@@ -1,11 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // The dev-tools indicator is rendered in a portal pinned to the bottom of the
-  // viewport, which sits directly on top of LifeXP's own bottom-pinned capture
-  // bar and swallows clicks in end-to-end tests. Turned off only when the e2e
-  // suite is driving the app; normal `npm run dev` keeps it.
-  devIndicators: process.env.LIFEXP_E2E === "1" ? false : undefined,
+  // The dev-tools indicator is a portal pinned to the bottom-left of the
+  // viewport, which is exactly where this app puts its bottom navigation. It
+  // covers the "Today" tab, and inside the log sheet it covers "Describe it" —
+  // so it both hides UI during review and swallows clicks in end-to-end tests.
+  //
+  // Next 16 removed `devIndicators.buildActivityPosition`, so there is no way
+  // to move it. Off is better than obscuring primary navigation on every page;
+  // the app has its own error boundary for the failures that matter.
+  devIndicators: false,
 
   // LifeXP is mobile-first, so it wants to be opened on an actual phone during
   // development — which means requests arrive at the machine's LAN address
