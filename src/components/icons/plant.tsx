@@ -61,29 +61,42 @@ const SOIL_WIDTH: Record<PlantStage, number> = {
   grand: 19,
 };
 
-export function Plant({
+/**
+ * Amplitude of the idle sway, per stage.
+ *
+ * A seedling whips about in a breeze and a grand tree barely moves. Falling
+ * amplitude is most of what stops a row of plants reading as one sprite
+ * repeated — the other half is the per-index delay the garden sets.
+ */
+export const SWAY_AMPLITUDE: Record<PlantStage, string> = {
+  seed: "0.6deg",
+  sprout: "1.5deg",
+  sapling: "1.3deg",
+  young: "1deg",
+  flowering: "0.85deg",
+  fruiting: "0.7deg",
+  grand: "0.5deg",
+};
+
+/**
+ * The plant itself, without an `<svg>` wrapper.
+ *
+ * Split out so the watering scene can compose a plant, a can and falling
+ * droplets into a single coordinate space — droplets have to land on the soil,
+ * which means they must share the plant's viewBox rather than be positioned
+ * over a nested SVG.
+ */
+export function PlantGlyph({
   stage,
   color,
-  size = 72,
-  swaying = true,
 }: {
   stage: PlantStage;
-  /** The skill's colour, so the garden and its cards agree. */
   color: string;
-  size?: number;
-  swaying?: boolean;
 }) {
   const soil = SOIL_WIDTH[stage];
 
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 64 64"
-      fill="none"
-      aria-hidden
-      className={swaying ? "plant-sway" : undefined}
-    >
+    <>
       {/* Soil is always present — even a seed sits in ground that is tended. */}
       <ellipse cx="32" cy="57" rx={soil} ry={soil * 0.26} fill="var(--line)" />
       <ellipse
@@ -102,6 +115,33 @@ export function Plant({
       {stage === "flowering" && <Flowering color={color} />}
       {stage === "fruiting" && <Fruiting color={color} />}
       {stage === "grand" && <GrandTree color={color} />}
+    </>
+  );
+}
+
+export function Plant({
+  stage,
+  color,
+  size = 72,
+  swaying = true,
+}: {
+  stage: PlantStage;
+  /** The skill's colour, so the garden and its cards agree. */
+  color: string;
+  size?: number;
+  swaying?: boolean;
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 64 64"
+      fill="none"
+      aria-hidden
+      className={swaying ? "plant-sway" : undefined}
+      style={{ ["--sway-amp" as string]: SWAY_AMPLITUDE[stage] }}
+    >
+      <PlantGlyph stage={stage} color={color} />
     </svg>
   );
 }

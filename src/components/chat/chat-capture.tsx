@@ -71,7 +71,7 @@ export function ChatCapture({
   function saveDraft(draft: DraftState) {
     startSaving(async () => {
       try {
-        const { progress } = await createExperience({
+        const { progress, moment } = await createExperience({
           title: draft.title,
           notes: draft.notes,
           occurredAt: draft.occurredAt,
@@ -88,6 +88,7 @@ export function ChatCapture({
           newMilestoneIds: progress.newMilestoneIds,
           skillName: draft.skills[0] ?? draft.title,
           minutes: draft.minutes,
+          moment,
         });
       } catch {
         setMessage("Couldn't save that one. Try again?");

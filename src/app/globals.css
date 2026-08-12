@@ -331,6 +331,138 @@ body {
   animation: rise-in var(--dur-move) var(--ease-out) both;
 }
 
+/*
+  Watering — the reward for recording something.
+
+  Read the header of components/garden/watering.tsx before changing any of
+  this: the sequence is timed so the plant's growth lands *while* the water is
+  on it, which is the whole trick. Move one delay and the water stops looking
+  like the cause.
+
+  Every animation here runs `both` and finishes at its resting state, so when
+  the reduced-motion block below collapses the durations to nothing, what
+  remains is the end of the sequence — a grown plant, no can, no droplets —
+  rather than a half-drawn frame.
+*/
+.water-can {
+  transform-origin: 78% 30%;
+  animation: water-can 1.5s var(--ease-out) both;
+}
+
+@keyframes water-can {
+  0% {
+    opacity: 0;
+    transform: translate(10px, -8px) rotate(8deg);
+  }
+  18%,
+  62% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(-16deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(8px, -10px) rotate(4deg);
+  }
+}
+
+.water-drop {
+  animation: water-drop 0.42s cubic-bezier(0.55, 0, 0.85, 0.4) both;
+}
+
+/* Falls, then flattens as it lands rather than simply vanishing. */
+@keyframes water-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scaleY(1);
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+    transform: translateY(30px) scaleY(1.3);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(34px) scaleY(0.35);
+  }
+}
+
+.water-soil {
+  opacity: 0;
+  animation: water-soil 1.5s var(--ease-out) both;
+}
+
+@keyframes water-soil {
+  0%,
+  38% {
+    opacity: 0;
+  }
+  55% {
+    opacity: 0.35;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Squash and stretch. The plant takes the water, then springs. */
+.water-plant {
+  transform-origin: 50% 90%;
+  animation: water-plant 1.5s var(--spring) both;
+}
+
+@keyframes water-plant {
+  0%,
+  42% {
+    transform: scale(1, 1);
+  }
+  54% {
+    transform: scale(1.08, 0.9);
+  }
+  70% {
+    transform: scale(0.96, 1.09);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+/* Stage change, timed to the squash: the old plant leaves as the new one
+   arrives, so the water is visibly what caused the growth. */
+.water-stage-out {
+  animation:
+    water-plant 1.5s var(--spring) both,
+    water-stage-out 1.5s var(--ease-out) both;
+}
+.water-stage-in {
+  animation:
+    water-plant 1.5s var(--spring) both,
+    water-stage-in 1.5s var(--ease-out) both;
+}
+
+@keyframes water-stage-out {
+  0%,
+  48% {
+    opacity: 1;
+  }
+  66%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes water-stage-in {
+  0%,
+  48% {
+    opacity: 0;
+  }
+  66%,
+  100% {
+    opacity: 1;
+  }
+}
+
 /* Focus ring that reads on both grounds without shouting. */
 :where(a, button, input, textarea, select, [tabindex]):focus-visible {
   outline: 2px solid var(--growth);

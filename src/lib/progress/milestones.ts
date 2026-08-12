@@ -214,6 +214,16 @@ export function nextMilestone(
   previous: MilestoneRow | null;
   fraction: number;
   remainingLabel: string | null;
+  /**
+   * The same distance as `remainingLabel`, unformatted.
+   *
+   * The reward moment animates this value downward as the log lands, which
+   * needs a number — a formatted string cannot be interpolated. Null once
+   * every milestone is reached.
+   */
+  remaining: number | null;
+  /** What `remaining` counts, so the client can format it the same way. */
+  remainingUnit: "minutes" | "sessions" | null;
 } {
   const measurable = milestones
     .filter((m) => m.thresholdMinutes !== null || m.thresholdCount !== null)
@@ -226,6 +236,8 @@ export function nextMilestone(
       previous: measurable.at(-1) ?? null,
       fraction: 1,
       remainingLabel: null,
+      remaining: null,
+      remainingUnit: null,
     };
   }
 
@@ -246,7 +258,14 @@ export function nextMilestone(
     ? `${formatHours(remaining)} to go`
     : `${remaining} ${remaining === 1 ? "session" : "sessions"} to go`;
 
-  return { next, previous, fraction, remainingLabel };
+  return {
+    next,
+    previous,
+    fraction,
+    remainingLabel,
+    remaining,
+    remainingUnit: usesMinutes ? "minutes" : "sessions",
+  };
 }
 
 /** "1.5h", "327h", "45m" — compact and never zero-padded. */

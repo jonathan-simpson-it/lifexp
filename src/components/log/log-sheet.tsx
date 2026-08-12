@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
 import { createExperience } from "@/app/actions/experiences";
 import type { QuickSkill } from "@/lib/growth/aggregate";
+import type { SkillMoment } from "@/lib/growth/moment";
 import { SkillIcon } from "@/components/icons";
 import { skillColor } from "@/lib/ui/format";
 import { ChatCapture } from "@/components/chat/chat-capture";
@@ -15,6 +16,9 @@ export type LogResult = {
   newMilestoneIds: string[];
   skillName: string;
   minutes: number | null;
+  /** Before/after state of the skill, for the watering moment. Null when the
+   *  entry was not attached to any skill. */
+  moment: { before: SkillMoment | null; after: SkillMoment } | null;
 };
 
 /**
@@ -59,7 +63,7 @@ export function LogSheet({
 
   function logQuick(skill: QuickSkill, minutes: number) {
     startSaving(async () => {
-      const { progress } = await createExperience({
+      const { progress, moment } = await createExperience({
         title: skill.name,
         occurredAt: new Date().toISOString(),
         minutes,
@@ -72,6 +76,7 @@ export function LogSheet({
         newMilestoneIds: progress.newMilestoneIds,
         skillName: skill.name,
         minutes,
+        moment,
       });
       onClose();
       router.refresh();

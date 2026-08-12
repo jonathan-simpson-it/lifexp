@@ -6,6 +6,7 @@ import { BadgeIcon } from "@/components/badge-icon";
 import type { LogResult } from "@/components/log/log-sheet";
 import { Confetti } from "./confetti";
 import { Toast } from "./toast";
+import { WateredToast } from "./watered-toast";
 
 /**
  * Rewards, scaled to what actually happened.
@@ -32,9 +33,23 @@ export function CelebrationHost({ result }: { result: LogResult }) {
 
   return (
     <>
-      {!toastDone && (
-        <Toast message={`Recorded — ${what}`} onDone={() => setToastDone(true)} />
-      )}
+      {/* With a skill attached, the confirmation *is* the reward: that skill's
+          plant gets watered and its remaining distance falls. Without one —
+          an entry logged against no skill — there is no plant to water, so it
+          falls back to the plain line. */}
+      {!toastDone &&
+        (result.moment ? (
+          <WateredToast
+            moment={result.moment}
+            what={what}
+            onDone={() => setToastDone(true)}
+          />
+        ) : (
+          <Toast
+            message={`Recorded — ${what}`}
+            onDone={() => setToastDone(true)}
+          />
+        ))}
 
       {current && (
         <MedalMoment

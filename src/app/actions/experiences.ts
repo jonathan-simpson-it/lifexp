@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { requireUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { createSkillForUser, findOrCreateSkill } from "@/lib/growth/skills";
+import { getSkillMoment } from "@/lib/growth/moment";
 import { syncProgress } from "@/lib/progress/sync";
 import {
   deleteExperienceEvent,
@@ -95,6 +96,15 @@ export async function createExperience(input: ExperienceInput) {
     select: { id: true },
   });
 
+  // Snapshot the skill *before* the write so the reward moment can show what
+  // changed — the plant's stage and the distance still to go. Taken here
+  // rather than in the client because the client only knows the skill's name
+  // and colour, not where it sits on its ladder.
+  const primarySkillId = owned[0]?.id ?? null;
+  const momentBefore = primarySkillId
+    ? await getSkillMoment(userId, primarySkillId)
+    : null;
+
   const experience = await db.experience.create({
     data: {
       userId,
@@ -110,10 +120,18 @@ export async function createExperience(input: ExperienceInput) {
   });
 
   const progress = await syncProgress(userId);
+  const momentAfter = primarySkillId
+    ? await getSkillMoment(userId, primarySkillId)
+    : null;
+
   await syncCalendar(userId, experience);
   revalidatePath("/", "layout");
 
-  return { experience, progress };
+  return {
+    experience,
+    progress,
+    moment: momentAfter ? { before: momentBefore, after: momentAfter } : null,
+  };
 }
 
 export async function createExperienceFromForm(formData: FormData) {

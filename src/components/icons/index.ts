@@ -1,6 +1,13 @@
 export { Logo, LogoMark, PRODUCT_NAME } from "./logo";
 export { Medal } from "./medal";
-export { Plant, stageForTier, STAGE_LABEL, type PlantStage } from "./plant";
+export {
+  Plant,
+  PlantGlyph,
+  stageForTier,
+  STAGE_LABEL,
+  SWAY_AMPLITUDE,
+  type PlantStage,
+} from "./plant";
 export { SkillIcon } from "./skill";
 export {
   IconAdd,
