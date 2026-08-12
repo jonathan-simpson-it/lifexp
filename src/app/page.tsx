@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { currentUserId } from "@/lib/auth";
 import { Logo, Plant, Medal } from "@/components/icons";
 import { formatDuration } from "@/lib/ui/format";
 
@@ -18,9 +18,11 @@ export const metadata: Metadata = {
 };
 
 export default async function LandingPage() {
-  // Signed-in visitors have no use for the pitch.
-  const session = await auth();
-  if (session?.user?.id) redirect("/today");
+  // Signed-in visitors have no use for the pitch. Verified rather than trusted
+  // from the token, so a stale session shows the landing page instead of
+  // bouncing into an app that will redirect straight back.
+  const userId = await currentUserId();
+  if (userId) redirect("/today");
 
   return (
     <div className="min-h-dvh">
