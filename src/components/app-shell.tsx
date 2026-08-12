@@ -9,9 +9,14 @@ import type { QuickSkill } from "@/lib/growth/aggregate";
 /**
  * Client shell around every signed-in page.
  *
- * It owns the two pieces of state that have to outlive a route change: whether
- * the log sheet is open, and what the last save earned. Pages themselves stay
- * server components — they are passed straight through as `children`.
+ * It owns the two things that outlive a route change: whether the log sheet is
+ * open, and what the last save earned. Pages stay server components — they come
+ * through untouched as `children`.
+ *
+ * Both the sheet and the celebration are **mounted fresh** rather than told to
+ * reset. A counter drives their `key`, so opening the sheet a second time gets
+ * clean initial state for free, and neither component needs an effect that
+ * copies props into state — which would cost an extra render pass every time.
  */
 export function AppShell({
   skills,
@@ -20,8 +25,16 @@ export function AppShell({
   skills: QuickSkill[];
   children: React.ReactNode;
 }) {
+  const [openCount, setOpenCount] = useState(0);
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [result, setResult] = useState<LogResult | null>(null);
+  const [result, setResult] = useState<{ id: number; value: LogResult } | null>(
+    null,
+  );
+
+  function openSheet() {
+    setOpenCount((n) => n + 1);
+    setSheetOpen(true);
+  }
 
   return (
     <>
@@ -31,16 +44,18 @@ export function AppShell({
         <div className="mx-auto max-w-3xl px-4 pt-4 pb-28 md:pb-10">{children}</div>
       </div>
 
-      <AppNav onAdd={() => setSheetOpen(true)} />
+      <AppNav onAdd={openSheet} />
 
-      <LogSheet
-        open={sheetOpen}
-        onClose={() => setSheetOpen(false)}
-        skills={skills}
-        onLogged={setResult}
-      />
+      {sheetOpen && (
+        <LogSheet
+          key={openCount}
+          skills={skills}
+          onClose={() => setSheetOpen(false)}
+          onLogged={(value) => setResult({ id: openCount, value })}
+        />
+      )}
 
-      <CelebrationHost result={result} onDone={() => setResult(null)} />
+      {result && <CelebrationHost key={result.id} result={result.value} />}
     </>
   );
 }
