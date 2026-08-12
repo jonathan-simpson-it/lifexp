@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import { cache } from "react";
 import { redirect } from "next/navigation";
 import type { NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
@@ -101,11 +102,32 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
 });
 
-/** The signed-in user's id, or null. Every data read is scoped through this. */
-export async function currentUserId(): Promise<string | null> {
+/**
+ * The signed-in user's id, or null. Every data read is scoped through this.
+ *
+ * The session is a JWT, so it keeps asserting a user id long after that user
+ * has been deleted — the token is cryptographically valid and there is nothing
+ * in it to invalidate. The failure mode is nasty and quiet: reads scoped to a
+ * missing user return empty rather than erroring, so pages render fine and look
+ * merely empty, and the first sign of trouble is a foreign-key violation on the
+ * next write.
+ *
+ * So the id is confirmed against the database before it is trusted. `cache`
+ * dedupes that lookup across the layout, the page and any server action in the
+ * same request, making it one query rather than one per caller.
+ */
+export const currentUserId = cache(async (): Promise<string | null> => {
   const session = await auth();
-  return session?.user?.id ?? null;
-}
+  const id = session?.user?.id;
+  if (!id) return null;
+
+  const user = await db.user.findUnique({
+    where: { id },
+    select: { id: true },
+  });
+
+  return user?.id ?? null;
+});
 
 /**
  * For server actions and pages that cannot function without a user. Server
