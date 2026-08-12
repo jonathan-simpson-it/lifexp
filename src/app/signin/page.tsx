@@ -69,6 +69,33 @@ export default async function SignInPage() {
         )}
       </div>
 
+      {!hasGoogleCredentials && (
+        <div className="mt-8 rounded-xl border border-line p-4">
+          <p className="text-sm font-medium">Everything works without any keys</p>
+          <p className="mt-1.5 text-sm text-muted">
+            Continue as <code>demo@lifexp.local</code> for two years of example
+            history — a skill deep into its ladder, medals earned and still to
+            find, and maintenance at every stage of freshness.
+          </p>
+          <ul className="mt-2.5 space-y-1 text-sm text-muted">
+            <li>
+              <strong className="font-medium text-ink-soft">Chat</strong> runs on a
+              built-in extractor — no API key, no network.
+            </li>
+            <li>
+              <strong className="font-medium text-ink-soft">Calendar</strong> shows
+              exactly what it would write to Google, in Settings.
+            </li>
+            <li>
+              Any other email starts an <strong className="font-medium text-ink-soft">
+                empty account
+              </strong>{" "}
+              if you&rsquo;d rather see it from scratch.
+            </li>
+          </ul>
+        </div>
+      )}
+
       <p className="mt-8 text-xs text-muted">
         Signing in with Google does not give LifeXP access to your calendar.
         That&rsquo;s a separate choice you can make later, in Settings.
