@@ -21,18 +21,26 @@ export function StructuredEntry({
   skills,
   onDone,
   onCancel,
+  preselectedSkillId,
+  defaultDate,
 }: {
   skills: { id: string; name: string }[];
   onDone: () => void;
   onCancel: () => void;
+  /** Carried over when the user picked a chip then chose "another amount". */
+  preselectedSkillId?: string;
+  /** Set when adding to a specific day from the calendar. */
+  defaultDate?: string;
 }) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
   const [title, setTitle] = useState("");
   const [hours, setHours] = useState("");
-  const [occurredAt, setOccurredAt] = useState(todayLocal());
-  const [selected, setSelected] = useState<string[]>([]);
+  const [occurredAt, setOccurredAt] = useState(defaultDate ?? todayLocal());
+  const [selected, setSelected] = useState<string[]>(
+    preselectedSkillId ? [preselectedSkillId] : [],
+  );
   const [newSkill, setNewSkill] = useState("");
   const [notes, setNotes] = useState("");
 
