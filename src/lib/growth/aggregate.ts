@@ -21,7 +21,6 @@ export type { WeekSummary } from "./summarise";
  * once, in readable code, instead of duplicated across raw queries.
  */
 
-const DAY = 86_400_000;
 
 type ExperienceWithSkills = {
   id: string;
