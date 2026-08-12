@@ -113,6 +113,89 @@ test.describe("usable without any keys", () => {
   });
 });
 
+/**
+ * The client asked for a light, cream app. The risk is not that someone edits
+ * the token — it is that a `prefers-color-scheme: dark` rule creeps back in and
+ * the app turns dark on exactly the phones nobody tests on.
+ */
+test.describe("cream ground", () => {
+  const CREAM = "rgb(247, 241, 225)"; // --paper
+
+  test("is cream when the device prefers light", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "light" });
+    await signIn(page);
+
+    await expect(page.locator("body")).toHaveCSS("background-color", CREAM);
+  });
+
+  test("is still cream when the device prefers dark", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "dark" });
+    await signIn(page);
+
+    await expect(page.locator("body")).toHaveCSS("background-color", CREAM);
+  });
+
+  test("stays cream on every page", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "dark" });
+    await signIn(page);
+
+    for (const path of ["/growth", "/maintenance", "/medals", "/timeline", "/settings"]) {
+      await page.goto(path);
+      await expect(page.locator("body")).toHaveCSS("background-color", CREAM);
+    }
+  });
+
+  test("no text is light-on-light", async ({ page }) => {
+    await signIn(page);
+
+    // Light text is fine on a dark chip (the active nav pill is cream on ink).
+    // The failure this guards against is light text on a LIGHT background —
+    // what a half-applied dark theme looks like, and what would make the app
+    // unreadable on the cream ground.
+    const unreadable = await page.evaluate(() => {
+      const parse = (value: string) => {
+        const m = value.match(/rgba?\(([^)]+)\)/);
+        if (!m) return null;
+        const parts = m[1].split(",").map((n) => parseFloat(n));
+        const [r, g, b, a = 1] = parts;
+        return a === 0 ? null : { r, g, b };
+      };
+
+      const lin = (c: number) =>
+        c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+      const lum = ({ r, g, b }: { r: number; g: number; b: number }) =>
+        0.2126 * lin(r / 255) + 0.7152 * lin(g / 255) + 0.0722 * lin(b / 255);
+
+      /** First ancestor with a non-transparent background. */
+      const groundOf = (el: Element) => {
+        let node: Element | null = el;
+        while (node) {
+          const bg = parse(getComputedStyle(node).backgroundColor);
+          if (bg) return bg;
+          node = node.parentElement;
+        }
+        return { r: 255, g: 255, b: 255 };
+      };
+
+      const offenders: string[] = [];
+      for (const el of document.querySelectorAll("p, span, h1, h2, h3, a, li, button")) {
+        const text = el.textContent?.trim();
+        if (!text || el.children.length > 0) continue;
+
+        const fg = parse(getComputedStyle(el).color);
+        if (!fg) continue;
+
+        const [hi, lo] = [lum(fg), lum(groundOf(el))].sort((a, b) => b - a);
+        const contrast = (hi + 0.05) / (lo + 0.05);
+        if (contrast < 3) offenders.push(`${text.slice(0, 30)} (${contrast.toFixed(2)}:1)`);
+      }
+      return offenders;
+    });
+
+    expect(unreadable).toEqual([]);
+  });
+});
+
 test.describe("medals", () => {
   test.beforeEach(async ({ page }) => {
     await signIn(page);
