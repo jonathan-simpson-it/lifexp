@@ -85,7 +85,7 @@ export function SkillCard({ skill }: { skill: SkillCardData }) {
         <div className="mt-2 flex items-baseline justify-between gap-3">
           {skill.nextLabel ? (
             <p className="text-sm">
-              <span className="numeral font-semibold text-action-deep">
+              <span className="numeral font-semibold text-accent-deep">
                 {skill.nextRemaining}
               </span>{" "}
               <span className="text-muted">to {skill.nextLabel}</span>
