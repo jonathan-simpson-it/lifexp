@@ -80,9 +80,11 @@ bd/
     │   └── philosophy.spec.ts     asserts the design principles hold
     └── src/
         ├── app/
+        │   ├── page.tsx           public landing page  ← the "/" route
         │   ├── (app)/             everything behind auth
-        │   │   ├── layout.tsx     session gate + nav shell
-        │   │   ├── page.tsx       dashboard  ← the "/" route
+        │   │   ├── layout.tsx     session gate + AppShell
+        │   │   ├── today/         dashboard: garden, recap, skills
+        │   │   ├── calendar/      month grid + year view
         │   │   ├── growth/            skills list
         │   │   ├── growth/[slug]/     one skill: ladder, heatmap, entries
         │   │   ├── maintenance/
