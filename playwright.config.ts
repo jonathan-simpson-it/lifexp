@@ -2,7 +2,9 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./e2e",
-  fullyParallel: false, // one seeded database, shared across specs
+  // One seeded database shared across specs, reset once per run by globalSetup.
+  globalSetup: "./e2e/global-setup.ts",
+  fullyParallel: false,
   workers: 1,
   retries: 0,
   reporter: [["list"]],
