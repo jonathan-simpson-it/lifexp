@@ -161,7 +161,9 @@ export function LogSheet({
                         type="button"
                         disabled={saving}
                         onClick={() => logQuick(picked, minutes)}
-                        className="tappable w-full rounded-xl border border-line bg-paper py-3 text-sm font-medium hover:border-action hover:text-action-deep disabled:opacity-50"
+                        // accent-deep on hover: the lighter sage sits at 2.7:1
+                        // against the ground, too faint to read as a border.
+                        className="tappable w-full rounded-xl border border-line bg-paper py-3 text-sm font-medium hover:border-accent-deep hover:text-accent-deep disabled:opacity-50"
                       >
                         {minutes < 60
                           ? `${minutes}m`
