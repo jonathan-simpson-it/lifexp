@@ -5,18 +5,18 @@ export const metadata = { title: "Sign in · LifeXP" };
 
 export default async function SignInPage() {
   const session = await auth();
-  if (session?.user?.id) redirect("/");
+  if (session?.user?.id) redirect("/today");
 
   async function signInWithGoogle() {
     "use server";
-    await signIn("google", { redirectTo: "/" });
+    await signIn("google", { redirectTo: "/today" });
   }
 
   async function signInForDevelopment(formData: FormData) {
     "use server";
     await signIn("dev", {
       email: String(formData.get("email") ?? "demo@lifexp.local"),
-      redirectTo: "/",
+      redirectTo: "/today",
     });
   }
 
