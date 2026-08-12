@@ -6,7 +6,7 @@ Many of the most valuable things in life have feedback cycles measured in months
 or years. Because progress is hard to perceive, people lose motivation while
 they are actually still getting somewhere. LifeXP keeps the evidence.
 
-This is the Prototype + Stage 1 MVP from [`../LifeXP PRD.md`](../LifeXP%20PRD.md).
+This is the Prototype + Stage 1 MVP from [`../LifeXP-PRD.md`](../LifeXP-PRD.md).
 
 ## Documentation
 
@@ -16,7 +16,7 @@ This is the Prototype + Stage 1 MVP from [`../LifeXP PRD.md`](../LifeXP%20PRD.md
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | full technical context — directory map, data model, flows, invariants, where to change what |
 | [`docs/DECISIONS.md`](docs/DECISIONS.md) | why things are the way they are, and what would justify changing them |
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | what is built against the PRD, what is deliberately missing, what comes next |
-| [`../LifeXP PRD.md`](../LifeXP%20PRD.md) | product source of truth |
+| [`../LifeXP-PRD.md`](../LifeXP-PRD.md) | product source of truth |
 
 ---
 
@@ -31,13 +31,32 @@ npm run seed                     # ~2 years of demo history
 npm run dev
 ```
 
-Open http://localhost:3000. With no Google credentials configured the sign-in
-page offers a local development sign-in — use `demo@lifexp.local` to land on the
-seeded account.
+Open http://localhost:3000 and continue as `demo@lifexp.local`.
 
-**Nothing above needs an account, an API key, or a network connection.** That is
+> Keep the `prisma dev` terminal open — it *is* the database. If you close it,
+> the app shows a page telling you how to start it again.
+
+### Every feature works with no API key
+
+Nothing here needs an account, an API key, or a network connection. That is
 deliberate: the PRD asks for five user interviews, and a demo that depends on a
 vendor console is a demo that fails at the wrong moment.
+
+| Feature | Without any keys |
+|---|---|
+| Sign-in | Local development sign-in. `demo@lifexp.local` has ~2 years of history; any other email starts an empty account so you can see first-run. |
+| Chat capture | Full rule-based extractor — durations, relative dates, weekday references, multiple activities per message, and refusing to log a plan. |
+| Structured entry, timeline, skills, milestones, medals, maintenance, heatmaps, export | Fully working. |
+| **Google Calendar** | Settings renders the exact events LifeXP would write, built by the same code that talks to Google. Connecting for real needs `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET`, and nothing else changes. |
+
+Adding `AI_PROVIDER` + `AI_API_KEY` upgrades chat to a model; it does not unlock
+anything that was previously hidden.
+
+### Trying it on a phone
+
+`npm run dev` prints a Network URL. Private LAN ranges are already allowed in
+`next.config.ts`, so it works from another device on the same Wi-Fi with no
+further setup — worth doing, since this is a mobile-first product.
 
 | Command | |
 |---|---|
@@ -135,6 +154,11 @@ created, so LifeXP *cannot* read the user's existing calendars even if it tried.
 Writes are best-effort: a calendar failure records a quiet banner and never
 prevents an experience from being saved. Disconnecting stops syncing and leaves
 the calendar in place — it is the user's record, and deleting it is their call.
+
+**Without Google credentials**, Settings still renders the events LifeXP would
+write, using `buildEventBody` — the same function the live sync calls. So the
+feature is inspectable on any machine, and the preview cannot drift away from
+what actually gets sent.
 
 > The exact scope string should be re-verified against current Google Calendar
 > API docs before going near production, along with the OAuth consent screen
