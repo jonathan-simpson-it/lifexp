@@ -1,0 +1,283 @@
+// LifeXP — schema
+//
+// Two independent systems live here:
+//   Growth      Experience -> ExperienceSkill -> Skill -> Milestone
+//   Maintenance MaintenanceItem -> MaintenanceLog
+//
+// Deliberately absent: any notion of a streak. There is no consecutive-day
+// counter, no "last broken" date, nothing that could be used to compute one.
+// That is a product requirement, not an oversight.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Auth.js (@auth/prisma-adapter) — field names are fixed by the adapter
+// ---------------------------------------------------------------------------
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+
+  // Locale for "today"/"yesterday" parsing and for calendar event times.
+  timezone String @default("UTC")
+
+  // Google Calendar write-back. Null until the user opts in from Settings.
+  // We only ever touch the calendar whose id is stored here — the one we made.
+  lifexpCalendarId  String?
+  calendarSyncError String?
+
+  accounts         Account[]
+  sessions         Session[]
+  skills           Skill[]
+  experiences      Experience[]
+  badgeAwards      BadgeAward[]
+  maintenanceItems MaintenanceItem[]
+  chatMessages     ChatMessage[]
+
+  createdAt DateTime @default(now())
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+// ---------------------------------------------------------------------------
+// Growth
+// ---------------------------------------------------------------------------
+
+model Skill {
+  id     String @id @default(cuid())
+  userId String
+
+  name String
+  slug String
+
+  // Drives the generated colour so a skill looks the same everywhere.
+  colorSeed Int @default(0)
+
+  // Optional flavour unit shown alongside hours ("books", "km"). Decorative:
+  // milestones and medals are always driven by minutes or experience count.
+  secondaryUnit String?
+
+  // Which milestone template seeded this skill's ladder ("language", "music"...).
+  templateKey String?
+
+  createdAt  DateTime  @default(now())
+  archivedAt DateTime?
+
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  experiences ExperienceSkill[]
+  milestones  Milestone[]
+
+  @@unique([userId, slug])
+  @@index([userId])
+}
+
+enum ExperienceSource {
+  CHAT
+  FORM
+  CALENDAR
+}
+
+model Experience {
+  id     String @id @default(cuid())
+  userId String
+
+  title String
+  notes String?
+
+  // When it happened, as opposed to when it was recorded.
+  occurredAt DateTime
+
+  // Nullable on purpose. An experience with no duration is still evidence —
+  // it contributes +1 to the skill's experience count.
+  minutes Int?
+
+  source     ExperienceSource @default(FORM)
+  rawInput   String? // the original sentence, when it came from chat
+  confidence Float? // extractor confidence, null for hand-entered
+
+  // Set once the experience has been mirrored into the user's LifeXP calendar.
+  googleEventId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skills ExperienceSkill[]
+
+  @@index([userId, occurredAt])
+}
+
+// An experience's FULL duration counts toward EACH linked skill. 90 minutes of
+// Japanese conversation is genuinely 90 minutes of both Japanese and Speaking,
+// so we do not split it. The consequence: cross-skill totals ("18h this week")
+// must sum over distinct Experience rows, never over ExperienceSkill rows,
+// or a two-skill experience is counted twice. See lib/growth/aggregate.ts.
+model ExperienceSkill {
+  experienceId String
+  skillId      String
+
+  experience Experience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+  skill      Skill      @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@id([experienceId, skillId])
+  @@index([skillId])
+}
+
+enum MilestoneTier {
+  FIRST_STEPS
+  FOUNDATION
+  BRONZE
+  SILVER
+  GOLD
+  MASTERY
+  CUSTOM
+}
+
+enum MilestoneOrigin {
+  TEMPLATE
+  CUSTOM
+}
+
+model Milestone {
+  id      String @id @default(cuid())
+  skillId String
+
+  label String
+  tier  MilestoneTier
+  order Int           @default(0)
+
+  // Exactly one of these is set for an automatic milestone. A CUSTOM milestone
+  // ("ski intermediate slopes confidently") has neither and is ticked by hand.
+  thresholdMinutes Int?
+  thresholdCount   Int?
+
+  origin MilestoneOrigin @default(TEMPLATE)
+
+  achievedAt DateTime?
+
+  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@index([skillId])
+}
+
+// Earned global badges. Definitions live in code (lib/progress/badges.ts);
+// only awards are persisted. The unique constraint is what makes the award
+// engine safe to re-run after every single write.
+model BadgeAward {
+  id     String @id @default(cuid())
+  userId String
+
+  badgeKey  String
+  awardedAt DateTime @default(now())
+  context   Json? // e.g. { "quietDays": 34 } so the shelf can say why
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeKey])
+  @@index([userId])
+}
+
+// ---------------------------------------------------------------------------
+// Maintenance
+// ---------------------------------------------------------------------------
+
+model MaintenanceItem {
+  id     String @id @default(cuid())
+  userId String
+
+  name String
+
+  // The user's own sense of rhythm, in days. Drives a freshness gradient only.
+  // Nothing in the app ever calls an item overdue, late, or failed.
+  intervalDays Int @default(7)
+
+  createdAt  DateTime  @default(now())
+  archivedAt DateTime?
+
+  user User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  logs MaintenanceLog[]
+
+  @@index([userId])
+}
+
+model MaintenanceLog {
+  id     String   @id @default(cuid())
+  itemId String
+  doneAt DateTime @default(now())
+
+  item MaintenanceItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([itemId, doneAt])
+}
+
+// ---------------------------------------------------------------------------
+// Chat
+// ---------------------------------------------------------------------------
+
+enum ChatRole {
+  USER
+  ASSISTANT
+}
+
+model ChatMessage {
+  id     String @id @default(cuid())
+  userId String
+
+  role    ChatRole
+  content String
+
+  // The extractor's proposed drafts, held here until the user confirms them.
+  // Nothing in this column has touched the Experience table yet.
+  draftJson Json?
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
