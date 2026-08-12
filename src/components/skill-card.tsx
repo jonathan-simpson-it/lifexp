@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { SkillCard as SkillCardData } from "@/lib/growth/aggregate";
 import { formatDuration, relativeDay, skillColor, TIER_COLOR } from "@/lib/ui/format";
+import { SkillIcon } from "@/components/icons";
 
 export function SkillCardList({ skills }: { skills: SkillCardData[] }) {
   return (
@@ -14,38 +15,57 @@ export function SkillCardList({ skills }: { skills: SkillCardData[] }) {
   );
 }
 
+/**
+ * The goal-gradient card.
+ *
+ * The distance to the next milestone is the single strongest habit mechanic in
+ * the product — people accelerate as a goal gets closer — so it is set larger
+ * than the running total and in the action colour. The total is evidence; the
+ * remaining distance is the pull.
+ */
 export function SkillCard({ skill }: { skill: SkillCardData }) {
   const color = skillColor(skill.colorSeed);
 
   return (
     <Link
       href={`/growth/${skill.slug}`}
-      className="card block p-4 transition-shadow hover:shadow-sm"
+      className="tappable card block p-4 transition-shadow hover:shadow-raised"
     >
-      <div className="flex items-baseline justify-between gap-3">
-        <span className="flex min-w-0 items-center gap-2">
+      <div className="flex items-start justify-between gap-3">
+        <span className="flex min-w-0 items-center gap-2.5">
           <span
             aria-hidden
-            className="size-2.5 shrink-0 rounded-full"
-            style={{ background: color }}
-          />
-          <span className="truncate font-medium">{skill.name}</span>
-        </span>
-
-        <span className="shrink-0 text-right">
-          <span className="numeral text-lg">{formatDuration(skill.totalMinutes)}</span>
-          <span className="ml-2 text-sm text-muted">
-            {skill.experienceCount}{" "}
-            {skill.experienceCount === 1 ? "experience" : "experiences"}
+            className="flex size-9 shrink-0 items-center justify-center rounded-full"
+            style={{ background: skillColor(skill.colorSeed, { soft: true }), color }}
+          >
+            <SkillIcon templateKey={skill.templateKey} size={19} />
+          </span>
+          <span className="min-w-0">
+            <span className="block truncate font-semibold">{skill.name}</span>
+            <span className="numeral block text-sm text-muted">
+              {formatDuration(skill.totalMinutes)} ·{" "}
+              {skill.experienceCount}{" "}
+              {skill.experienceCount === 1 ? "entry" : "entries"}
+            </span>
           </span>
         </span>
+
+        {skill.achievedLabel && (
+          <span
+            className="shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold"
+            style={{
+              color: TIER_COLOR[skill.achievedTier ?? "CUSTOM"],
+              background: "var(--paper)",
+            }}
+          >
+            {skill.achievedLabel}
+          </span>
+        )}
       </div>
 
-      {/* Progress toward the NEXT milestone, measured from the previous one —
-          so a skill deep into a long stretch still shows visible movement. */}
-      <div className="mt-3">
+      <div className="mt-3.5">
         <div
-          className="h-1.5 w-full overflow-hidden rounded-full bg-line"
+          className="h-2 w-full overflow-hidden rounded-full bg-line"
           role="img"
           aria-label={
             skill.nextLabel
@@ -54,44 +74,33 @@ export function SkillCard({ skill }: { skill: SkillCardData }) {
           }
         >
           <div
-            className="h-full rounded-full transition-[width] duration-700"
+            className="h-full rounded-full transition-[width] duration-700 ease-[var(--spring)]"
             style={{
-              width: `${Math.max(skill.fraction * 100, 2)}%`,
+              width: `${Math.max(skill.fraction * 100, 3)}%`,
               background: color,
             }}
           />
         </div>
 
-        <div className="mt-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-sm">
-          {skill.achievedLabel ? (
-            <span
-              className="inline-flex items-center gap-1.5"
-              style={{ color: TIER_COLOR[skill.achievedTier ?? "CUSTOM"] }}
-            >
-              <span aria-hidden>●</span>
-              {skill.achievedLabel}
-            </span>
+        <div className="mt-2 flex items-baseline justify-between gap-3">
+          {skill.nextLabel ? (
+            <p className="text-sm">
+              <span className="numeral font-semibold text-action-deep">
+                {skill.nextRemaining}
+              </span>{" "}
+              <span className="text-muted">to {skill.nextLabel}</span>
+            </p>
           ) : (
-            <span className="text-muted">Just getting started</span>
+            <p className="text-sm text-muted">Every milestone reached</p>
           )}
 
-          <span className="text-muted">
-            {skill.nextLabel ? (
-              <>
-                {skill.nextRemaining} to {skill.nextLabel}
-              </>
-            ) : (
-              "Every milestone reached"
-            )}
-          </span>
+          {skill.lastActiveAt && (
+            <span className="shrink-0 text-xs text-muted">
+              {relativeDay(skill.lastActiveAt)}
+            </span>
+          )}
         </div>
       </div>
-
-      {skill.lastActiveAt && (
-        <p className="mt-2 text-xs text-muted">
-          last {relativeDay(skill.lastActiveAt)}
-        </p>
-      )}
     </Link>
   );
 }
