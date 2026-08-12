@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
 import { createExperience } from "@/app/actions/experiences";
@@ -31,12 +31,10 @@ const PRESETS = [15, 30, 45, 60, 90, 120];
 type Mode = "quick" | "chat" | "form";
 
 export function LogSheet({
-  open,
   onClose,
   skills,
   onLogged,
 }: {
-  open: boolean;
   onClose: () => void;
   skills: QuickSkill[];
   onLogged: (result: LogResult) => void;
@@ -45,19 +43,11 @@ export function LogSheet({
   const [mode, setMode] = useState<Mode>("quick");
   const [picked, setPicked] = useState<QuickSkill | null>(null);
   const [saving, startSaving] = useTransition();
-  const panelRef = useRef<HTMLDivElement>(null);
 
-  // Reset every time it opens: the sheet should never remember a half-finished
-  // interaction from an hour ago.
+  // No "reset on open" effect: the shell mounts this fresh on every open, so
+  // these initial values *are* the reset. Syncing state from a prop in an
+  // effect would cost a second render pass every time the sheet appeared.
   useEffect(() => {
-    if (open) {
-      setMode("quick");
-      setPicked(null);
-    }
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
@@ -65,9 +55,7 @@ export function LogSheet({
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
     };
-  }, [open, onClose]);
-
-  if (!open) return null;
+  }, [onClose]);
 
   function logQuick(skill: QuickSkill, minutes: number) {
     startSaving(async () => {
@@ -100,7 +88,6 @@ export function LogSheet({
       />
 
       <div
-        ref={panelRef}
         role="dialog"
         aria-modal="true"
         aria-label="Record something"
