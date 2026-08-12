@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import { redirect } from "next/navigation";
 import type { NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
@@ -110,9 +111,14 @@ export async function currentUserId(): Promise<string | null> {
  * For server actions and pages that cannot function without a user. Server
  * actions are reachable by direct POST, so authorisation is re-checked inside
  * each one rather than trusted from the page that rendered the form.
+ *
+ * Redirects rather than throwing. Being signed out is an ordinary state, not an
+ * error, and throwing filled the dev server's log with a stack trace every time
+ * someone opened the app in a fresh browser. `redirect` throws a control-flow
+ * signal Next handles, so callers still get a non-null id or nothing at all.
  */
 export async function requireUserId(): Promise<string> {
   const userId = await currentUserId();
-  if (!userId) throw new Error("Not signed in");
+  if (!userId) redirect("/signin");
   return userId;
 }
