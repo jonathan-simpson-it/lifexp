@@ -2,6 +2,7 @@ import { requireUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getCalendarStatus } from "@/lib/google/calendar";
 import { resolveProvider } from "@/lib/ai/provider";
+import { CalendarPreview } from "@/components/calendar-preview";
 import {
   backfillCalendar,
   connectCalendar,
@@ -14,13 +15,26 @@ export const metadata = { title: "Settings · LifeXP" };
 export default async function SettingsPage() {
   const userId = await requireUserId();
 
-  const [calendar, user, pendingSync] = await Promise.all([
+  const [calendar, user, pendingSync, recent] = await Promise.all([
     getCalendarStatus(userId),
     db.user.findUnique({
       where: { id: userId },
       select: { email: true, timezone: true },
     }),
     db.experience.count({ where: { userId, googleEventId: null } }),
+    db.experience.findMany({
+      where: { userId },
+      orderBy: { occurredAt: "desc" },
+      take: 6,
+      select: {
+        id: true,
+        title: true,
+        notes: true,
+        occurredAt: true,
+        minutes: true,
+        googleEventId: true,
+      },
+    }),
   ]);
 
   // Reads env only; no key material reaches the page.
@@ -39,7 +53,18 @@ export default async function SettingsPage() {
         </h2>
 
         {calendar.state === "unavailable" && (
-          <p className="mt-2 text-sm text-muted">{calendar.reason}</p>
+          <>
+            <p className="mt-2 text-sm text-ink-soft">
+              {calendar.reason} You can still see exactly what LifeXP would write
+              — this preview is built by the same code that talks to Google, so
+              nothing here is a mock-up.
+            </p>
+            <CalendarPreview experiences={recent} connected={false} />
+            <p className="mt-2 text-xs text-muted">
+              Set <code>AUTH_GOOGLE_ID</code> and <code>AUTH_GOOGLE_SECRET</code>{" "}
+              to turn this into a real calendar. Nothing else changes.
+            </p>
+          </>
         )}
 
         {calendar.state === "not-connected" && (
@@ -58,6 +83,10 @@ export default async function SettingsPage() {
                 Connect calendar
               </button>
             </form>
+            <p className="mt-4 text-xs tracking-wide text-muted uppercase">
+              What would be added
+            </p>
+            <CalendarPreview experiences={recent} connected={false} />
           </>
         )}
 
@@ -100,6 +129,8 @@ export default async function SettingsPage() {
               Stopping keeps everything already in your calendar. It&rsquo;s your
               record — deleting it is your call, from Google Calendar.
             </p>
+
+            <CalendarPreview experiences={recent} connected />
           </>
         )}
       </section>
