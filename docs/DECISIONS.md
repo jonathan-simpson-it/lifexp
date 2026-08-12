@@ -281,6 +281,108 @@ ancestor background, so a half-applied theme fails the build.
 
 ---
 
+## 16. Two chosen typefaces, and a scale of roles
+
+**Decision.** Newsreader (display, numerals, voice) and Hanken Grotesk (UI,
+body), self-hosted via `next/font`. Seven role-named type tokens —
+`text-eyebrow` through `text-hero` — each carrying its own line height, tracking
+and weight. The face changes at 20px: serif at or above `text-title`, sans below.
+
+**Why.** The app previously had no chosen typeface at all: `--font-display` was
+`Georgia` and `--font-sans` was the system stack, so the type was whatever the
+device happened to have. It was the one part of the design never actually
+designed, and with a palette this small — one colour, two grounds — type and
+space are what have to carry the hierarchy.
+
+Newsreader specifically for its optical-size axis. A 34px total and a 12px
+caption are drawn differently rather than scaled from one master, which is what
+makes a number read as recorded rather than computed. The `opsz` axis has to be
+requested explicitly; `next/font` ships weight only by default.
+
+**Roles rather than sizes** so "what size is this?" is never a judgement call at
+the call site. `text-eyebrow` is a complete typographic decision, not a size that
+still needs four more classes to look right.
+
+**Consequence.** A webfont that fails to load looks *almost* right, because the
+fallback stack is deliberately close — which makes it the one visual regression
+nobody spots by eye. `typefaces › the chosen faces are actually applied` asserts
+the computed family instead.
+
+**Cost.** The first build needs network to fetch the faces. If that is ever a
+problem, vendor the woff2 files and switch to `next/font/local`; the CSS
+variables stay the same.
+
+---
+
+## 17. Motion only ever moves in the direction of growth
+
+**Decision.** Nothing in the app animates downward, drains, wilts or empties —
+except a UI element being dismissed, and the remaining-distance figure, which
+counts down because a smaller distance is good news. `src/lib/ui/motion.ts`
+deliberately contains no shrink, decay or fade-to-nothing preset.
+
+**Why.** The same reason there are no streaks. A product whose premise is that a
+slow month still counts must not own an animation capable of expressing loss,
+because that animation will eventually get used.
+
+**The watering rule follows from it.** Logging waters the skill's plant, and a
+milestone crossing grows it a stage *while the water is on it*. In every farming
+game watering is an obligation — the plant gets thirsty, you owe it water, you
+feel bad when you don't — and that is a streak wearing a costume. So there is no
+thirsty state, no "needs water" prompt, and nothing that ever asks to be
+watered. Watering only ever happens as a consequence of the user recording
+something.
+
+**Two simplifications, both deliberate.** The watering renders inside the
+confirmation rather than over the garden, because logging works from every
+screen and the garden only exists on `/today` — one placement means the same
+moment everywhere with no cross-tree coordination. And the garden's grow-in
+replays on every visit rather than once per session: a once-per-session flag has
+to survive SSR, and a wrong guess on the server means either a hydration
+mismatch or a flash of the settled state.
+
+**`motion` is used only where CSS cannot go** — shared-element transitions
+(`layoutId`) and animating a number. Everything else is CSS keyframes. Without
+that boundary the bundle grows a physics engine to fade a card in.
+
+**Enforced by.** `motion › reduced motion silences the watering animation` and
+`motion › no plant ever renders a wilted state`, plus the unit tests in
+`src/lib/ui/growth-only.test.ts`.
+
+---
+
+## 18. Contrast is measured against every ground, not just the papers
+
+**Decision.** A text token must clear 4.5:1 against **all four** grounds it can
+sit on: `--paper`, `--paper-raised`, `--accent-soft` and `--medal-soft`.
+
+**Why.** The original audit measured foregrounds against the two paper grounds
+only. Half the text in the app sits on a tint instead — badge chips on
+`--medal-soft`, the active sidebar item on `--accent-soft` — and four
+combinations were below AA without anyone noticing:
+
+| | |
+|---|---|
+| `--medal` on `--medal-soft` | 4.40:1 |
+| `--medal` on `--accent-soft` | 4.47:1 |
+| `--accent-deep` on `--accent-soft` | 4.34:1 |
+| `--accent-deep` on `--medal-soft` | 4.27:1 |
+
+`--accent-deep` moved from `#4f7266` to `#496a5f` and `--medal` from `#8a6124`
+to `#805a21`, both with margin so adding a chip tint later does not silently
+reintroduce the problem. `--accent` is untouched: it is the client's chosen sage
+and it is a fill, never text.
+
+**The deeper cause was the test.** `no text is light-on-light` used a 3:1
+threshold — the bar for graphics, not for text — so everything above passed.
+It now uses 4.5:1, which is what the palette always claimed. That change alone
+also catches the milestone chip on skill cards, which was rendering its label in
+the tier colour at 3.24:1.
+
+**Rules out.** Eyeballing a new colour. Add it to the audit or do not add it.
+
+---
+
 ## 12. Free-tier limits deferred
 
 **Decision.** The PRD's 3-skill cap and backdating restriction are not enforced.

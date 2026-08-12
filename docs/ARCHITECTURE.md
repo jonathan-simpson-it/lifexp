@@ -33,7 +33,8 @@ and writes only to itself.
 | Framework | Next.js 16.3, App Router, Turbopack | Turbopack is the default in 16 — no flag |
 | React | 19.2 | |
 | Language | TypeScript, strict | |
-| Styling | Tailwind v4 (`@theme` tokens in `globals.css`) | no config file; tokens are CSS variables |
+| Styling | Tailwind v4 (`@theme` tokens in `globals.css`) | no config file; tokens are CSS variables. The visual language they encode is written down in [`DESIGN.md`](../DESIGN.md) |
+| Typefaces | Newsreader + Hanken Grotesk via `next/font` | self-hosted at build time; no CDN request, no layout shift |
 | Database | Postgres via Prisma 7 | Prisma 7 requires a **driver adapter** (`@prisma/adapter-pg`) |
 | Auth | Auth.js v5 (`next-auth@beta`) + `@auth/prisma-adapter` | JWT sessions — see §6 |
 | Icons | `lucide-react` | explicit import map, no dynamic lookup |
@@ -348,6 +349,7 @@ are the tests that keep the product honest as it grows.
 | Add an AI provider | `lib/ai/adapters/`, then `lib/ai/provider.ts` |
 | Change what chat understands | `lib/ai/adapters/rules.ts` and/or `lib/ai/prompt.ts` |
 | Add a mutation | `app/actions/` — must call `requireUserId()` |
-| Change colours/typography | `app/globals.css` (`:root` + `@theme`) |
+| Change colours/typography | `app/globals.css` (`:root` + `@theme`) — then update [`DESIGN.md`](../DESIGN.md), and re-check contrast against **all four** grounds, not just the papers |
+| Add or change an animation | `app/globals.css` keyframes; `lib/ui/motion.ts` only for shared-element transitions and animated numbers. Read [`DESIGN.md`](../DESIGN.md) §7 first — motion may only move in the direction of growth |
 | Change dashboard composition | `app/(app)/page.tsx` |
 | Change what export contains | `app/api/export/route.ts` |

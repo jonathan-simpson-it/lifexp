@@ -13,6 +13,7 @@ This is the Prototype + Stage 1 MVP from [`../LifeXP-PRD.md`](../LifeXP-PRD.md).
 | | |
 |---|---|
 | **This file** | how to run it, and the short version of everything else |
+| [`DESIGN.md`](DESIGN.md) | the visual language — palette with measured contrast, type scale, components, motion rules. Portable: attach it to Claude Design, Cursor or v0 and they build on-brand |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | full technical context — directory map, data model, flows, invariants, where to change what |
 | [`docs/DECISIONS.md`](docs/DECISIONS.md) | why things are the way they are, and what would justify changing them |
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | what is built against the PRD, what is deliberately missing, what comes next |
