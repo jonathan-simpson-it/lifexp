@@ -64,6 +64,55 @@ test.describe("no pressure", () => {
   });
 });
 
+/**
+ * Every feature must be reachable with no API key and no credentials. These
+ * tests run in exactly that configuration, so they fail if anything starts
+ * requiring a vendor account to be seen at all.
+ */
+test.describe("usable without any keys", () => {
+  test.beforeEach(async ({ page }) => {
+    await signIn(page);
+  });
+
+  test("chat extracts without an AI key", async ({ page }) => {
+    await page.getByPlaceholder("What did you do?").first().fill(
+      "Went to Japanese class for 90 minutes today",
+    );
+    await page.getByRole("button", { name: "Record this" }).click();
+
+    await expect(
+      page.locator(".card").filter({ hasText: "Japanese class" }).first(),
+    ).toBeVisible();
+  });
+
+  test("settings names the extractor actually running", async ({ page }) => {
+    await page.goto("/settings");
+    await expect(page.getByText(/Rule-based \(no API key\)/)).toBeVisible();
+  });
+
+  test("calendar is inspectable without Google credentials", async ({ page }) => {
+    await page.goto("/settings");
+
+    // The preview renders real event payloads, including the all-day form used
+    // for an experience with no stated duration.
+    await expect(page.getByText("What would be added").or(
+      page.getByText(/see exactly what LifeXP would write/),
+    ).first()).toBeVisible();
+
+    const preview = page.locator("div").filter({ hasText: /^LifeXP/ }).last();
+    await expect(preview).toBeVisible();
+  });
+
+  test("export downloads without any external service", async ({ page }) => {
+    const response = await page.request.get("/api/export");
+    expect(response.status()).toBe(200);
+
+    const body = await response.json();
+    expect(body.format).toBe("lifexp.export.v1");
+    expect(Array.isArray(body.experiences)).toBe(true);
+  });
+});
+
 test.describe("medals", () => {
   test.beforeEach(async ({ page }) => {
     await signIn(page);
