@@ -14,40 +14,32 @@ import { Toast } from "./toast";
  * their fourth thing of the day should not be interrupted four times. Earning a
  * medal gets the full moment, because that is genuinely rare.
  *
- * Multiple medals queue and play in sequence rather than stacking, so each one
- * is actually read.
+ * Everything here is derived from the `result` prop rather than copied into
+ * state by an effect. The parent remounts this with a fresh `key` per save, so
+ * "reset for the new result" is free and there is no cascading second render.
  */
-export function CelebrationHost({
-  result,
-  onDone,
-}: {
-  result: LogResult | null;
-  onDone: () => void;
-}) {
-  const [queue, setQueue] = useState<string[]>([]);
-  const [toast, setToast] = useState<string | null>(null);
+export function CelebrationHost({ result }: { result: LogResult }) {
+  // How many medals in this batch the user has acknowledged. Multiple medals
+  // play in sequence rather than stacking, so each one is actually read.
+  const [acknowledged, setAcknowledged] = useState(0);
+  const [toastDone, setToastDone] = useState(false);
 
-  useEffect(() => {
-    if (!result) return;
+  const current = result.newBadgeKeys[acknowledged];
 
-    const what = result.minutes
-      ? `${result.minutes < 60 ? `${result.minutes}m` : `${Number((result.minutes / 60).toFixed(1))}h`} of ${result.skillName}`
-      : result.skillName;
-
-    setToast(`Recorded — ${what}`);
-    setQueue(result.newBadgeKeys);
-    onDone();
-  }, [result, onDone]);
-
-  const current = queue[0];
+  const what = result.minutes
+    ? `${result.minutes < 60 ? `${result.minutes}m` : `${Number((result.minutes / 60).toFixed(1))}h`} of ${result.skillName}`
+    : result.skillName;
 
   return (
     <>
-      {toast && <Toast message={toast} onDone={() => setToast(null)} />}
+      {!toastDone && (
+        <Toast message={`Recorded — ${what}`} onDone={() => setToastDone(true)} />
+      )}
+
       {current && (
         <MedalMoment
           badgeKey={current}
-          onDismiss={() => setQueue((q) => q.slice(1))}
+          onDismiss={() => setAcknowledged((n) => n + 1)}
         />
       )}
     </>
