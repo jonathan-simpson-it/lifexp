@@ -33,7 +33,9 @@ export function GardenBed({ skills }: { skills: SkillCard[] }) {
             <li key={skill.id} className="shrink-0">
               <Link
                 href={`/growth/${skill.slug}`}
-                className="tappable flex w-24 flex-col items-center rounded-xl px-1 py-1 text-center"
+                // 80px wide so four skills fit across a phone without the
+                // fourth being clipped at the edge.
+                className="tappable flex w-20 flex-col items-center rounded-xl px-0.5 py-1 text-center"
                 aria-label={`${skill.name}, ${STAGE_LABEL[stage]}, ${formatDuration(skill.totalMinutes)} recorded`}
               >
                 <span
@@ -41,7 +43,7 @@ export function GardenBed({ skills }: { skills: SkillCard[] }) {
                   // sprite repeated.
                   style={{ ["--sway-delay" as string]: `${index * 0.4}s` }}
                 >
-                  <Plant stage={stage} color={color} size={76} />
+                  <Plant stage={stage} color={color} size={72} />
                 </span>
                 <span className="mt-0.5 w-full truncate text-xs font-medium">
                   {skill.name}
