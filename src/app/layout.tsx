@@ -8,10 +8,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#faf7f2" },
-    { media: "(prefers-color-scheme: dark)", color: "#14130f" },
-  ],
+  // One colour, matching --paper. LifeXP is light in every colour scheme, so
+  // advertising a dark variant here would only make the phone's status bar
+  // disagree with the page underneath it.
+  themeColor: "#f7f1e1",
+  colorScheme: "only light",
   width: "device-width",
   initialScale: 1,
 };
