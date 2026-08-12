@@ -172,6 +172,16 @@ type SyncableExperience = {
   googleEventId: string | null;
 };
 
+/**
+ * Exported so Settings can show exactly what LifeXP would write, using the same
+ * builder that actually talks to Google rather than a mock-up that can drift
+ * away from it. That preview is how the calendar feature stays inspectable on a
+ * machine with no Google credentials.
+ */
+export function buildEventBody(experience: SyncableExperience) {
+  return eventBody(experience);
+}
+
 function eventBody(experience: SyncableExperience) {
   const description = [
     experience.notes,
