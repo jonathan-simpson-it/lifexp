@@ -45,22 +45,21 @@
   --radius: 14px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #14130f;
-    --paper-raised: #1c1a16;
-    --ink: #ece7dd;
-    --ink-soft: #c3bcae;
-    --muted: #8f8878;
-    --line: #2c2925;
-    --line-strong: #3d3933;
+/*
+  Light only, deliberately.
 
-    --growth: #8fb08f;
-    --growth-soft: #232c22;
+  A `prefers-color-scheme: dark` block used to invert all of the above, which
+  meant anyone whose phone was set to dark mode saw a near-black app regardless
+  of this palette. The client wants cream, so cream is what everyone gets.
 
-    --medal: #d8ab5e;
-    --medal-soft: #2a2318;
-  }
+  `color-scheme: only light` also stops the browser from darkening form
+  controls, scrollbars and autofill backgrounds underneath us.
+
+  To reintroduce a dark theme later, add the media block back here — nothing
+  else in the codebase assumes a light ground; every colour is a token.
+*/
+:root {
+  color-scheme: only light;
 }
 
 @theme inline {
