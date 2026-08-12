@@ -2,7 +2,11 @@ import Link from "next/link";
 import { requireUserId } from "@/lib/auth";
 import { getGrowthOverview } from "@/lib/growth/aggregate";
 import { getMaintenanceCards } from "@/lib/maintenance/queries";
-import { getBadgeState } from "@/lib/progress/queries";
+import {
+  getBadgeState,
+  getRecapWindow,
+  getRecentBadges,
+} from "@/lib/progress/queries";
 import { SkillCardList } from "@/components/skill-card";
 import { MaintenanceList } from "@/components/maintenance-list";
 import { MedalShelf } from "@/components/medal-shelf";
@@ -15,11 +19,17 @@ export const metadata = { title: "Today · LifeXP" };
 export default async function TodayPage() {
   const userId = await requireUserId();
 
-  const [growth, maintenance, badges] = await Promise.all([
+  const [growth, maintenance, badges, recentBadges] = await Promise.all([
     getGrowthOverview(userId),
     getMaintenanceCards(userId),
     getBadgeState(userId),
+    getRecentBadges(userId),
   ]);
+
+  // Clock read lives in lib, not here: calling Date.now() while rendering is an
+  // impure render, and the recap's client half should only have to answer
+  // "has this week been dismissed?".
+  const recap = getRecapWindow();
 
   const isEmpty = growth.skills.length === 0 && maintenance.length === 0;
 
@@ -46,18 +56,9 @@ export default async function TodayPage() {
               name: s.name,
               totalMinutes: s.totalMinutes,
             }))}
-            recentBadges={badges
-              .filter(
-                (b) =>
-                  b.earned &&
-                  b.awardedAt &&
-                  Date.now() - b.awardedAt.getTime() < 7 * 86_400_000,
-              )
-              .map((b) => ({
-                key: b.definition.key,
-                title: b.definition.title,
-                icon: b.definition.icon,
-              }))}
+            recentBadges={recentBadges}
+            isRecapDay={recap.isRecapDay}
+            weekStamp={recap.weekStamp}
           />
 
           <Section
