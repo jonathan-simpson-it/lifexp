@@ -63,9 +63,7 @@ export function MonthGrid({ data }: { data: CalendarMonth }) {
           <ChevronLeft size={20} aria-hidden />
         </Link>
 
-        <h2 className="display text-lg font-semibold">
-          {MONTH_NAME.format(first)}
-        </h2>
+        <h2 className="display text-title">{MONTH_NAME.format(first)}</h2>
 
         {isCurrentMonth ? (
           // No forward travel past today: an empty future month is not
@@ -170,17 +168,27 @@ export function MonthGrid({ data }: { data: CalendarMonth }) {
         })}
       </div>
 
-      <dl className="mt-5 grid grid-cols-4 gap-2 rounded-xl border border-line bg-paper p-3 text-center">
-        <Total label="hours" value={formatDuration(totals.minutes)} />
-        <Total label="entries" value={String(totals.experiences)} />
-        <Total label="skills" value={String(totals.skills)} />
-        <Total label="medals" value={String(totals.medals)} />
+      {/* Hours is the answer; the other three are context. They used to be four
+          equal numbers, which made the strip something to read rather than
+          something to glance at. */}
+      <dl className="mt-5 flex items-center gap-4 rounded-xl border border-line bg-paper px-4 py-3">
+        <div>
+          <dt className="sr-only">hours</dt>
+          <dd className="numeral text-figure">{formatDuration(totals.minutes)}</dd>
+          <p className="text-eyebrow text-muted uppercase">this month</p>
+        </div>
+
+        <div className="ml-auto flex gap-4 text-right">
+          <Total label="entries" value={String(totals.experiences)} />
+          <Total label="skills" value={String(totals.skills)} />
+          <Total label="medals" value={String(totals.medals)} />
+        </div>
       </dl>
 
       <section className="mt-5">
         {selectedDay ? (
           <>
-            <h3 className="text-sm font-semibold tracking-wide text-muted uppercase">
+            <h3 className="text-eyebrow text-muted uppercase">
               {DAY_NAME.format(new Date(`${selectedDay.date}T12:00:00Z`))}
             </h3>
             <ul className="mt-2 space-y-2">
@@ -215,7 +223,7 @@ export function MonthGrid({ data }: { data: CalendarMonth }) {
             </ul>
           </>
         ) : (
-          <p className="text-sm text-muted">
+          <p className="voice">
             Pick a day to see what you did. Nothing recorded is just a day that
             went unrecorded.
           </p>
@@ -229,8 +237,8 @@ function Total({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <dt className="sr-only">{label}</dt>
-      <dd className="numeral text-lg">{value}</dd>
-      <p className="text-xs text-muted">{label}</p>
+      <dd className="numeral text-body">{value}</dd>
+      <p className="text-caption text-muted">{label}</p>
     </div>
   );
 }

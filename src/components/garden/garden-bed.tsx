@@ -45,10 +45,10 @@ export function GardenBed({ skills }: { skills: SkillCard[] }) {
                 >
                   <Plant stage={stage} color={color} size={72} />
                 </span>
-                <span className="mt-0.5 w-full truncate text-xs font-medium">
+                <span className="mt-0.5 w-full truncate text-caption font-medium">
                   {skill.name}
                 </span>
-                <span className="numeral text-xs text-muted">
+                <span className="numeral text-caption text-muted">
                   {formatDuration(skill.totalMinutes)}
                 </span>
               </Link>
@@ -66,8 +66,8 @@ function EmptyBed() {
       <div className="mx-auto opacity-60">
         <Plant stage="seed" color="var(--growth)" size={72} swaying={false} />
       </div>
-      <h2 className="display mt-2 text-lg font-semibold">Empty soil</h2>
-      <p className="mt-1 text-sm text-muted">
+      <h2 className="display mt-2 text-title">Empty soil</h2>
+      <p className="voice mt-1">
         Record anything you did and the first thing will start growing here.
       </p>
     </section>

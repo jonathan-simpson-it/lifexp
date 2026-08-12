@@ -85,30 +85,37 @@ export function WeeklyRecap({
         <X size={16} aria-hidden />
       </button>
 
-      <p className="text-xs font-semibold tracking-widest text-accent-deep uppercase">
-        Your week
-      </p>
+      <p className="text-eyebrow text-accent-deep uppercase">Your week</p>
 
+      {/* The reassurance lines get the voice italic; the factual one does not.
+          That split is the point of the treatment — it marks which sentences
+          are the product speaking rather than reporting. */}
       {quiet ? (
         <>
-          <h2 className="display mt-2 text-xl font-semibold">A quiet one</h2>
-          <p className="mt-1.5 text-ink-soft">
+          <h2 className="display mt-2 text-title">A quiet one</h2>
+          <p className="voice mt-1.5">
             Nothing recorded this week. Everything you built before is still
             there, and it will still be there whenever you come back.
           </p>
         </>
       ) : (
         <>
-          <h2 className="display mt-2 text-xl font-semibold">
+          <h2 className="display mt-2 text-title">
             <span className="numeral">{formatDuration(week.minutes)}</span> across{" "}
             <span className="numeral">{week.skillCount}</span>{" "}
             {week.skillCount === 1 ? "skill" : "skills"}
           </h2>
-          <p className="mt-1.5 text-ink-soft">
-            {light
-              ? "A lighter week than usual. It still counts — that is the whole point."
-              : `${week.experienceCount} experiences recorded${busiest ? `, mostly ${busiest.name}` : ""}.`}
-          </p>
+          {light ? (
+            <p className="voice mt-1.5">
+              A lighter week than usual. It still counts — that is the whole
+              point.
+            </p>
+          ) : (
+            <p className="mt-1.5 text-ink-soft">
+              {week.experienceCount} experiences recorded
+              {busiest ? `, mostly ${busiest.name}` : ""}.
+            </p>
+          )}
         </>
       )}
 
@@ -117,7 +124,7 @@ export function WeeklyRecap({
           {recentBadges.map((badge) => (
             <li
               key={badge.key}
-              className="flex items-center gap-1.5 rounded-full bg-medal-soft px-2.5 py-1 text-xs font-medium text-medal"
+              className="flex items-center gap-1.5 rounded-full bg-medal-soft px-2.5 py-1 text-caption font-medium text-medal"
             >
               <BadgeIcon name={badge.icon} size={14} />
               {badge.title}

@@ -108,13 +108,10 @@ function Section({
   return (
     <section aria-labelledby={id}>
       <div className="flex items-baseline justify-between">
-        <h2
-          id={id}
-          className="text-sm font-semibold tracking-wide text-muted uppercase"
-        >
+        <h2 id={id} className="text-eyebrow text-muted uppercase">
           {title}
         </h2>
-        <Link href={href} className="text-sm text-muted hover:text-ink">
+        <Link href={href} className="text-caption text-muted hover:text-ink">
           {linkLabel}
         </Link>
       </div>
@@ -126,6 +123,12 @@ function Section({
 /**
  * Answers the one question the homepage exists to answer: how has my life
  * grown? Deliberately not "7 tasks completed".
+ *
+ * Hierarchy is the whole point of this block. One figure is the answer and gets
+ * hero treatment; the label above and the breakdown below are support. Before
+ * this, the same three numbers sat inline in a sentence at equal weight, which
+ * meant the screen had to be *read* to be understood rather than glanced at —
+ * and this is a screen people open for four seconds.
  */
 function WeekStrip({
   skillCount,
@@ -142,46 +145,50 @@ function WeekStrip({
 
   return (
     <section aria-labelledby="week-heading" className="pt-1">
-      <h1 id="week-heading" className="display text-2xl font-semibold">
+      <h1 id="week-heading" className="text-eyebrow text-muted uppercase">
         This week
       </h1>
 
       {nothingThisWeek ? (
         // A quiet week is not a failure state, so it does not get an empty
-        // shell of zeroes — it gets the long view instead.
-        <p className="mt-2 text-ink-soft">
+        // shell of zeroes — it gets the long view, in the product's voice.
+        <p className="voice mt-1.5">
           Nothing recorded yet this week. Your{" "}
           <span className="numeral">{formatDuration(totalMinutes)}</span> so far
           hasn&rsquo;t gone anywhere.
         </p>
       ) : (
-        <p className="mt-2 text-lg text-ink-soft">
-          You explored <Stat>{skillCount}</Stat>{" "}
-          {skillCount === 1 ? "skill" : "skills"}, spent{" "}
-          <Stat>{formatDuration(minutes)}</Stat>, and recorded{" "}
-          <Stat>{experienceCount}</Stat>{" "}
-          {experienceCount === 1 ? "experience" : "experiences"}.
-        </p>
+        <>
+          <p className="numeral rise-in mt-1 text-hero">
+            {formatDuration(minutes)}
+          </p>
+          <p className="mt-0.5 text-caption text-muted">
+            across <Stat>{skillCount}</Stat>{" "}
+            {skillCount === 1 ? "skill" : "skills"} ·{" "}
+            <Stat>{experienceCount}</Stat>{" "}
+            {experienceCount === 1 ? "entry" : "entries"}
+          </p>
+        </>
       )}
     </section>
   );
 }
 
 function Stat({ children }: { children: React.ReactNode }) {
-  return <span className="numeral text-ink">{children}</span>;
+  return <span className="numeral text-ink-soft">{children}</span>;
 }
 
 function FirstRun() {
   return (
     <section className="card p-5">
-      <h2 className="display text-xl font-semibold">Start anywhere</h2>
+      <h2 className="display text-title">Start anywhere</h2>
       <p className="mt-2 text-ink-soft">
         Tap the <span className="font-semibold text-accent-deep">+</span> button
         and tell LifeXP something you did — today, last week, whenever. It
         doesn&rsquo;t need to be impressive, and there&rsquo;s nothing to set up
         first.
       </p>
-      <ul className="mt-4 space-y-1.5 text-sm text-muted">
+      <ul className="mt-4 space-y-1.5 text-caption text-muted">
         <li>&ldquo;Went to Japanese class for 90 minutes today&rdquo;</li>
         <li>&ldquo;Practised piano for half an hour yesterday&rdquo;</li>
         <li>&ldquo;Read 40 pages before bed&rdquo;</li>

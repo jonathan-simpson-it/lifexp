@@ -41,8 +41,10 @@ export function SkillCard({ skill }: { skill: SkillCardData }) {
             <SkillIcon templateKey={skill.templateKey} size={19} />
           </span>
           <span className="min-w-0">
-            <span className="block truncate font-semibold">{skill.name}</span>
-            <span className="numeral block text-sm text-muted">
+            <span className="display block truncate text-title">
+              {skill.name}
+            </span>
+            <span className="numeral block text-caption text-muted">
               {formatDuration(skill.totalMinutes)} ·{" "}
               {skill.experienceCount}{" "}
               {skill.experienceCount === 1 ? "entry" : "entries"}
@@ -51,13 +53,20 @@ export function SkillCard({ skill }: { skill: SkillCardData }) {
         </span>
 
         {skill.achievedLabel && (
-          <span
-            className="shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold"
-            style={{
-              color: TIER_COLOR[skill.achievedTier ?? "CUSTOM"],
-              background: "var(--paper)",
-            }}
-          >
+          // The tier colour is a DOT, not the text colour.
+          //
+          // It used to colour the label itself, which measured 3.24:1 for gold
+          // and 3.29:1 for first-steps against cream — fine for a graphic,
+          // well under the 4.5:1 small text needs. The tier colours were
+          // classified as graphical when the palette was audited, and this was
+          // the one place they were not being used as graphics. As a dot they
+          // are back inside their bar, and the label reads at 8.73:1.
+          <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-paper px-2.5 py-1 text-caption font-semibold text-ink-soft">
+            <span
+              aria-hidden
+              className="size-2 shrink-0 rounded-full"
+              style={{ background: TIER_COLOR[skill.achievedTier ?? "CUSTOM"] }}
+            />
             {skill.achievedLabel}
           </span>
         )}
@@ -84,18 +93,20 @@ export function SkillCard({ skill }: { skill: SkillCardData }) {
 
         <div className="mt-2 flex items-baseline justify-between gap-3">
           {skill.nextLabel ? (
-            <p className="text-sm">
+            // The remaining distance is the only coloured text on the card, on
+            // purpose: the total above is evidence, this is the pull.
+            <p className="text-body">
               <span className="numeral font-semibold text-accent-deep">
                 {skill.nextRemaining}
               </span>{" "}
               <span className="text-muted">to {skill.nextLabel}</span>
             </p>
           ) : (
-            <p className="text-sm text-muted">Every milestone reached</p>
+            <p className="text-body text-muted">Every milestone reached</p>
           )}
 
           {skill.lastActiveAt && (
-            <span className="shrink-0 text-xs text-muted">
+            <span className="shrink-0 text-caption text-muted">
               {relativeDay(skill.lastActiveAt)}
             </span>
           )}
