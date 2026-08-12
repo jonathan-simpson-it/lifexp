@@ -73,7 +73,9 @@
      cream. */
   --shadow-1: 0 1px 2px rgb(94 74 40 / 0.06), 0 2px 6px rgb(94 74 40 / 0.05);
   --shadow-2: 0 2px 6px rgb(94 74 40 / 0.08), 0 8px 20px rgb(94 74 40 / 0.09);
-  --shadow-lift: 0 4px 10px rgb(146 62 24 / 0.22), 0 10px 26px rgb(146 62 24 / 0.16);
+  /* Tinted with the sage rather than the old terracotta, so the raised centre
+     button casts a shadow of its own colour instead of a warm halo. */
+  --shadow-accent-lift: 0 4px 10px rgb(48 74 66 / 0.22), 0 10px 26px rgb(48 74 66 / 0.16);
 
   /* Motion. The overshoot is what makes the app feel springy rather than
      merely animated; every celebratory transition uses it. */
