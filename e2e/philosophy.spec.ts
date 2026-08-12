@@ -12,7 +12,15 @@ test.describe("no pressure", () => {
     await signIn(page);
   });
 
-  const pages = ["/", "/growth", "/maintenance", "/medals", "/timeline", "/settings"];
+  const pages = [
+    "/today",
+    "/growth",
+    "/calendar",
+    "/maintenance",
+    "/medals",
+    "/timeline",
+    "/settings",
+  ];
 
   for (const path of pages) {
     test(`${path} never uses punitive language`, async ({ page }) => {
