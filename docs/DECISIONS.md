@@ -247,6 +247,21 @@ evidence, at the cost of the mapping no longer being exactly the ladder.
 
 ---
 
+## 15. Two coral tokens, not one
+
+**Decision.** `--action` (#e0663c) is a bright coral used only as a fill behind
+graphics. `--action-deep` (#ad4e1f) carries anything with small text: a primary
+button with a white label, or coral text on cream.
+
+**Why.** The bright coral gives white text only 3.4:1 — below the 4.5:1 needed
+for normal text. Shipping one token would have meant either an inaccessible
+primary CTA or a muddy brown button everywhere. Splitting them keeps the bright
+coral visually dominant (it is on the big round centre button) while every piece
+of text clears AA.
+
+Both sit at hue 15–20, deliberately clear of the alarm-red band the guard test
+scans for.
+
 ### Contrast is checked, not eyeballed
 
 Every foreground token clears WCAG AA against both grounds: body text ≥ 4.5:1
