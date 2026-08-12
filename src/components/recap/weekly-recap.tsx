@@ -1,64 +1,76 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 import { X } from "lucide-react";
 import type { WeekSummary } from "@/lib/growth/summarise";
+import type { RecapBadge } from "@/lib/progress/queries";
 import { formatDuration } from "@/lib/ui/format";
 import { BadgeIcon } from "@/components/badge-icon";
 
 /**
- * Only serialisable data crosses this boundary.
- *
- * Badge *definitions* carry an `earned()` predicate, and handing one to a
- * client component is an immediate server error. The page flattens them to
- * these three fields first.
- */
-export type RecapBadge = { key: string; title: string; icon: string };
-export type RecapSkill = { name: string; totalMinutes: number };
-
-/**
  * The weekly ritual.
  *
- * Appears Sunday and Monday, dismissible for the week. The design constraint
+ * Appears Sunday and Monday, dismissible for that week. The design constraint
  * that matters: **it has to read well on a bad week.** Most recap features are
  * written for the good ones and quietly shame you the rest of the time, which
  * would undo the entire product.
+ *
+ * Whether it is a recap day is decided on the server (`getRecapWindow`) so no
+ * component reads the clock during render. All this component decides is
+ * whether the user has already dismissed this particular week.
  */
+
+export type RecapSkill = { name: string; totalMinutes: number };
+
 const DISMISS_KEY = "lifexp:recap-dismissed-week";
 
-function weekStamp(now = new Date()): string {
-  const d = new Date(now);
-  d.setUTCDate(d.getUTCDate() - d.getUTCDay());
-  return d.toISOString().slice(0, 10);
+/**
+ * localStorage is an external store, so it is read through the API React
+ * provides for exactly that. The alternative — setState inside an effect —
+ * triggers a second render pass on every mount.
+ */
+function subscribe(onChange: () => void) {
+  window.addEventListener("storage", onChange);
+  window.addEventListener("lifexp:recap-dismissed", onChange);
+  return () => {
+    window.removeEventListener("storage", onChange);
+    window.removeEventListener("lifexp:recap-dismissed", onChange);
+  };
+}
+
+function useDismissedWeek(): string | null {
+  return useSyncExternalStore(
+    subscribe,
+    () => localStorage.getItem(DISMISS_KEY),
+    // Server render: nothing is dismissed yet. The card appears after
+    // hydration if this week's stamp does not match.
+    () => null,
+  );
 }
 
 export function WeeklyRecap({
   week,
   skills,
   recentBadges,
+  isRecapDay,
+  weekStamp,
 }: {
   week: WeekSummary;
   skills: RecapSkill[];
   recentBadges: RecapBadge[];
+  isRecapDay: boolean;
+  weekStamp: string;
 }) {
-  const [show, setShow] = useState(false);
+  const dismissedWeek = useDismissedWeek();
 
-  useEffect(() => {
-    const day = new Date().getDay(); // 0 Sun, 1 Mon
-    if (day !== 0 && day !== 1) return;
-    if (localStorage.getItem(DISMISS_KEY) === weekStamp()) return;
-    setShow(true);
-  }, []);
+  const dismiss = useCallback(() => {
+    localStorage.setItem(DISMISS_KEY, weekStamp);
+    window.dispatchEvent(new Event("lifexp:recap-dismissed"));
+  }, [weekStamp]);
 
-  if (!show) return null;
-
-  function dismiss() {
-    localStorage.setItem(DISMISS_KEY, weekStamp());
-    setShow(false);
-  }
+  if (!isRecapDay || dismissedWeek === weekStamp) return null;
 
   const busiest = [...skills].sort((a, b) => b.totalMinutes - a.totalMinutes)[0];
-
   const quiet = week.experienceCount === 0;
   const light = !quiet && week.experienceCount <= 2;
 
