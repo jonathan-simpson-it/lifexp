@@ -3,7 +3,12 @@ import { requireUserId } from "@/lib/auth";
 import { getSkillDetail, getTimeline } from "@/lib/growth/aggregate";
 import { ActivityHeatmap } from "@/components/activity-heatmap";
 import { Timeline } from "@/components/timeline";
-import { formatDuration, skillColor, TIER_COLOR } from "@/lib/ui/format";
+import {
+  formatDuration,
+  formatRemaining,
+  skillColor,
+  TIER_COLOR,
+} from "@/lib/ui/format";
 import { formatHours } from "@/lib/progress/milestones";
 
 // Next 16: params is a Promise and must be awaited.
@@ -18,7 +23,8 @@ export default async function SkillPage({
   const detail = await getSkillDetail(userId, slug);
   if (!detail) notFound();
 
-  const { skill, milestones, progress, next, fraction, remainingLabel } = detail;
+  const { skill, milestones, progress, next, fraction, remaining, remainingUnit } =
+    detail;
   const color = skillColor(skill.colorSeed);
   const entries = await getTimeline(userId, { skillId: skill.id, take: 60 });
 
@@ -31,25 +37,26 @@ export default async function SkillPage({
             className="size-3 rounded-full"
             style={{ background: color }}
           />
-          <h1 className="display text-2xl font-semibold">{skill.name}</h1>
+          <h1 className="text-eyebrow text-muted uppercase">{skill.name}</h1>
         </div>
 
-        {/* Evidence, stated plainly. Not points, not a level. */}
-        <p className="mt-2 text-lg text-ink-soft">
-          <span className="numeral text-ink">
-            {formatDuration(progress.totalMinutes)}
-          </span>{" "}
-          ·{" "}
-          <span className="numeral text-ink">{progress.experienceCount}</span>{" "}
+        {/* Evidence, stated plainly. Not points, not a level. One hero figure,
+            the way every screen in this app answers its own question. */}
+        <p className="numeral mt-1 text-hero">
+          {formatDuration(progress.totalMinutes)}
+        </p>
+        <p className="mt-0.5 text-caption text-muted">
+          <span className="numeral">{progress.experienceCount}</span>{" "}
           {progress.experienceCount === 1 ? "experience" : "experiences"}
-          {skill.secondaryUnit ? (
-            <span className="text-muted"> · counted in {skill.secondaryUnit} too</span>
-          ) : null}
+          {skill.secondaryUnit ? ` · counted in ${skill.secondaryUnit} too` : ""}
         </p>
 
         {next && (
-          <p className="mt-1 text-sm text-muted">
-            {remainingLabel} to {next.label}
+          <p className="mt-2 text-body">
+            <span className="numeral font-semibold text-accent-deep">
+              {formatRemaining(remaining, remainingUnit)}
+            </span>{" "}
+            <span className="text-muted">to {next.label}</span>
           </p>
         )}
       </header>

@@ -13,11 +13,25 @@ import { logMaintenance, undoLastMaintenance } from "@/app/actions/maintenance";
  * this component says late, overdue, missed, or due. "Been a while" is as
  * pointed as the app gets, and that describes the interval, not the person.
  */
+/*
+  Freshness, in the light register.
+
+  These used to mix --growth (a *text* token) with --muted, which produced a
+  near-black bar. Since the bar fills as time passes, the least-recently-done
+  item ended up with the darkest, widest, heaviest element on the whole screen
+  — on maintenance, the least important section. That is a hierarchy inversion,
+  and on something a user has "not done for a while" it reads as an alarm in a
+  product that refuses to nag.
+
+  --accent is the correct token: these are fills with no text on them, which is
+  exactly what the light sage is for. Fading toward --line-strong rather than
+  --muted means a long-untouched item settles quietly into its own track.
+*/
 const TONE_COLOR: Record<string, string> = {
-  fresh: "var(--growth)",
-  settling: "color-mix(in oklab, var(--growth) 70%, var(--muted))",
-  aging: "color-mix(in oklab, var(--growth) 35%, var(--muted))",
-  distant: "var(--muted)",
+  fresh: "var(--accent)",
+  settling: "color-mix(in oklab, var(--accent) 72%, var(--line-strong))",
+  aging: "color-mix(in oklab, var(--accent) 40%, var(--line-strong))",
+  distant: "var(--line-strong)",
 };
 
 const TONE_WORD: Record<string, string> = {

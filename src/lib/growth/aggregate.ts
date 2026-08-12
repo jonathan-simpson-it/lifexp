@@ -59,6 +59,10 @@ export type SkillCard = {
   lastActiveAt: Date | null;
   nextLabel: string | null;
   nextRemaining: string | null;
+  /** The same distance unformatted, so the card can say "70.1h to Elementary"
+   *  rather than "70.1h to go to Elementary". */
+  remaining: number | null;
+  remainingUnit: "minutes" | "sessions" | null;
   fraction: number;
   achievedTier: MilestoneTier | null;
   achievedLabel: string | null;
@@ -106,10 +110,8 @@ export async function getGrowthOverview(userId: string): Promise<DashboardData> 
       achievedAt: m.achievedAt,
     }));
 
-    const { next, previous, fraction, remainingLabel } = nextMilestone(
-      milestones,
-      progress,
-    );
+    const { next, previous, fraction, remainingLabel, remaining, remainingUnit } =
+      nextMilestone(milestones, progress);
 
     const highestAchieved = [...milestones]
       .filter((m) => m.achievedAt)
@@ -128,6 +130,8 @@ export async function getGrowthOverview(userId: string): Promise<DashboardData> 
       lastActiveAt: own[0]?.occurredAt ?? null,
       nextLabel: next?.label ?? null,
       nextRemaining: remainingLabel,
+      remaining,
+      remainingUnit,
       fraction,
       achievedTier: (highestAchieved ?? previous)?.tier ?? null,
       achievedLabel: highestAchieved?.label ?? null,

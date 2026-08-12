@@ -1,6 +1,12 @@
 import Link from "next/link";
 import type { SkillCard as SkillCardData } from "@/lib/growth/aggregate";
-import { formatDuration, relativeDay, skillColor, TIER_COLOR } from "@/lib/ui/format";
+import {
+  formatDuration,
+  formatRemaining,
+  relativeDay,
+  skillColor,
+  TIER_COLOR,
+} from "@/lib/ui/format";
 import { SkillIcon } from "@/components/icons";
 
 export function SkillCardList({ skills }: { skills: SkillCardData[] }) {
@@ -97,7 +103,8 @@ export function SkillCard({ skill }: { skill: SkillCardData }) {
             // purpose: the total above is evidence, this is the pull.
             <p className="text-body">
               <span className="numeral font-semibold text-accent-deep">
-                {skill.nextRemaining}
+                {formatRemaining(skill.remaining, skill.remainingUnit) ??
+                  skill.nextRemaining}
               </span>{" "}
               <span className="text-muted">to {skill.nextLabel}</span>
             </p>

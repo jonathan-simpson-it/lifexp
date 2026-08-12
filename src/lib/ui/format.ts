@@ -26,6 +26,25 @@ export function skillColor(colorSeed: number, opts: { soft?: boolean } = {}) {
     : `oklch(${lightness.toFixed(3)} 0.055 ${hue})`;
 }
 
+/**
+ * The distance to a milestone, as a bare quantity: "70.1h", "81 sessions".
+ *
+ * Deliberately without the trailing "to go" that `remainingLabel` carries,
+ * because every place this appears already says where it is going —
+ * "70.1h to Elementary". Using the label there produced "70.1h to go to
+ * Elementary", which is what shipped until someone read it out loud.
+ */
+export function formatRemaining(
+  remaining: number | null,
+  unit: "minutes" | "sessions" | null,
+): string | null {
+  if (remaining === null || unit === null) return null;
+  if (unit === "sessions") {
+    return `${remaining} ${remaining === 1 ? "session" : "sessions"}`;
+  }
+  return formatDuration(remaining);
+}
+
 export const TIER_COLOR: Record<MilestoneTier, string> = {
   FIRST_STEPS: "var(--tier-first-steps)",
   FOUNDATION: "var(--tier-foundation)",

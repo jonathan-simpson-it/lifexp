@@ -8,6 +8,10 @@ export default defineConfig({
   workers: 1,
   retries: 0,
   reporter: [["list"]],
+  // The @shots specs capture screenshots for design review rather than
+  // asserting anything, so they stay out of the normal run.
+  // Capture them with: npx playwright test --grep @shots
+  grepInvert: /@shots/,
   use: {
     baseURL: "http://localhost:3000",
     trace: "retain-on-failure",
