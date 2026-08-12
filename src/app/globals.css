@@ -1,26 +1,126 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+  LifeXP visual language.
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  Paper, not dashboard. The product is a record of a life, so it leans warm and
+  printed rather than cool and analytical: off-white grounds, a serif for
+  anything that states a quantity, and generous space.
+
+  There is no red token here, and that is deliberate. Nothing in this product is
+  an error, a warning, or a failure — not a maintenance item left for a month,
+  not a skill untouched since spring. If a future screen genuinely needs a
+  destructive colour, add it then, consciously.
+*/
+
+:root {
+  --paper: #faf7f2;
+  --paper-raised: #ffffff;
+  --ink: #1f1d18;
+  --ink-soft: #4a4539;
+  --muted: #7a7365;
+  --line: #e6dfd3;
+  --line-strong: #d5cbb9;
+
+  /* Growth: sage. Used for accumulation, freshness, anything alive. */
+  --growth: #5f7f5f;
+  --growth-soft: #e8efe6;
+
+  /* Medals: warm metal. Tiers step up in brightness, not in loudness. */
+  --medal: #b98b3e;
+  --medal-soft: #f6eddc;
+  --tier-first-steps: #a8a094;
+  --tier-foundation: #8f9c7d;
+  --tier-bronze: #b07d4f;
+  --tier-silver: #9aa3ab;
+  --tier-gold: #c9a227;
+  --tier-mastery: #7a6cae;
+
+  --radius: 14px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --paper: #14130f;
+    --paper-raised: #1c1a16;
+    --ink: #ece7dd;
+    --ink-soft: #c3bcae;
+    --muted: #8f8878;
+    --line: #2c2925;
+    --line-strong: #3d3933;
+
+    --growth: #8fb08f;
+    --growth-soft: #232c22;
+
+    --medal: #d8ab5e;
+    --medal-soft: #2a2318;
   }
 }
 
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-growth: var(--growth);
+  --color-growth-soft: var(--growth-soft);
+  --color-medal: var(--medal);
+  --color-medal-soft: var(--medal-soft);
+
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  --font-display: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+
+  --radius-card: var(--radius);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  /* Room for the pinned chat bar on small screens. */
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Numbers are the emotional payload of this app — set them in the serif. */
+.numeral {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.display {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+}
+
+.card {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+/* Focus ring that reads on both grounds without shouting. */
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--growth);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
