@@ -94,7 +94,7 @@ function MedalMoment({
         <button
           type="button"
           onClick={onDismiss}
-          className="tappable mt-6 w-full rounded-full bg-action-deep py-3 font-semibold text-white"
+          className="tappable mt-6 w-full rounded-full bg-accent-deep py-3 font-semibold text-white"
         >
           Nice
         </button>
