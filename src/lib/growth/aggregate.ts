@@ -236,6 +236,123 @@ export async function getTimeline(
   }));
 }
 
+export type CalendarDay = {
+  /** YYYY-MM-DD, UTC. */
+  date: string;
+  minutes: number;
+  experiences: {
+    id: string;
+    title: string;
+    minutes: number | null;
+    skills: { id: string; name: string; colorSeed: number }[];
+  }[];
+  maintenance: { id: string; name: string }[];
+};
+
+export type CalendarMonth = {
+  year: number;
+  /** 1-12. */
+  month: number;
+  days: CalendarDay[];
+  totals: {
+    minutes: number;
+    experiences: number;
+    skills: number;
+    medals: number;
+  };
+};
+
+const dayKey = (date: Date) => date.toISOString().slice(0, 10);
+
+/**
+ * Everything that happened in one month, bucketed by day.
+ *
+ * Returns a bucket for every day that has something in it; the grid fills the
+ * blanks. Days are UTC — consistent with `bucketByDay`, and at personal scale
+ * the timezone edges are not worth per-user day boundaries.
+ */
+export async function getMonth(
+  userId: string,
+  year: number,
+  month: number,
+): Promise<CalendarMonth> {
+  const from = new Date(Date.UTC(year, month - 1, 1));
+  const to = new Date(Date.UTC(year, month, 1));
+
+  const [experiences, maintenanceLogs, milestones, badges] = await Promise.all([
+    db.experience.findMany({
+      where: { userId, occurredAt: { gte: from, lt: to } },
+      select: {
+        id: true,
+        title: true,
+        minutes: true,
+        occurredAt: true,
+        skills: {
+          select: {
+            skill: { select: { id: true, name: true, colorSeed: true } },
+          },
+        },
+      },
+      orderBy: { occurredAt: "asc" },
+    }),
+    db.maintenanceLog.findMany({
+      where: { item: { userId }, doneAt: { gte: from, lt: to } },
+      select: { id: true, doneAt: true, item: { select: { name: true } } },
+    }),
+    db.milestone.count({
+      where: { skill: { userId }, achievedAt: { gte: from, lt: to } },
+    }),
+    db.badgeAward.count({
+      where: { userId, awardedAt: { gte: from, lt: to } },
+    }),
+  ]);
+
+  const byDay = new Map<string, CalendarDay>();
+  const ensure = (key: string) => {
+    let day = byDay.get(key);
+    if (!day) {
+      day = { date: key, minutes: 0, experiences: [], maintenance: [] };
+      byDay.set(key, day);
+    }
+    return day;
+  };
+
+  for (const experience of experiences) {
+    const day = ensure(dayKey(experience.occurredAt));
+    day.minutes += experience.minutes ?? 0;
+    day.experiences.push({
+      id: experience.id,
+      title: experience.title,
+      minutes: experience.minutes,
+      skills: experience.skills.map((link) => link.skill),
+    });
+  }
+
+  for (const log of maintenanceLogs) {
+    ensure(dayKey(log.doneAt)).maintenance.push({
+      id: log.id,
+      name: log.item.name,
+    });
+  }
+
+  const skillIds = new Set(
+    experiences.flatMap((e) => e.skills.map((s) => s.skill.id)),
+  );
+
+  return {
+    year,
+    month,
+    days: [...byDay.values()].sort((a, b) => a.date.localeCompare(b.date)),
+    totals: {
+      // Summed over distinct experiences — see the note on ExperienceSkill.
+      minutes: experiences.reduce((sum, e) => sum + (e.minutes ?? 0), 0),
+      experiences: experiences.length,
+      skills: skillIds.size,
+      medals: milestones + badges,
+    },
+  };
+}
+
 export async function getSkillDetail(userId: string, slug: string) {
   const skill = await db.skill.findUnique({
     where: { userId_slug: { userId, slug } },
