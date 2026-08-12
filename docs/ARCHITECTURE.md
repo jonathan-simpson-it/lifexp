@@ -3,7 +3,7 @@
 Full technical context for the app. Read this before changing anything
 structural; `../README.md` is the short version for getting it running.
 
-Source of truth for product intent: [`../../LifeXP PRD.md`](../../LifeXP%20PRD.md)
+Source of truth for product intent: [`../../LifeXP-PRD.md`](../../LifeXP-PRD.md)
 (lives beside the app directory, not inside it).
 
 ---
@@ -63,7 +63,7 @@ here:
 
 ```
 bd/
-├── LifeXP PRD.md                  product source of truth (outside the app)
+├── LifeXP-PRD.md                   product source of truth (outside the app)
 └── lifexp/
     ├── README.md                  how to run it
     ├── docs/
@@ -298,6 +298,17 @@ Opt-in from Settings, never at sign-in.
 > ⚠️ Re-verify the scope string against current Google Calendar API docs before
 > production, and budget for the OAuth consent-screen review that any calendar
 > scope triggers.
+
+### 8.1 Making it inspectable without credentials
+
+`buildEventBody` is exported and rendered by `components/calendar-preview.tsx`
+in Settings. Without Google credentials this is the *only* way to see what the
+feature does, and it uses the real builder rather than a mock so the preview
+cannot drift from what is actually sent.
+
+This matters beyond convenience: calendar is the one feature that would
+otherwise be invisible on a machine that hasn't been through an OAuth setup,
+which is every machine used for a user interview.
 
 ---
 
