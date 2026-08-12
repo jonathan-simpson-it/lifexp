@@ -128,8 +128,8 @@ const stem = {
 function Seed({ color }: { color: string }) {
   return (
     <g>
-      <ellipse cx="32" cy="49" rx="4.5" ry="5.5" fill={color} opacity="0.85" />
-      <path d="M32 45.5c0-1.6.8-3 2-3.8" {...stem} strokeWidth={2} />
+      <ellipse cx="32" cy="51" rx="4" ry="5" fill={color} opacity="0.9" />
+      <path d="M32 47c0-1.8.9-3.2 2.4-4" {...stem} strokeWidth={2} />
     </g>
   );
 }
@@ -137,36 +137,35 @@ function Seed({ color }: { color: string }) {
 function Sprout({ color }: { color: string }) {
   return (
     <g>
-      <path d="M32 52V38" {...stem} />
-      <path
-        d="M32 42c-6 0-9-3.5-9-8 5 0 9 3 9 8Z"
-        fill={color}
-        opacity="0.9"
-      />
-      <path d="M32 40c5 0 8-3 8-7-4.5 0-8 2.6-8 7Z" fill={color} />
+      <path d="M32 54V37" {...stem} />
+      <path d="M32 44c-5.5 0-8.4-3.2-8.4-7.4 4.6 0 8.4 2.8 8.4 7.4Z" fill={color} opacity="0.85" />
+      <path d="M32 41c4.8 0 7.6-2.9 7.6-6.7-4.3 0-7.6 2.5-7.6 6.7Z" fill={color} />
     </g>
   );
 }
 
+/** Slender and clearly taller than a sprout, with a visible branching stem. */
 function Sapling({ color }: { color: string }) {
   return (
     <g>
-      <path d="M32 52V26" {...stem} />
-      <path d="M32 38c-7 0-11-4-11-9.5 6 0 11 3.5 11 9.5Z" fill={color} opacity="0.85" />
-      <path d="M32 32c6.5 0 10.5-3.8 10.5-9-5.6 0-10.5 3.3-10.5 9Z" fill={color} />
-      <path d="M32 26c-4 0-6.5-2.5-6.5-6 3.6 0 6.5 2.2 6.5 6Z" fill={color} opacity="0.7" />
+      <path d="M32 54V25" {...stem} strokeWidth={3.2} />
+      <path d="M32 40l-6.5 -5M32 34l6.5 -5" {...stem} strokeWidth={2.2} />
+      <path d="M32 43c-7.5 0-11.5-4.3-11.5-10 6.4 0 11.5 3.8 11.5 10Z" fill={color} opacity="0.8" />
+      <path d="M32 36c7 0 11-4.1 11-9.6-6 0-11 3.5-11 9.6Z" fill={color} opacity="0.9" />
+      <path d="M32 27c-4.6 0-7.4-2.9-7.4-6.9 4.1 0 7.4 2.6 7.4 6.9Z" fill={color} />
     </g>
   );
 }
 
+/** First stage with a true canopy — the silhouette changes from leaves to tree. */
 function YoungTree({ color }: { color: string }) {
   return (
     <g>
-      <path d="M32 52V30" {...stem} />
-      <path d="M32 38l-7-6M32 34l7-6" {...stem} strokeWidth={2.5} />
-      <circle cx="32" cy="22" r="11" fill={color} opacity="0.9" />
-      <circle cx="22" cy="28" r="7" fill={color} opacity="0.75" />
-      <circle cx="42" cy="28" r="7" fill={color} opacity="0.75" />
+      <path d="M32 55V32" {...stem} strokeWidth={3.6} />
+      <path d="M32 40l-7-6.5M32 36l7-6.5" {...stem} strokeWidth={2.6} />
+      <circle cx="32" cy="23" r="10" fill={color} opacity="0.92" />
+      <circle cx="23.5" cy="29" r="6.2" fill={color} opacity="0.72" />
+      <circle cx="40.5" cy="29" r="6.2" fill={color} opacity="0.72" />
     </g>
   );
 }
@@ -174,15 +173,16 @@ function YoungTree({ color }: { color: string }) {
 function Flowering({ color }: { color: string }) {
   return (
     <g>
-      <path d="M32 52V30" {...stem} />
-      <path d="M32 38l-7-6M32 34l7-6" {...stem} strokeWidth={2.5} />
-      <circle cx="32" cy="22" r="11.5" fill={color} opacity="0.9" />
-      <circle cx="21" cy="28" r="7" fill={color} opacity="0.75" />
-      <circle cx="43" cy="28" r="7" fill={color} opacity="0.75" />
-      {/* Blossom — the first stage that reads as a reward rather than growth. */}
-      <circle cx="26" cy="18" r="2.6" fill="var(--paper-raised)" />
-      <circle cx="37" cy="24" r="2.6" fill="var(--paper-raised)" />
-      <circle cx="34" cy="15" r="2.2" fill="var(--paper-raised)" />
+      <path d="M32 55V30" {...stem} strokeWidth={4} />
+      <path d="M32 40l-8-7M32 35l8-7" {...stem} strokeWidth={2.8} />
+      <circle cx="32" cy="20" r="12" fill={color} opacity="0.92" />
+      <circle cx="21" cy="27.5" r="7.2" fill={color} opacity="0.74" />
+      <circle cx="43" cy="27.5" r="7.2" fill={color} opacity="0.74" />
+      {/* Blossom — the first stage that reads as reward rather than growth. */}
+      <circle cx="25.5" cy="17" r="2.8" fill="var(--paper-raised)" />
+      <circle cx="37.5" cy="23" r="2.8" fill="var(--paper-raised)" />
+      <circle cx="33" cy="13" r="2.4" fill="var(--paper-raised)" />
+      <circle cx="24" cy="26" r="2.2" fill="var(--paper-raised)" />
     </g>
   );
 }
@@ -190,14 +190,15 @@ function Flowering({ color }: { color: string }) {
 function Fruiting({ color }: { color: string }) {
   return (
     <g>
-      <path d="M32 52V28" {...stem} strokeWidth={3.5} />
-      <path d="M32 38l-8-7M32 34l8-7" {...stem} strokeWidth={2.5} />
-      <circle cx="32" cy="21" r="12.5" fill={color} opacity="0.9" />
-      <circle cx="20" cy="28" r="7.5" fill={color} opacity="0.75" />
-      <circle cx="44" cy="28" r="7.5" fill={color} opacity="0.75" />
-      <circle cx="26" cy="19" r="3" fill="var(--medal-bright)" />
-      <circle cx="38" cy="23" r="3" fill="var(--medal-bright)" />
-      <circle cx="34" cy="13" r="2.6" fill="var(--medal-bright)" />
+      <path d="M32 55V28" {...stem} strokeWidth={4.4} />
+      <path d="M32 40l-9-7.5M32 34l9-7.5" {...stem} strokeWidth={3} />
+      <circle cx="32" cy="18.5" r="13.2" fill={color} opacity="0.94" />
+      <circle cx="19.5" cy="27" r="8" fill={color} opacity="0.76" />
+      <circle cx="44.5" cy="27" r="8" fill={color} opacity="0.76" />
+      <circle cx="25" cy="16" r="3.2" fill="var(--medal-bright)" />
+      <circle cx="38.5" cy="21" r="3.2" fill="var(--medal-bright)" />
+      <circle cx="33" cy="10.5" r="2.8" fill="var(--medal-bright)" />
+      <circle cx="20" cy="26" r="2.6" fill="var(--medal-bright)" />
     </g>
   );
 }
@@ -205,16 +206,17 @@ function Fruiting({ color }: { color: string }) {
 function GrandTree({ color }: { color: string }) {
   return (
     <g>
-      <path d="M32 53V26" {...stem} strokeWidth={4.5} />
-      <path d="M32 38l-9-8M32 33l9-8" {...stem} strokeWidth={3} />
-      <circle cx="32" cy="19" r="14" fill={color} />
-      <circle cx="18" cy="27" r="8.5" fill={color} opacity="0.8" />
-      <circle cx="46" cy="27" r="8.5" fill={color} opacity="0.8" />
-      <circle cx="32" cy="34" r="7" fill={color} opacity="0.7" />
-      <circle cx="25" cy="16" r="3.2" fill="var(--medal-bright)" />
-      <circle cx="39" cy="21" r="3.2" fill="var(--medal-bright)" />
-      <circle cx="34" cy="11" r="2.8" fill="var(--medal-bright)" />
-      <circle cx="20" cy="25" r="2.4" fill="var(--medal-bright)" />
+      <path d="M32 56V26" {...stem} strokeWidth={5.2} />
+      <path d="M32 42l-10-8.5M32 35l10-8.5" {...stem} strokeWidth={3.4} />
+      <circle cx="32" cy="16" r="14.6" fill={color} />
+      <circle cx="17" cy="25.5" r="9" fill={color} opacity="0.82" />
+      <circle cx="47" cy="25.5" r="9" fill={color} opacity="0.82" />
+      <circle cx="32" cy="31.5" r="7.6" fill={color} opacity="0.7" />
+      <circle cx="24" cy="13" r="3.4" fill="var(--medal-bright)" />
+      <circle cx="39.5" cy="18" r="3.4" fill="var(--medal-bright)" />
+      <circle cx="33" cy="7.5" r="3" fill="var(--medal-bright)" />
+      <circle cx="18" cy="24" r="2.6" fill="var(--medal-bright)" />
+      <circle cx="46" cy="27" r="2.6" fill="var(--medal-bright)" />
     </g>
   );
 }
