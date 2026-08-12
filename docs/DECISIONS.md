@@ -247,20 +247,28 @@ evidence, at the cost of the mapping no longer being exactly the ladder.
 
 ---
 
-## 15. Two coral tokens, not one
+## 15. Sage is the only colour, in three values
 
-**Decision.** `--action` (#e0663c) is a bright coral used only as a fill behind
-graphics. `--action-deep` (#ad4e1f) carries anything with small text: a primary
-button with a white label, or coral text on cream.
+**Decision.** `--accent` (#80988f), `--accent-deep` (#4f7266) and
+`--accent-soft` (#e3e9e6) — one hue (158) at three depths. `--growth` aliases
+the accent rather than holding a second green, and per-skill colours are
+generated inside the same hue band.
 
-**Why.** The bright coral gives white text only 3.4:1 — below the 4.5:1 needed
-for normal text. Shipping one token would have meant either an inaccessible
-primary CTA or a muddy brown button everywhere. Splitting them keeps the bright
-coral visually dominant (it is on the big round centre button) while every piece
-of text clears AA.
+**Why the split.** #80988f is 2.74:1 on cream. That is fine for a decorative
+fill but below the 3:1 a UI boundary needs and far below the 4.5:1 text needs,
+and white on it is only 3.1:1. One token would have meant either unreadable
+buttons or abandoning the chosen colour. The deep variant carries everything
+with text; the light one stays decorative. The audit script encodes exactly that
+rule, so using `--accent` for text fails the check.
 
-Both sit at hue 15–20, deliberately clear of the alarm-red band the guard test
-scans for.
+**Per-skill colours are sage too.** Skills still need to be distinguishable —
+the calendar draws a dot per skill — but arbitrary hues made those the loudest
+thing on screen in a palette meant to be a single colour. `skillColor` now
+varies **lightness** within hue 148–187, which separates cleanly inside one
+family.
+
+**Revisit if.** Users cannot tell skills apart in the calendar. The lever is
+lightness spread, not hue.
 
 ### Contrast is checked, not eyeballed
 
