@@ -143,6 +143,58 @@ export async function getGrowthOverview(userId: string): Promise<DashboardData> 
   };
 }
 
+export type QuickSkill = {
+  id: string;
+  name: string;
+  colorSeed: number;
+  templateKey: string | null;
+};
+
+/**
+ * Skills for the quick-log chips, most recently used first.
+ *
+ * Recency ordering is what makes two-tap logging work: the thing you did
+ * yesterday is almost always the thing you are logging now, so it should be
+ * the leftmost chip.
+ */
+export async function getRecentSkills(
+  userId: string,
+  take = 8,
+): Promise<QuickSkill[]> {
+  const skills = await db.skill.findMany({
+    where: { userId, archivedAt: null },
+    select: {
+      id: true,
+      name: true,
+      colorSeed: true,
+      templateKey: true,
+      createdAt: true,
+      experiences: {
+        select: { experience: { select: { occurredAt: true } } },
+        orderBy: { experience: { occurredAt: "desc" } },
+        take: 1,
+      },
+    },
+  });
+
+  return skills
+    .map((skill) => ({
+      id: skill.id,
+      name: skill.name,
+      colorSeed: skill.colorSeed,
+      templateKey: skill.templateKey,
+      lastUsed: skill.experiences[0]?.experience.occurredAt ?? skill.createdAt,
+    }))
+    .sort((a, b) => b.lastUsed.getTime() - a.lastUsed.getTime())
+    .slice(0, take)
+    .map(({ id, name, colorSeed, templateKey }) => ({
+      id,
+      name,
+      colorSeed,
+      templateKey,
+    }));
+}
+
 export type TimelineEntry = {
   id: string;
   title: string;
