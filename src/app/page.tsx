@@ -37,7 +37,7 @@ export default async function LandingPage() {
           </Link>
           <Link
             href="/signin"
-            className="tappable rounded-full bg-action-deep px-4 py-2 text-sm font-semibold text-white shadow-action"
+            className="tappable rounded-full bg-accent-deep px-4 py-2 text-sm font-semibold text-white shadow-accent"
           >
             Start free
           </Link>
@@ -79,7 +79,7 @@ function Hero() {
         <div className="mt-7 flex flex-wrap items-center gap-4">
           <Link
             href="/signin"
-            className="tappable rounded-full bg-action-deep px-7 py-3.5 text-base font-semibold text-white shadow-action"
+            className="tappable rounded-full bg-accent-deep px-7 py-3.5 text-base font-semibold text-white shadow-accent"
           >
             Start free
           </Link>
@@ -172,7 +172,7 @@ function HowItWorks() {
         <ol className="mt-8 grid gap-6 md:grid-cols-3">
           {steps.map((step, i) => (
             <li key={step.title}>
-              <span className="flex size-9 items-center justify-center rounded-full bg-action-soft font-semibold text-action-deep">
+              <span className="flex size-9 items-center justify-center rounded-full bg-accent-soft font-semibold text-accent-deep">
                 {i + 1}
               </span>
               <h3 className="mt-3 font-semibold">{step.title}</h3>
@@ -269,7 +269,7 @@ function FinalCta() {
       </p>
       <Link
         href="/signin"
-        className="tappable mt-7 inline-block rounded-full bg-action-deep px-8 py-4 text-base font-semibold text-white shadow-action"
+        className="tappable mt-7 inline-block rounded-full bg-accent-deep px-8 py-4 text-base font-semibold text-white shadow-accent"
       >
         Start free
       </Link>
