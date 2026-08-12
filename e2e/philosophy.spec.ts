@@ -81,13 +81,17 @@ test.describe("usable without any keys", () => {
   });
 
   test("chat extracts without an AI key", async ({ page }) => {
-    await page.getByPlaceholder("What did you do?").first().fill(
-      "Went to Japanese class for 90 minutes today",
-    );
-    await page.getByRole("button", { name: "Record this" }).click();
+    await page.getByRole("button", { name: "Record something" }).first().click();
+    const sheet = page.getByRole("dialog", { name: "Record something" });
+
+    await sheet.getByRole("button", { name: "Describe it" }).click();
+    await sheet
+      .getByPlaceholder(/Japanese class/)
+      .fill("Went to Japanese class for 90 minutes today");
+    await sheet.getByRole("button", { name: "Record this" }).click();
 
     await expect(
-      page.locator(".card").filter({ hasText: "Japanese class" }).first(),
+      sheet.locator(".card").filter({ hasText: "Japanese class" }).first(),
     ).toBeVisible();
   });
 
