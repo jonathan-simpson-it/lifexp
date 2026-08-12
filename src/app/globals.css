@@ -26,6 +26,23 @@
   --line: #d8c8a4;
   --line-strong: #c4b087;
 
+  /*
+    Action: coral. Two tokens on purpose.
+
+    --action is the bright, friendly coral. It is a FILL for graphical things —
+    the centre log button, chips, accents — where the 3:1 bar applies.
+
+    --action-deep is for anything carrying small text: a primary button with a
+    white label (5.4:1), or coral text on cream (4.8:1). Using the bright coral
+    there would ship a CTA nobody with low vision can read.
+
+    Both sit at hue 15-20, deliberately clear of the alarm-red band that
+    philosophy.spec.ts scans for. See the note above about no red.
+  */
+  --action: #e0663c;
+  --action-deep: #ad4e1f;
+  --action-soft: #fbe7dd;
+
   /* Growth: sage. Used for accumulation, freshness, anything alive. */
   --growth: #4f6e4f;
   --growth-soft: #e6eee0;
@@ -34,6 +51,8 @@
   /* Deep enough to clear 4.5:1 on cream — it is used for small text on the
      medal shelf, not just as a swatch. */
   --medal: #8a6124;
+  /* The bright gold used to FILL medal marks, where nothing sits on top. */
+  --medal-bright: #c9932b;
   --medal-soft: #f1e5c9;
   --tier-first-steps: #8c8474;
   --tier-foundation: #6f7f5e;
