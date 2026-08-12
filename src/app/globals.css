@@ -27,25 +27,29 @@
   --line-strong: #c4b087;
 
   /*
-    Action: coral. Two tokens on purpose.
+    Sage — the only colour.
 
-    --action is the bright, friendly coral. It is a FILL for graphical things —
-    the centre log button, chips, accents — where the 3:1 bar applies.
+    Three values of one hue (158), not three colours. The split exists because
+    of contrast, not decoration:
 
-    --action-deep is for anything carrying small text: a primary button with a
-    white label (5.4:1), or coral text on cream (4.8:1). Using the bright coral
-    there would ship a CTA nobody with low vision can read.
+    --accent      the sage itself. A FILL for graphics — progress bars, chips,
+                  plant tints — where the 3:1 bar applies. On cream it is
+                  2.74:1, so nothing legible may sit on it and it may never be
+                  used for text.
+    --accent-deep the same hue at L38. Everything carrying small text: a button
+                  with a white label (5.3:1) or sage text on cream (4.7:1).
+    --accent-soft the tint, for chip and badge backgrounds.
 
-    Both sit at hue 15-20, deliberately clear of the alarm-red band that
-    philosophy.spec.ts scans for. See the note above about no red.
+    Growth aliases the accent rather than holding its own green, so there is
+    genuinely one colour in the product.
   */
-  --action: #e0663c;
-  --action-deep: #ad4e1f;
-  --action-soft: #fbe7dd;
+  --accent: #80988f;
+  --accent-deep: #4f7266;
+  --accent-soft: #e3e9e6;
 
-  /* Growth: sage. Used for accumulation, freshness, anything alive. */
-  --growth: #4f6e4f;
-  --growth-soft: #e6eee0;
+  /* Accumulation, freshness, anything alive — the same sage. */
+  --growth: var(--accent-deep);
+  --growth-soft: var(--accent-soft);
 
   /* Medals: warm metal. Tiers step up in brightness, not in loudness. */
   /* Deep enough to clear 4.5:1 on cream — it is used for small text on the
