@@ -46,6 +46,21 @@ export const STAGE_LABEL: Record<PlantStage, string> = {
   grand: "a grand tree",
 };
 
+/**
+ * Soil width tracks the stage. A seedling in a wide bed looks lost; a grand
+ * tree in a narrow one looks potted. Scaling the ground with the plant is what
+ * makes the set read as a progression rather than as sprites of one size.
+ */
+const SOIL_WIDTH: Record<PlantStage, number> = {
+  seed: 9,
+  sprout: 11,
+  sapling: 13,
+  young: 15,
+  flowering: 16,
+  fruiting: 17,
+  grand: 19,
+};
+
 export function Plant({
   stage,
   color,
@@ -58,6 +73,8 @@ export function Plant({
   size?: number;
   swaying?: boolean;
 }) {
+  const soil = SOIL_WIDTH[stage];
+
   return (
     <svg
       width={size}
@@ -68,8 +85,15 @@ export function Plant({
       className={swaying ? "plant-sway" : undefined}
     >
       {/* Soil is always present — even a seed sits in ground that is tended. */}
-      <ellipse cx="32" cy="55" rx="17" ry="4.5" fill="var(--line)" />
-      <ellipse cx="32" cy="54" rx="13" ry="3" fill="var(--line-strong)" opacity="0.7" />
+      <ellipse cx="32" cy="57" rx={soil} ry={soil * 0.26} fill="var(--line)" />
+      <ellipse
+        cx="32"
+        cy="56.2"
+        rx={soil * 0.72}
+        ry={soil * 0.17}
+        fill="var(--line-strong)"
+        opacity="0.65"
+      />
 
       {stage === "seed" && <Seed color={color} />}
       {stage === "sprout" && <Sprout color={color} />}
@@ -90,6 +114,16 @@ const stem = {
   strokeLinecap: "round" as const,
   fill: "none",
 };
+
+/*
+  Each stage is drawn to a distinctly different height and silhouette. Adjacent
+  stages have to be tellable apart at a glance in a 76px box — an earlier pass
+  differed only in leaf count and a skill with ten times the evidence of its
+  neighbour looked identical to it, which defeats the point of the garden.
+
+  Heights, crown to soil:  seed 8 · sprout 20 · sapling 32 · young 40 ·
+  flowering 44 · fruiting 48 · grand 54
+*/
 
 function Seed({ color }: { color: string }) {
   return (
