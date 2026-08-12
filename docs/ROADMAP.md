@@ -11,6 +11,7 @@ next. PRD stages are from [`../../LifeXP-PRD.md`](../../LifeXP-PRD.md).
 |---|---|
 | **Stage 0 — Prototype** | ✅ Complete |
 | **Stage 1 — MVP** | ✅ Complete |
+| **Redesign — gamified product** | ✅ Complete (design system, mobile shell, garden, calendar, celebrations, landing page) |
 | Stage 2 — Calendar, imports, AI suggestions | 🟡 Calendar write-back done; imports and suggestions not started |
 | Stage 3 — Health apps, third-party, subscriptions | ⬜ Not started |
 | Stage 4 — Life analytics, reviews | ⬜ Not started |
