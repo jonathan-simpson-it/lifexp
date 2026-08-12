@@ -101,6 +101,10 @@ export function MonthGrid({ data }: { data: CalendarMonth }) {
           const day = byDate.get(key);
           const isSelected = selected === key;
           const isToday = key === todayKey;
+          // A day that hasn't happened is not an empty day. Marking it with the
+          // same "nothing recorded" dot would imply a gap the user could have
+          // filled, which is the one thing this product never does.
+          const isFuture = key > todayKey;
 
           // Two dots per skill maximum, so a busy day stays legible.
           const dots = day
@@ -119,7 +123,13 @@ export function MonthGrid({ data }: { data: CalendarMonth }) {
               type="button"
               onClick={() => setSelected(key)}
               aria-pressed={isSelected}
-              aria-label={`${dayNumber}, ${day ? `${day.experiences.length} recorded` : "nothing recorded"}`}
+              aria-label={`${dayNumber}, ${
+                day
+                  ? `${day.experiences.length} recorded`
+                  : isFuture
+                    ? "yet to come"
+                    : "nothing recorded"
+              }`}
               className={[
                 "tappable flex aspect-square flex-col items-center justify-center rounded-xl text-sm",
                 isSelected
@@ -127,6 +137,7 @@ export function MonthGrid({ data }: { data: CalendarMonth }) {
                   : isToday
                     ? "bg-action-soft font-semibold text-action-deep"
                     : "hover:bg-line/40",
+                isFuture ? "text-muted/60" : "",
               ].join(" ")}
             >
               <span className="numeral leading-none">{dayNumber}</span>
@@ -150,7 +161,7 @@ export function MonthGrid({ data }: { data: CalendarMonth }) {
                     aria-hidden
                     className={isSelected ? "text-paper" : "text-growth"}
                   />
-                ) : (
+                ) : isFuture ? null : (
                   <span className="size-1 rounded-full bg-line-strong opacity-50" />
                 )}
               </span>
