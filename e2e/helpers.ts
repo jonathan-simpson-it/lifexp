@@ -1,4 +1,17 @@
+import { execFileSync } from "node:child_process";
 import type { Page } from "@playwright/test";
+
+/**
+ * Removes a user, for the stale-session tests.
+ *
+ * Shells out rather than importing Prisma: specs are transpiled as CommonJS and
+ * the generated client is ESM, so a direct import fails on `import.meta`.
+ */
+export function deleteUser(email: string) {
+  execFileSync("npx", ["tsx", "e2e/support/delete-user.ts", email], {
+    stdio: "pipe",
+  });
+}
 
 /**
  * Signs in through the development credentials provider.
