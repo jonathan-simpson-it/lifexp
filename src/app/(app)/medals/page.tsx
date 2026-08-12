@@ -2,7 +2,8 @@ import Link from "next/link";
 import { requireUserId } from "@/lib/auth";
 import { getAchievedMilestones, getBadgeState } from "@/lib/progress/queries";
 import { MedalShelf } from "@/components/medal-shelf";
-import { TIER_COLOR, formatDate } from "@/lib/ui/format";
+import { formatDate } from "@/lib/ui/format";
+import { Medal } from "@/components/icons";
 import type { MilestoneTier } from "@/lib/progress/milestones";
 
 export const metadata = { title: "Medals · LifeXP" };
@@ -41,13 +42,9 @@ export default async function MedalsPage() {
           <ul className="mt-3 grid gap-2">
             {milestones.map((milestone) => (
               <li key={milestone.id} className="card flex items-center gap-3 p-3">
-                <span
-                  aria-hidden
-                  className="size-2.5 shrink-0 rounded-full"
-                  style={{
-                    background: TIER_COLOR[milestone.tier as MilestoneTier],
-                  }}
-                />
+                <span aria-hidden className="shrink-0">
+                  <Medal tier={milestone.tier as MilestoneTier} size={40} />
+                </span>
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-medium">{milestone.label}</p>
                   <Link
