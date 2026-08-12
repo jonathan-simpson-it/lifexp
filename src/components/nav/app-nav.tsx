@@ -95,7 +95,7 @@ function NavItem({ item, active }: { item: Destination; active: boolean }) {
         aria-current={active ? "page" : undefined}
         className={[
           "tappable flex flex-col items-center gap-0.5 rounded-xl px-1 py-1.5 text-[11px]",
-          active ? "text-action-deep" : "text-muted",
+          active ? "text-accent-deep" : "text-muted",
         ].join(" ")}
       >
         <span className={active ? "pop-in" : undefined}>
@@ -117,7 +117,9 @@ function AddButton({ onAdd }: { onAdd: () => void }) {
       type="button"
       onClick={onAdd}
       aria-label="Record something"
-      className="tappable -mt-6 flex size-14 items-center justify-center rounded-full bg-action text-white shadow-action ring-4 ring-paper"
+      // accent-deep rather than accent: the white plus needs to be crisp, and
+      // on the lighter sage it would sit at 3.1:1 rather than 5.3:1.
+      className="tappable -mt-6 flex size-14 items-center justify-center rounded-full bg-accent-deep text-white shadow-accent ring-4 ring-paper"
     >
       <IconAdd size={26} />
     </button>
@@ -142,7 +144,7 @@ function Sidebar({ onAdd }: { onAdd: () => void }) {
       <button
         type="button"
         onClick={onAdd}
-        className="tappable mb-6 flex items-center justify-center gap-2 rounded-full bg-action-deep px-4 py-3 text-sm font-semibold text-white shadow-action"
+        className="tappable mb-6 flex items-center justify-center gap-2 rounded-full bg-accent-deep px-4 py-3 text-sm font-semibold text-white shadow-accent"
       >
         <IconAdd size={20} />
         Record something
@@ -159,7 +161,7 @@ function Sidebar({ onAdd }: { onAdd: () => void }) {
                 className={[
                   "tappable flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm",
                   active
-                    ? "bg-action-soft font-semibold text-action-deep"
+                    ? "bg-accent-soft font-semibold text-accent-deep"
                     : "text-muted hover:bg-line/40 hover:text-ink",
                 ].join(" ")}
               >
