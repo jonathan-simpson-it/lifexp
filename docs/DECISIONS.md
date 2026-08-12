@@ -206,6 +206,26 @@ controls, scrollbars and autofill backgrounds underneath the palette.
 token. The `cream ground` tests in `philosophy.spec.ts` would need updating at
 the same time; they currently assert cream under *both* colour schemes.
 
+---
+
+## 13. Gamification without streaks or leaderboards
+
+**Decision.** Four loops: goal gradient (distance to the next milestone, set
+larger than the running total and in the action colour), variable reward
+(surprise medals with `? ? ?` slots), ritual (a Sunday/Monday recap), and a
+living garden. No streak, no league, no ranking.
+
+**Why.** Every mainstream engine is a streak or a leaderboard, and both work by
+threatening loss. This product's premise is that a slow month still counts, so
+those mechanics are unavailable by definition. The four chosen loops can only
+ever deliver good news.
+
+**The strongest of them is the goal gradient** — people accelerate as a goal
+gets closer, and the reward lands at the instant of effort, when the remaining
+distance visibly drops after logging.
+
+---
+
 ### Contrast is checked, not eyeballed
 
 Every foreground token clears WCAG AA against both grounds: body text ≥ 4.5:1
