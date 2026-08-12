@@ -108,13 +108,13 @@ export function ChatCapture({
           onChange={(e) => setText(e.target.value)}
           placeholder="Went to Japanese class for 90 minutes today"
           autoComplete="off"
-          className="min-w-0 flex-1 rounded-full border border-line bg-paper px-4 py-2.5 text-base outline-none focus:border-action"
+          className="min-w-0 flex-1 rounded-full border border-line bg-paper px-4 py-2.5 text-base outline-none focus:border-accent"
         />
         <button
           type="submit"
           disabled={!text.trim() || thinking}
           aria-label="Record this"
-          className="tappable shrink-0 rounded-full bg-action p-2.5 text-white disabled:opacity-30"
+          className="tappable shrink-0 rounded-full bg-accent p-2.5 text-white disabled:opacity-30"
         >
           {thinking ? (
             <Loader2 size={18} aria-hidden className="animate-spin" />
