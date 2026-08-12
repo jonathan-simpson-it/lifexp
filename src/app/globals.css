@@ -108,7 +108,21 @@
   --color-growth: var(--growth);
   --color-growth-soft: var(--growth-soft);
   --color-medal: var(--medal);
+  --color-medal-bright: var(--medal-bright);
   --color-medal-soft: var(--medal-soft);
+  --color-action: var(--action);
+  --color-action-deep: var(--action-deep);
+  --color-action-soft: var(--action-soft);
+
+  /* Distinct names on purpose: `--radius-lg: var(--radius-lg)` here would be
+     self-referential, since @theme also declares at :root. These generate
+     rounded-card-lg / shadow-card / shadow-raised / shadow-action utilities. */
+  --radius-card-lg: var(--radius-lg);
+  --radius-card-sheet: var(--radius-sheet);
+
+  --shadow-card: var(--shadow-1);
+  --shadow-raised: var(--shadow-2);
+  --shadow-action: var(--shadow-lift);
 
   --font-sans:
     ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
