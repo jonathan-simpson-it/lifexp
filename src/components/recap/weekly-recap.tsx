@@ -85,7 +85,7 @@ export function WeeklyRecap({
         <X size={16} aria-hidden />
       </button>
 
-      <p className="text-xs font-semibold tracking-widest text-action-deep uppercase">
+      <p className="text-xs font-semibold tracking-widest text-accent-deep uppercase">
         Your week
       </p>
 
