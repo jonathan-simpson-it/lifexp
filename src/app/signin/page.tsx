@@ -1,11 +1,14 @@
 import { redirect } from "next/navigation";
-import { auth, signIn, hasGoogleCredentials } from "@/lib/auth";
+import { currentUserId, signIn, hasGoogleCredentials } from "@/lib/auth";
 
 export const metadata = { title: "Sign in · LifeXP" };
 
 export default async function SignInPage() {
-  const session = await auth();
-  if (session?.user?.id) redirect("/today");
+  // currentUserId, not auth(): a session pointing at a deleted user must land
+  // here and be offered a fresh sign-in, otherwise this page and the app layout
+  // redirect to each other indefinitely.
+  const userId = await currentUserId();
+  if (userId) redirect("/today");
 
   async function signInWithGoogle() {
     "use server";
