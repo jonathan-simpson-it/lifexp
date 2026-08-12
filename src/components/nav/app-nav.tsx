@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "motion/react";
+import { SPRING } from "@/lib/ui/motion";
 import {
   IconAdd,
   IconCalendar,
@@ -45,10 +47,16 @@ function useIsActive() {
     href === "/today" ? pathname === "/today" : pathname.startsWith(href);
 }
 
-export function AppNav({ onAdd }: { onAdd: () => void }) {
+export function AppNav({
+  onAdd,
+  sheetOpen = false,
+}: {
+  onAdd: () => void;
+  sheetOpen?: boolean;
+}) {
   return (
     <>
-      <BottomBar onAdd={onAdd} />
+      <BottomBar onAdd={onAdd} sheetOpen={sheetOpen} />
       <Sidebar onAdd={onAdd} />
     </>
   );
@@ -56,7 +64,13 @@ export function AppNav({ onAdd }: { onAdd: () => void }) {
 
 /* --- mobile -------------------------------------------------------------- */
 
-function BottomBar({ onAdd }: { onAdd: () => void }) {
+function BottomBar({
+  onAdd,
+  sheetOpen,
+}: {
+  onAdd: () => void;
+  sheetOpen: boolean;
+}) {
   const isActive = useIsActive();
 
   return (
@@ -73,7 +87,7 @@ function BottomBar({ onAdd }: { onAdd: () => void }) {
 
         <li className="flex-1">
           <div className="flex justify-center">
-            <AddButton onAdd={onAdd} />
+            <AddButton onAdd={onAdd} open={sheetOpen} />
           </div>
         </li>
 
@@ -94,10 +108,21 @@ function NavItem({ item, active }: { item: Destination; active: boolean }) {
         href={href}
         aria-current={active ? "page" : undefined}
         className={[
-          "tappable flex flex-col items-center gap-0.5 rounded-xl px-1 py-1.5 text-[11px]",
+          "tappable relative flex flex-col items-center gap-0.5 rounded-xl px-1 py-1.5 text-eyebrow",
           active ? "text-accent-deep" : "text-muted",
         ].join(" ")}
       >
+        {/* The active marker is one element that moves between tabs rather than
+            one per tab that fades. Shared-element transitions have no CSS
+            equivalent, which is the whole reason `motion` is a dependency. */}
+        {active && (
+          <motion.span
+            layoutId="nav-pill-mobile"
+            transition={SPRING}
+            aria-hidden
+            className="absolute inset-x-1.5 inset-y-0.5 -z-10 rounded-xl bg-accent-soft"
+          />
+        )}
         <span className={active ? "pop-in" : undefined}>
           <Icon active={active} size={24} />
         </span>
@@ -111,17 +136,26 @@ function NavItem({ item, active }: { item: Destination; active: boolean }) {
  * The centre button. Raised above the bar and the only coral fill in the
  * chrome, because it is the one control the product depends on being found.
  */
-function AddButton({ onAdd }: { onAdd: () => void }) {
+function AddButton({ onAdd, open }: { onAdd: () => void; open: boolean }) {
   return (
     <button
       type="button"
       onClick={onAdd}
       aria-label="Record something"
+      aria-expanded={open}
       // accent-deep rather than accent: the white plus needs to be crisp, and
       // on the lighter sage it would sit at 3.1:1 rather than 5.3:1.
       className="tappable -mt-6 flex size-14 items-center justify-center rounded-full bg-accent-deep text-white shadow-accent ring-4 ring-paper"
     >
-      <IconAdd size={26} />
+      {/* The plus turns into a close mark while the sheet is up, which ties
+          the button to the thing it opened. Rotation rather than a swap, so
+          the two states are visibly the same object. */}
+      <span
+        className="transition-transform duration-[var(--dur-move)] ease-[var(--ease-out)]"
+        style={{ transform: open ? "rotate(45deg)" : undefined }}
+      >
+        <IconAdd size={26} />
+      </span>
     </button>
   );
 }
@@ -144,7 +178,7 @@ function Sidebar({ onAdd }: { onAdd: () => void }) {
       <button
         type="button"
         onClick={onAdd}
-        className="tappable mb-6 flex items-center justify-center gap-2 rounded-full bg-accent-deep px-4 py-3 text-sm font-semibold text-white shadow-accent"
+        className="tappable mb-6 flex items-center justify-center gap-2 rounded-full bg-accent-deep px-4 py-3 text-body font-semibold text-white shadow-accent"
       >
         <IconAdd size={20} />
         Record something
@@ -159,12 +193,20 @@ function Sidebar({ onAdd }: { onAdd: () => void }) {
                 href={href}
                 aria-current={active ? "page" : undefined}
                 className={[
-                  "tappable flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm",
+                  "tappable relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-body",
                   active
-                    ? "bg-accent-soft font-semibold text-accent-deep"
+                    ? "font-semibold text-accent-deep"
                     : "text-muted hover:bg-line/40 hover:text-ink",
                 ].join(" ")}
               >
+                {active && (
+                  <motion.span
+                    layoutId="nav-pill-desktop"
+                    transition={SPRING}
+                    aria-hidden
+                    className="absolute inset-0 -z-10 rounded-xl bg-accent-soft"
+                  />
+                )}
                 <Icon active={active} size={22} />
                 {label}
               </Link>
@@ -175,7 +217,7 @@ function Sidebar({ onAdd }: { onAdd: () => void }) {
 
       <Link
         href="/settings"
-        className="tappable rounded-xl px-3 py-2.5 text-sm text-muted hover:bg-line/40 hover:text-ink"
+        className="tappable rounded-xl px-3 py-2.5 text-body text-muted hover:bg-line/40 hover:text-ink"
       >
         Settings
       </Link>

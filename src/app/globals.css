@@ -329,6 +329,37 @@ body {
 }
 .rise-in {
   animation: rise-in var(--dur-move) var(--ease-out) both;
+  animation-delay: var(--rise-delay, 0s);
+}
+
+/*
+  The garden arriving.
+
+  Plants grow up out of the soil rather than fading in, with the origin pinned
+  at the soil line so nothing appears to float. Staggered by index, it reads as
+  the page settling — deliberately short, because it replays on every visit to
+  /today and anything longer would wear out fast.
+
+  Suppressing it after the first visit was considered and rejected: the flag
+  would have to survive SSR, and a wrong guess on the server means either a
+  hydration mismatch or a visible flash of the settled state. A 400ms animation
+  that always runs is better than a 700ms one that sometimes glitches.
+*/
+.grow-in {
+  transform-origin: 50% 100%;
+  animation: grow-in 0.4s var(--spring) both;
+  animation-delay: var(--rise-delay, 0s);
+}
+
+@keyframes grow-in {
+  0% {
+    opacity: 0;
+    transform: scaleY(0.6) translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /*

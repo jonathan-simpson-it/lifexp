@@ -39,9 +39,15 @@ export function GardenBed({ skills }: { skills: SkillCard[] }) {
                 aria-label={`${skill.name}, ${STAGE_LABEL[stage]}, ${formatDuration(skill.totalMinutes)} recorded`}
               >
                 <span
-                  // Staggered so a row sways like planting rather than like one
-                  // sprite repeated.
-                  style={{ ["--sway-delay" as string]: `${index * 0.4}s` }}
+                  className="grow-in block"
+                  style={{
+                    // Staggered so a row sways like planting rather than like
+                    // one sprite repeated...
+                    ["--sway-delay" as string]: `${index * 0.4}s`,
+                    // ...and rises in sequence, so the garden reads as growing
+                    // rather than as a row appearing at once.
+                    ["--rise-delay" as string]: `${index * 0.06}s`,
+                  }}
                 >
                   <Plant stage={stage} color={color} size={72} />
                 </span>

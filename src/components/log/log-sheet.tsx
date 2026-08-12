@@ -158,17 +158,24 @@ export function LogSheet({
             {/* Durations only appear once a skill is chosen, so the first tap
                 is never ambiguous. */}
             {picked && (
-              <div className="rise-in mt-4">
+              <div className="mt-4">
                 <ul className="grid grid-cols-3 gap-2">
-                  {PRESETS.map((minutes) => (
-                    <li key={minutes}>
+                  {PRESETS.map((minutes, i) => (
+                    // Staggered rather than appearing as a block: the eye
+                    // follows the sequence to the first option instead of
+                    // having to choose among six that arrived at once.
+                    <li
+                      key={minutes}
+                      className="rise-in"
+                      style={{ ["--rise-delay" as string]: `${i * 0.03}s` }}
+                    >
                       <button
                         type="button"
                         disabled={saving}
                         onClick={() => logQuick(picked, minutes)}
                         // accent-deep on hover: the lighter sage sits at 2.7:1
                         // against the ground, too faint to read as a border.
-                        className="tappable w-full rounded-xl border border-line bg-paper py-3 text-sm font-medium hover:border-accent-deep hover:text-accent-deep disabled:opacity-50"
+                        className="tappable w-full rounded-xl border border-line bg-paper py-3 text-body font-medium hover:border-accent-deep hover:text-accent-deep disabled:opacity-50"
                       >
                         {minutes < 60
                           ? `${minutes}m`

@@ -44,7 +44,7 @@ export function AppShell({
         <div className="mx-auto max-w-3xl px-4 pt-4 pb-28 md:pb-10">{children}</div>
       </div>
 
-      <AppNav onAdd={openSheet} />
+      <AppNav onAdd={openSheet} sheetOpen={sheetOpen} />
 
       {sheetOpen && (
         <LogSheet
