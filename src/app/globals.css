@@ -14,27 +14,33 @@
 */
 
 :root {
-  --paper: #faf7f2;
-  --paper-raised: #ffffff;
-  --ink: #1f1d18;
-  --ink-soft: #4a4539;
-  --muted: #7a7365;
-  --line: #e6dfd3;
-  --line-strong: #d5cbb9;
+  /* Cream ground. The client asked for a light app, so this is the only
+     palette — see the note on colour-scheme below. */
+  --paper: #f7f1e1;
+  --paper-raised: #fdfaf2;
+  --ink: #211e16;
+  --ink-soft: #494332;
+  --muted: #6b6250;
+  /* Borders sit at ~1.46 against the ground: visible enough to define a card
+     edge on cream, soft enough not to draw a box around everything. */
+  --line: #d8c8a4;
+  --line-strong: #c4b087;
 
   /* Growth: sage. Used for accumulation, freshness, anything alive. */
-  --growth: #5f7f5f;
-  --growth-soft: #e8efe6;
+  --growth: #4f6e4f;
+  --growth-soft: #e6eee0;
 
   /* Medals: warm metal. Tiers step up in brightness, not in loudness. */
-  --medal: #b98b3e;
-  --medal-soft: #f6eddc;
-  --tier-first-steps: #a8a094;
-  --tier-foundation: #8f9c7d;
-  --tier-bronze: #b07d4f;
-  --tier-silver: #9aa3ab;
-  --tier-gold: #c9a227;
-  --tier-mastery: #7a6cae;
+  /* Deep enough to clear 4.5:1 on cream — it is used for small text on the
+     medal shelf, not just as a swatch. */
+  --medal: #8a6124;
+  --medal-soft: #f1e5c9;
+  --tier-first-steps: #8c8474;
+  --tier-foundation: #6f7f5e;
+  --tier-bronze: #96683c;
+  --tier-silver: #7c848c;
+  --tier-gold: #a5811a;
+  --tier-mastery: #665a96;
 
   --radius: 14px;
 }
