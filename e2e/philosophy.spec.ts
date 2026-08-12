@@ -197,12 +197,116 @@ test.describe("cream ground", () => {
 
         const [hi, lo] = [lum(fg), lum(groundOf(el))].sort((a, b) => b - a);
         const contrast = (hi + 0.05) / (lo + 0.05);
-        if (contrast < 3) offenders.push(`${text.slice(0, 30)} (${contrast.toFixed(2)}:1)`);
+        // 4.5:1 — the AA bar for body text, not the 3:1 graphical one.
+        //
+        // This was 3:1, and that gap is exactly how the milestone chip on
+        // skill cards shipped with the tier colour as its text colour: gold
+        // measures 3.24:1 on cream, which cleared the old threshold and fails
+        // the real one. Every colour used for text in this app is meant to
+        // clear 4.5, so the test now asserts that rather than something looser.
+        if (contrast < 4.5) {
+          offenders.push(`${text.slice(0, 30)} (${contrast.toFixed(2)}:1)`);
+        }
       }
       return offenders;
     });
 
     expect(unreadable).toEqual([]);
+  });
+});
+
+/**
+ * Typography.
+ *
+ * A webfont that fails to load does not look broken — it looks *almost right*,
+ * because the fallback stack is deliberately close. That makes it the one
+ * visual regression nobody notices by eye, so it is asserted instead.
+ */
+test.describe("typefaces", () => {
+  test("the chosen faces are actually applied", async ({ page }) => {
+    await signIn(page);
+
+    const body = await page
+      .locator("body")
+      .evaluate((el) => getComputedStyle(el).fontFamily);
+    expect(body).toContain("Hanken Grotesk");
+
+    // Any number in the app is set in the display face.
+    const numeral = await page
+      .locator(".numeral")
+      .first()
+      .evaluate((el) => getComputedStyle(el).fontFamily);
+    expect(numeral).toContain("Newsreader");
+  });
+
+  test("the voice is set in the display italic", async ({ page }) => {
+    await signIn(page);
+    // A month with nothing in it — no day is preselected, so the calendar
+    // shows its "nothing recorded is just a day that went unrecorded" line.
+    // Every other place the voice appears is conditional on a quiet week or an
+    // empty garden, none of which the seed guarantees.
+    await page.goto("/calendar?y=2020&m=1");
+
+    const voice = page.locator(".voice").first();
+    await expect(voice).toHaveCSS("font-style", "italic");
+    expect(
+      await voice.evaluate((el) => getComputedStyle(el).fontFamily),
+    ).toContain("Newsreader");
+  });
+});
+
+/**
+ * Motion.
+ *
+ * Two rules, both of which are easy to break by adding an animation and
+ * forgetting the people who asked not to see one.
+ */
+test.describe("motion", () => {
+  test("reduced motion silences the watering animation", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await signIn(page);
+
+    // The watering keyframes must be covered by the global reduced-motion
+    // block. Asserting on a real element rather than the stylesheet, so a rule
+    // added outside that block fails here.
+    const durations = await page.evaluate(() => {
+      const probe = document.createElement("div");
+      document.body.append(probe);
+
+      // Read as seconds rather than as a string: browsers serialise the
+      // collapsed 0.01ms as "1e-05s" here and "0.00001s" elsewhere, and the
+      // assertion should be about the duration, not the formatting.
+      const read = (className: string) => {
+        probe.className = className;
+        return parseFloat(getComputedStyle(probe).animationDuration);
+      };
+
+      const result = {
+        can: read("water-can"),
+        drop: read("water-drop"),
+        grow: read("grow-in"),
+        sway: read("plant-sway"),
+      };
+      probe.remove();
+      return result;
+    });
+
+    for (const [name, seconds] of Object.entries(durations)) {
+      expect(seconds, `${name} should be silenced`).toBeLessThan(0.001);
+    }
+  });
+
+  test("no plant ever renders a wilted state", async ({ page }) => {
+    await signIn(page);
+
+    // Growth is the only direction. If a browning or drooping stage is ever
+    // added, the accessible names are where it would surface first.
+    const labels = await page
+      .locator("[aria-label]")
+      .evaluateAll((els) => els.map((el) => el.getAttribute("aria-label") ?? ""));
+
+    const decay = /wilt|wither|dying|dead|dried|neglect|drooping|browning/i;
+    expect(labels.filter((l) => decay.test(l))).toEqual([]);
   });
 });
 

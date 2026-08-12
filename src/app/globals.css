@@ -36,15 +36,22 @@
                   plant tints — where the 3:1 bar applies. On cream it is
                   2.74:1, so nothing legible may sit on it and it may never be
                   used for text.
-    --accent-deep the same hue at L38. Everything carrying small text: a button
-                  with a white label (5.3:1) or sage text on cream (4.7:1).
+    --accent-deep everything carrying small text: a button with a white label
+                  (5.98:1) or sage text on any ground in the palette (4.78:1
+                  at worst, which is on --accent-soft).
     --accent-soft the tint, for chip and badge backgrounds.
 
     Growth aliases the accent rather than holding its own green, so there is
     genuinely one colour in the product.
+
+    --accent-deep was #4f7266 until it was measured against the *chip tints*
+    rather than only against the two paper grounds. Sage text on a sage chip —
+    the active sidebar item — was 4.34:1, and the audit had never looked at
+    that pair. It is darkened just far enough to clear 4.5 on every ground in
+    the palette with room to spare.
   */
   --accent: #80988f;
-  --accent-deep: #4f7266;
+  --accent-deep: #496a5f;
   --accent-soft: #e3e9e6;
 
   /* Accumulation, freshness, anything alive — the same sage. */
@@ -52,9 +59,12 @@
   --growth-soft: var(--accent-soft);
 
   /* Medals: warm metal. Tiers step up in brightness, not in loudness. */
-  /* Deep enough to clear 4.5:1 on cream — it is used for small text on the
-     medal shelf, not just as a swatch. */
-  --medal: #8a6124;
+  /* Deep enough to clear 4.5:1 on every ground in the palette — it is used for
+     small text on the medal shelf and on the recap's badge chips, not just as
+     a swatch. Was #8a6124, which measured 4.40:1 on --medal-soft: the tint it
+     most often sits on, and the one combination the original audit never
+     checked because it only tested foregrounds against the papers. */
+  --medal: #805a21;
   /* The bright gold used to FILL medal marks, where nothing sits on top. */
   --medal-bright: #c9932b;
   --medal-soft: #f1e5c9;
