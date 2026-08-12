@@ -53,6 +53,8 @@ export type SkillCard = {
   slug: string;
   colorSeed: number;
   secondaryUnit: string | null;
+  /** Drives the skill glyph on chips and cards. */
+  templateKey: string | null;
   totalMinutes: number;
   experienceCount: number;
   lastActiveAt: Date | null;
@@ -120,6 +122,7 @@ export async function getGrowthOverview(userId: string): Promise<DashboardData> 
       slug: skill.slug,
       colorSeed: skill.colorSeed,
       secondaryUnit: skill.secondaryUnit,
+      templateKey: skill.templateKey,
       totalMinutes,
       experienceCount: own.length,
       // `own` inherits the descending order of the parent query.
