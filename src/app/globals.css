@@ -62,6 +62,22 @@
   --tier-mastery: #665a96;
 
   --radius: 14px;
+  --radius-lg: 20px;
+  --radius-sheet: 28px;
+
+  /* Elevation. Warm-tinted shadows — a neutral grey shadow reads as dirt on
+     cream. */
+  --shadow-1: 0 1px 2px rgb(94 74 40 / 0.06), 0 2px 6px rgb(94 74 40 / 0.05);
+  --shadow-2: 0 2px 6px rgb(94 74 40 / 0.08), 0 8px 20px rgb(94 74 40 / 0.09);
+  --shadow-lift: 0 4px 10px rgb(146 62 24 / 0.22), 0 10px 26px rgb(146 62 24 / 0.16);
+
+  /* Motion. The overshoot is what makes the app feel springy rather than
+     merely animated; every celebratory transition uses it. */
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-tap: 120ms;
+  --dur-move: 260ms;
+  --dur-pop: 420ms;
 }
 
 /*
