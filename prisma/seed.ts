@@ -75,11 +75,23 @@ function isQuietPeriod(daysAgo: number): boolean {
 async function main() {
   console.log("Seeding LifeXP demo data…");
 
-  // Start clean so re-running the seed is safe. Cascades handle the rest.
-  await db.user.deleteMany({ where: { email: DEMO_EMAIL } });
+  /*
+    Re-seeding keeps the SAME user row and wipes only what it owns.
 
-  const user = await db.user.create({
-    data: {
+    Deleting and recreating the user was tidier but assigned a fresh id every
+    run, which silently invalidated any signed-in browser: sessions are JWTs, so
+    the old id kept being asserted, reads scoped to a missing user returned
+    empty, and the first write failed on a foreign key. Anyone re-seeding while
+    the app was open saw a working-looking but empty app that 500ed on save.
+
+    Upserting keeps developers signed in across seeds. (currentUserId now
+    verifies the user exists regardless, so a stale token is handled properly
+    either way — this just stops provoking it every single run.)
+  */
+  const user = await db.user.upsert({
+    where: { email: DEMO_EMAIL },
+    update: { name: "Demo", timezone: "UTC" },
+    create: {
       email: DEMO_EMAIL,
       name: "Demo",
       // Matches the UTC dates built by `at()`, so hour-of-day badges behave
@@ -87,6 +99,16 @@ async function main() {
       timezone: "UTC",
     },
   });
+
+  // Cascades clear the dependent rows (experiences' skill links, maintenance
+  // logs, milestones) without touching the user or their auth accounts.
+  await Promise.all([
+    db.experience.deleteMany({ where: { userId: user.id } }),
+    db.skill.deleteMany({ where: { userId: user.id } }),
+    db.maintenanceItem.deleteMany({ where: { userId: user.id } }),
+    db.badgeAward.deleteMany({ where: { userId: user.id } }),
+    db.chatMessage.deleteMany({ where: { userId: user.id } }),
+  ]);
 
   const japanese = await createSkillForUser(user.id, "Japanese");
   const piano = await createSkillForUser(user.id, "Piano");
