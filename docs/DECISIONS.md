@@ -175,13 +175,45 @@ migrations stop connecting, re-run it and update `.env`.
 
 ## 11. Warm/paper visual language, and no red token
 
-**Decision.** Off-white grounds, a serif for anything stating a quantity, sage
-for growth, warm metal for medals. The palette defines **no red**.
+**Decision.** Cream grounds, a serif for anything stating a quantity, sage for
+growth, warm metal for medals. The palette defines **no red**.
 
 **Why.** The product is a record of a life, not a dashboard. And nothing in it is
 an error state — not a maintenance item untouched for a month, not a skill
 dormant since spring. Omitting the token means any red would have to be
 deliberately hardcoded, and an e2e test scans for it.
+
+---
+
+## 12. Light only — no dark mode
+
+**Decision.** `--paper` is cream (`#f7f1e1`) and there is **no**
+`prefers-color-scheme: dark` block. `color-scheme: only light` is set on
+`:root`, and `viewport.themeColor` is a single value.
+
+**Why.** The client asked for a light app. A dark-mode block would have
+overridden the cream on any device set to dark — which is most phones, and
+therefore most of the devices the app will actually be demoed on. Honouring the
+request means light for everyone, not light-unless-your-phone-disagrees.
+
+`color-scheme: only light` additionally stops the browser darkening form
+controls, scrollbars and autofill backgrounds underneath the palette.
+
+**Cost.** People who prefer dark interfaces get a bright app.
+
+**Revisit if.** The client wants a dark theme. It is one media block in
+`globals.css` — nothing else assumes a light ground, because every colour is a
+token. The `cream ground` tests in `philosophy.spec.ts` would need updating at
+the same time; they currently assert cream under *both* colour schemes.
+
+### Contrast is checked, not eyeballed
+
+Every foreground token clears WCAG AA against both grounds: body text ≥ 4.5:1
+(worst is `--muted` at 5.34:1) and graphical tokens ≥ 3:1. `--medal` was
+darkened specifically because it is used for small text on the medal shelf, not
+just as a swatch. `no text is light-on-light` in `philosophy.spec.ts` walks the
+rendered DOM and computes each element's contrast against its nearest opaque
+ancestor background, so a half-applied theme fails the build.
 
 ---
 
