@@ -101,7 +101,14 @@ bd/
         │       ├── chat/          extraction — READ ONLY, never writes
         │       └── export/        full JSON export
         ├── components/            presentational + small client islands
-        │   └── chat/              chat bar, draft card, structured form
+        │   ├── icons/             custom SVG set: plants, medals, nav, logo
+        │   ├── nav/               bottom bar + desktop sidebar
+        │   ├── log/               quick-log sheet (the centre button)
+        │   ├── garden/            the living garden
+        │   ├── calendar/          month grid
+        │   ├── celebrate/         toast, medal moment, confetti
+        │   ├── recap/             weekly recap
+        │   └── chat/              capture, draft card, structured form
         ├── lib/
         │   ├── auth.ts            Auth.js config, requireUserId()
         │   ├── db.ts              Prisma singleton (hot-reload safe)
