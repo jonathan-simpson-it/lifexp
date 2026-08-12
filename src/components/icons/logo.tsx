@@ -28,7 +28,7 @@ export function LogoMark({ size = 28 }: { size?: number }) {
       />
       <path
         d="M16 15.5c5.4 0 8.4-3.2 8.4-8-4.8 0-8.4 3-8.4 8Z"
-        fill="var(--action)"
+        fill="var(--accent)"
       />
       <path d="M8.5 27h15" stroke="var(--line-strong)" strokeWidth="2.4" strokeLinecap="round" />
     </svg>
