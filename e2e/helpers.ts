@@ -11,7 +11,7 @@ export async function signIn(page: Page, email = "demo@lifexp.local") {
   await page.goto("/signin");
   await page.getByLabel("Development sign-in").fill(email);
   await page.getByRole("button", { name: "Continue" }).click();
-  await page.waitForURL("/");
+  await page.waitForURL("/today");
 }
 
 /** Words this product must never say to a user. */
