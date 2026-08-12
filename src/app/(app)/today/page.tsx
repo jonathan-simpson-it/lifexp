@@ -176,7 +176,7 @@ function FirstRun() {
     <section className="card p-5">
       <h2 className="display text-xl font-semibold">Start anywhere</h2>
       <p className="mt-2 text-ink-soft">
-        Tap the <span className="font-semibold text-action-deep">+</span> button
+        Tap the <span className="font-semibold text-accent-deep">+</span> button
         and tell LifeXP something you did — today, last week, whenever. It
         doesn&rsquo;t need to be impressive, and there&rsquo;s nothing to set up
         first.
