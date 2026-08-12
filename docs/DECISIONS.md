@@ -226,6 +226,27 @@ distance visibly drops after logging.
 
 ---
 
+## 14. Plant stage comes from milestone tier, nothing else
+
+**Decision.** A skill's plant stage is derived solely from its highest achieved
+milestone. The component takes no `lastActiveAt` and no date of any kind.
+
+**Why.** There is then no code path that can wilt a plant. A skill untouched
+since spring renders exactly as it did the day it was last logged — the
+anti-streak rule expressed visually rather than merely promised.
+
+**Known consequence.** Two skills at the same tier render identically even when
+one has ten times the evidence: Japanese at 332h and Piano at 34.5h are both
+"Foundation", so both are saplings. This is defensible — each plant shows
+progress along *that skill's own ladder*, and the hours label underneath carries
+the absolute figure — but it is a real trade-off.
+
+**Revisit if.** Users read the garden as a comparison between skills rather than
+as each skill's own journey. The fix would be to blend tier with absolute
+evidence, at the cost of the mapping no longer being exactly the ladder.
+
+---
+
 ### Contrast is checked, not eyeballed
 
 Every foreground token clears WCAG AA against both grounds: body text ≥ 4.5:1
