@@ -35,10 +35,9 @@ describe("alarm-red detection", () => {
 
   describe("allows the LifeXP palette", () => {
     const palette: Record<string, string> = {
-      "coral (action)": "#e0663c",
-      "terracotta (action-deep)": "#ad4e1f",
-      "coral tint (action-soft)": "#fbe7dd",
-      "sage (growth)": "#4f6e4f",
+      "sage (accent)": "#80988f",
+      "deep sage (accent-deep)": "#4f7266",
+      "sage tint (accent-soft)": "#e3e9e6",
       "gold (medal)": "#8a6124",
       "bright gold (medal-bright)": "#c9932b",
       "bronze tier": "#96683c",
