@@ -135,7 +135,7 @@ export function MonthGrid({ data }: { data: CalendarMonth }) {
                 isSelected
                   ? "bg-ink text-paper"
                   : isToday
-                    ? "bg-action-soft font-semibold text-action-deep"
+                    ? "bg-accent-soft font-semibold text-accent-deep"
                     : "hover:bg-line/40",
                 isFuture ? "text-muted/60" : "",
               ].join(" ")}
