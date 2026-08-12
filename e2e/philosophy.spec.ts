@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { FORBIDDEN_COPY, signIn } from "./helpers";
+import { isAlarmRed } from "../src/lib/ui/alarm-red";
 
 /**
  * The design principles, asserted against the rendered app.
@@ -41,22 +42,19 @@ test.describe("no pressure", () => {
     // Something long-untouched should read as faded, not failed.
     await expect(page.getByText("been a while").first()).toBeVisible();
 
-    // No element on the page renders in a red hue. The palette has no red
-    // token at all, so anything red would have to be hardcoded.
-    const reds = await page.evaluate(() => {
-      const isRed = (value: string) => {
-        const match = value.match(/rgba?\(([^)]+)\)/);
-        if (!match) return false;
-        const [r, g, b] = match[1].split(",").map((n) => parseFloat(n));
-        return r > 150 && g < 90 && b < 90;
-      };
-      return [...document.querySelectorAll("*")].filter((el) => {
+    // Collect every computed colour in the browser, then judge them in Node
+    // with the same `isAlarmRed` the unit tests cover. One implementation, so
+    // the rule the suite enforces cannot drift from the rule that is tested.
+    const colours = await page.evaluate(() => {
+      const out: string[] = [];
+      for (const el of document.querySelectorAll("*")) {
         const style = getComputedStyle(el);
-        return isRed(style.color) || isRed(style.backgroundColor);
-      }).length;
+        out.push(style.color, style.backgroundColor, style.borderTopColor);
+      }
+      return out;
     });
 
-    expect(reds).toBe(0);
+    expect(colours.filter(isAlarmRed)).toEqual([]);
   });
 
   test("logging maintenance resets its freshness", async ({ page }) => {
