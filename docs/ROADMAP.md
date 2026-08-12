@@ -1,7 +1,7 @@
 # LifeXP — Roadmap
 
 Where the build is against the PRD, what is deliberately missing, and what comes
-next. PRD stages are from [`../../LifeXP PRD.md`](../../LifeXP%20PRD.md).
+next. PRD stages are from [`../../LifeXP-PRD.md`](../../LifeXP-PRD.md).
 
 ---
 
