@@ -159,7 +159,70 @@ body {
 .card {
   background: var(--paper-raised);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+}
+
+/*
+  Every tappable thing depresses slightly. It is the cheapest possible way to
+  make a web app feel native, and it costs one class.
+*/
+.tappable {
+  transition:
+    transform var(--dur-tap) var(--ease-out),
+    opacity var(--dur-tap) var(--ease-out);
+}
+.tappable:active {
+  transform: scale(0.96);
+}
+
+/*
+  The garden's idle sway. Plants are offset by index (--sway-delay) so a row of
+  them moves like planting rather than like a single sprite repeated.
+*/
+.plant-sway {
+  transform-origin: 50% 90%;
+  animation: sway 5.5s ease-in-out infinite;
+  animation-delay: var(--sway-delay, 0s);
+}
+
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-1.1deg);
+  }
+  50% {
+    transform: rotate(1.1deg);
+  }
+}
+
+/* A medal or milestone arriving. Overshoots, then settles. */
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.pop-in {
+  animation: pop-in var(--dur-pop) var(--spring) both;
+}
+
+@keyframes rise-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise-in {
+  animation: rise-in var(--dur-move) var(--ease-out) both;
 }
 
 /* Focus ring that reads on both grounds without shouting. */
