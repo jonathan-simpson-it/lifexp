@@ -10,7 +10,12 @@ import { useEffect, useRef } from "react";
  * ship far more than this needs.
  */
 
-const COLORS = ["#e0663c", "#c9932b", "#4f6e4f", "#ad4e1f", "#e0b23f"];
+/**
+ * Sage and gold only — the product's two materials. Confetti is the one place
+ * it would be easy to reach for a party palette, and a burst of colours the app
+ * never otherwise uses would look borrowed.
+ */
+const COLORS = ["#80988f", "#4f7266", "#c9932b", "#a8bdb2", "#e0b23f"];
 
 type Piece = {
   x: number;
