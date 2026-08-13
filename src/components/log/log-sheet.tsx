@@ -96,7 +96,10 @@ export function LogSheet({
         role="dialog"
         aria-modal="true"
         aria-label="Record something"
-        className="sheet-in relative w-full max-w-lg rounded-t-[var(--radius-sheet)] border border-line bg-paper-raised p-4 pb-6 shadow-raised md:rounded-[var(--radius-sheet)]"
+        // overscroll-contain stops a flick inside the sheet from chaining to
+        // the page underneath once the sheet hits its end, which on iOS reads
+        // as the whole app sliding around behind a modal.
+        className="sheet-in relative max-h-[88svh] w-full max-w-lg overflow-y-auto overscroll-contain rounded-t-[var(--radius-sheet)] border border-line bg-paper-raised p-4 pb-6 shadow-raised md:rounded-[var(--radius-sheet)]"
         style={{ paddingBottom: "calc(1.5rem + env(safe-area-inset-bottom))" }}
       >
         <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-line-strong md:hidden" />

@@ -38,14 +38,15 @@ export default async function MedalsPage() {
         ) : (
           // The same grid and the same tile as the badges below, so the two
           // kinds of medal finally read as one collection.
-          <ul className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
-            {milestones.map((milestone) => (
+          <ul className="mt-4 grid grid-cols-3 gap-x-3 gap-y-6 sm:grid-cols-4 md:grid-cols-6">
+            {milestones.map((milestone, i) => (
               <li key={milestone.id}>
                 <Link
                   href={`/growth/${milestone.skill.slug}`}
-                  className="tappable block h-full"
+                  className="block h-full"
                 >
                   <MilestoneTile
+                    index={i}
                     tier={milestone.tier as MilestoneTier}
                     label={milestone.label}
                     skillName={milestone.skill.name}

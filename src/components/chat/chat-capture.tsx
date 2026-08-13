@@ -105,6 +105,9 @@ export function ChatCapture({
         <input
           id="chat-capture"
           autoFocus
+          // The mobile return key says "Send" rather than "Go", and the field
+          // is free prose, so autocorrect helps and autocapitalise is right.
+          enterKeyHint="send"
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Went to Japanese class for 90 minutes today"

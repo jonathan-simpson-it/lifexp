@@ -216,6 +216,50 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  /*
+    Kills the grey flash iOS Safari paints over any tapped element. It is the
+    single most obvious tell that a thing is a website rather than an app, and
+    removing it costs one line. Feedback is not lost: .tappable already
+    depresses on :active, which is a better signal anyway.
+  */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Selection in the product's own colour rather than the browser's blue. */
+::selection {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+/*
+  Headings never leave one word alone on the last line. Cheap, and it is most
+  of the difference between typography that was set and typography that just
+  wrapped.
+*/
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p,
+li {
+  text-wrap: pretty;
+}
+
+/*
+  iOS Safari zooms the whole page when a field smaller than 16px takes focus,
+  and every form control in this app was 14px. On a mobile-first product that
+  is a jarring lurch on the most common interaction there is. Below the
+  breakpoint the controls are 16px and the zoom never fires; above it, the
+  smaller size is fine because desktop browsers do not do this.
+*/
+@media (max-width: 767px) {
+  input:not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  select {
+    font-size: 1rem;
+  }
 }
 
 body {
@@ -419,6 +463,58 @@ body {
   100% {
     opacity: 0;
     transform: translateX(34px);
+  }
+}
+
+/*
+  A medal hanging on its rail.
+
+  Two states, and the restraint matters. At rest it swings a fraction of a
+  degree on a long, slow cycle, staggered per medal, which is just enough to
+  say "these are hanging" without becoming the pulsing, attention-seeking
+  motion DESIGN.md forbids. Touch or hover it and it swings properly, then
+  settles, because a physical object you nudge should nudge back.
+*/
+.medal-hang {
+  transform-origin: 50% 2%;
+  animation: medal-hang 9s ease-in-out infinite;
+  animation-delay: var(--hang-delay, 0s);
+}
+
+@keyframes medal-hang {
+  0%,
+  100% {
+    transform: rotate(-0.5deg);
+  }
+  50% {
+    transform: rotate(0.5deg);
+  }
+}
+
+.group:hover .medal-hang,
+.group:focus-visible .medal-hang,
+.group:active .medal-hang {
+  animation: medal-nudge 1.4s var(--ease-out) both;
+}
+
+@keyframes medal-nudge {
+  0% {
+    transform: rotate(0deg);
+  }
+  15% {
+    transform: rotate(6deg);
+  }
+  38% {
+    transform: rotate(-4deg);
+  }
+  58% {
+    transform: rotate(2.4deg);
+  }
+  76% {
+    transform: rotate(-1.2deg);
+  }
+  100% {
+    transform: rotate(0deg);
   }
 }
 

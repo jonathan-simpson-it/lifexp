@@ -3,16 +3,19 @@ import { badgeVisual } from "@/components/badge-icon";
 import type { MilestoneTier } from "@/lib/progress/milestones";
 
 /**
- * One tile, used everywhere a medal appears.
+ * A medal hanging on a shelf.
  *
- * There used to be three layouts for the same thing: 40px circles on the home
- * shelf, two-column rows on the medals page, and a third arrangement for
- * milestones. The rows were the worst of it, because their height followed the
- * length of the description, so a shelf was a ragged column rather than a grid.
+ * The rail is the point. A grid of bordered boxes is a list of records; medals
+ * hooked over a rail is a thing you own, and the whole product is built on the
+ * difference between those two feelings.
  *
- * Everything here is fixed: the medal size, the title line, and a description
- * clamped to two lines. Tiles are therefore the same height whatever is in
- * them, which is the only way a collection reads as a collection.
+ * The rail is drawn per tile and bleeds 6px past each edge, which is slightly
+ * wider than the grid gap, so adjacent rails meet and read as one continuous
+ * bar across the row. That survives wrapping and any column count, which a
+ * single rail drawn behind the grid would not.
+ *
+ * Tiles have no box of their own any more. Height is still fixed by clamping
+ * the title and description, so a row stays even.
  */
 export function MedalTile({
   tier,
@@ -21,6 +24,8 @@ export function MedalTile({
   earned,
   symbol,
   footnote,
+  /** Position in the row, used to stagger the idle sway. */
+  index = 0,
 }: {
   tier: MilestoneTier;
   title: string;
@@ -29,27 +34,38 @@ export function MedalTile({
   symbol?: React.ReactNode;
   /** Date, or the one-line context sentence. */
   footnote?: string | null;
+  index?: number;
 }) {
   return (
     <div
-      className={[
-        "flex h-full flex-col items-center rounded-[var(--radius-lg)] border p-3 text-center",
-        earned
-          ? "border-medal/25 bg-medal-soft/45"
-          : // Not dashed. A dashed box reads as a broken element; a solid one
-            // at low contrast reads as a slot that is simply still empty.
-            "border-line bg-paper/40",
-      ].join(" ")}
+      className="group relative flex h-full flex-col items-center pt-3 text-center"
+      title={subtitle ? `${title}: ${subtitle}` : title}
     >
-      <Medal tier={tier} size={56} earned={earned} symbol={symbol} />
+      {/* The rail, and the shadow it casts on the wall behind. */}
+      <span
+        aria-hidden
+        // Bleeds wider than the 12px grid gap so neighbouring rails overlap
+        // rather than merely meet. Exact abutment leaves a hairline at most
+        // fractional widths, and a broken rail reads as a rendering fault.
+        className="absolute -inset-x-2.5 top-0 h-[3px] bg-line-strong"
+      />
+      <span
+        aria-hidden
+        className="absolute -inset-x-2.5 top-[3px] h-1.5 bg-gradient-to-b from-ink/8 to-transparent"
+      />
 
-      {/* Wraps to two lines rather than truncating. At three tiles across a
-          phone, "First Experience" and "Hundred Hours" both lost their last
-          word to an ellipsis, which is a poor way to name a thing someone
-          just earned. */}
+      {/* Hangs from the rail, so it swings from the top rather than pivoting
+          about its own middle. */}
+      <span
+        className="medal-hang block origin-top"
+        style={{ ["--hang-delay" as string]: `${(index % 6) * 0.5}s` }}
+      >
+        <Medal tier={tier} size={58} earned={earned} symbol={symbol} />
+      </span>
+
       <p
         className={[
-          "mt-1.5 line-clamp-2 w-full text-caption leading-tight font-semibold",
+          "mt-1 line-clamp-2 w-full text-caption leading-tight font-semibold",
           earned ? "text-ink" : "text-muted",
         ].join(" ")}
       >
@@ -57,14 +73,14 @@ export function MedalTile({
       </p>
 
       {subtitle && (
-        // Exactly two lines, always. This is the fix for the ragged grid.
-        <p className="mt-0.5 line-clamp-2 text-eyebrow leading-snug text-muted normal-case tracking-normal">
+        // Exactly two lines, always. This is what keeps a row even.
+        <p className="mt-0.5 line-clamp-2 text-eyebrow leading-snug tracking-normal text-muted normal-case">
           {subtitle}
         </p>
       )}
 
       {footnote && (
-        <p className="mt-auto pt-1.5 text-eyebrow text-medal normal-case tracking-normal">
+        <p className="mt-auto pt-1 text-eyebrow tracking-normal text-medal normal-case">
           {footnote}
         </p>
       )}
@@ -78,11 +94,13 @@ export function MilestoneTile({
   label,
   skillName,
   achievedAt,
+  index,
 }: {
   tier: MilestoneTier;
   label: string;
   skillName: string;
   achievedAt?: string | null;
+  index?: number;
 }) {
   return (
     <MedalTile
@@ -90,6 +108,7 @@ export function MilestoneTile({
       title={label}
       subtitle={skillName}
       footnote={achievedAt}
+      index={index}
       earned
     />
   );
@@ -102,12 +121,14 @@ export function BadgeTile({
   subtitle,
   earned,
   footnote,
+  index,
 }: {
   badgeKey: string;
   title: string;
   subtitle?: string | null;
   earned: boolean;
   footnote?: string | null;
+  index?: number;
 }) {
   const { symbol, metal } = badgeVisual(badgeKey);
 
@@ -119,6 +140,7 @@ export function BadgeTile({
       earned={earned}
       symbol={symbol}
       footnote={footnote}
+      index={index}
     />
   );
 }

@@ -36,10 +36,13 @@ export function MedalShelf({
         </span>
       </div>
 
-      <ul className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
-        {shown.map((badge) => (
+      {/* gap-y is generous: the rail sits at the top of each tile, and rows
+          need air above them or the rails read as underlines on the row
+          before. */}
+      <ul className="mt-4 grid grid-cols-3 gap-x-3 gap-y-6 sm:grid-cols-4 md:grid-cols-6">
+        {shown.map((badge, i) => (
           <li key={badge.definition.key}>
-            <Tile badge={badge} />
+            <Tile badge={badge} index={i} />
           </li>
         ))}
       </ul>
@@ -56,7 +59,7 @@ export function MedalShelf({
   );
 }
 
-function Tile({ badge }: { badge: BadgeState }) {
+function Tile({ badge, index }: { badge: BadgeState; index: number }) {
   const { definition, earned } = badge;
 
   // Unearned and no hint: keep it a genuine surprise.
@@ -64,6 +67,7 @@ function Tile({ badge }: { badge: BadgeState }) {
 
   return (
     <BadgeTile
+      index={index}
       badgeKey={definition.key}
       title={earned ? definition.title : isSecret ? "? ? ?" : definition.title}
       subtitle={

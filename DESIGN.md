@@ -382,9 +382,52 @@ the total above is evidence, this is the pull.
 
 ### Medal
 
-Mark filled with `--medal-bright` or its tier colour on `--medal-soft`, label in
-`--medal`. Unearned medals render as `? ? ?`. Discovery is the mechanic, so
-never list what has not been earned.
+**One medal family for everything the app awards.** Skill milestones and the
+twelve global badges are the same object, differing only in what sits in the
+field. There must never be a second visual language for an award; there was
+once, and the shelf read as a bag of stickers.
+
+Anatomy, drawn at a 64-unit viewBox with the disc at (32, 40):
+
+```
+   ╱╲╱╲     ribbon: two straps, the far one a shade darker. That single
+  ╱ ╱╲ ╲    difference is what stops it reading as a flat V.
+  ┌────┐    rim: solid edge metal, with knurling drawn as a dashed stroke
+ │┌────┐│   field: face metal, one step lighter than the rim
+ ││ ◆  ││   slot: the tier star, or a badge symbol on a 24px grid
+ │└────┘│   recess: a darker hairline, so the field reads as stamped in
+  └────┘    gleam: a highlight arc, upper left
+```
+
+- **Rank is metal, ribbon and star points. Never size.** A Gold is exactly as
+  big as a Bronze, because nobody's first should look small beside someone's
+  fifth.
+- **Badge metal encodes rarity**, reusing the tier palette rather than a second
+  one: pale for the badges everyone gets on day one, gold for a hundred hours
+  and a year of history, violet for the one you cannot chase.
+- **Unearned keeps the full silhouette** in `--line` and loses only its metal,
+  so the shelf shows the shape of what is still out there. Titles become
+  `? ? ?` where the badge is meant to be a surprise. Never a dashed outline,
+  which reads as a broken element rather than an empty slot.
+- Below about 20px, pass `ribbon={false}`: the straps turn into two dark specks
+  and the medal stops reading as a medal.
+
+### The shelf
+
+Medals **hang from a rail**, they do not sit in boxes. A grid of bordered cards
+is a list of records; medals hooked over a rail is a thing you own, and the
+whole product rests on the difference between those two feelings.
+
+- The rail is drawn per tile and bleeds wider than the grid gap, so neighbouring
+  rails overlap into one continuous bar. Exact abutment leaves a hairline at
+  most fractional widths, and a broken rail reads as a rendering fault.
+- A soft gradient directly under the rail is the shadow it casts. It is what
+  makes the rail read as an object rather than a border.
+- Tiles have no box. Height is held even by clamping the title and the
+  description to two lines each.
+- At rest each medal swings a half degree on a nine-second cycle, staggered.
+  Touch or hover and it swings properly, then settles. See §7 for why this is
+  the one looping motion the product allows.
 
 ---
 
@@ -484,7 +527,11 @@ visibly the cause.
 - **No punitive copy** (see §3).
 - **No `--accent` as or behind text. No tier colour as a text colour.**
 - No parallax, no scroll-triggered reveals, no animated skeletons or shimmer.
-- No looping attention-seekers: no pulsing log button, no bouncing CTA. A pulse
+- No looping attention-seekers **except ambient life**: the plants sway and the
+  medals hang. Both are slow, sub-degree, staggered, and attached to objects
+  that would move in the real world. The test is whether the motion is asking
+  for something. A swaying plant is not; a pulsing log button is, and a pulse
+  that says *log something* is a nag. No pulsing log button, no bouncing CTA. A pulse
   that says *log something* is a nag, and nags are streak-logic.
 - No emoji as section markers; no `01 / 02 / 03` eyebrows unless the content
   genuinely is a sequence.
@@ -550,6 +597,26 @@ Mobile is the primary target, not the fallback. Every interaction must be
 reachable with one thumb, and the centre button sits where the thumb already
 rests. `env(safe-area-inset-bottom)` is respected on `body` and every fixed
 element.
+
+### The small things that decide whether it feels native
+
+Each of these is one or two lines and each is load-bearing. They are listed
+because they are exactly what gets dropped, and their absence is felt without
+being noticed.
+
+| Detail | Why |
+|---|---|
+| `-webkit-tap-highlight-color: transparent` | Kills the grey flash iOS paints over any tapped element. The single most obvious tell that a thing is a website. Feedback is not lost: `.tappable` already depresses. |
+| **Form controls ≥ 16px under 768px** | iOS Safari zooms the whole page when a smaller field takes focus. Every control here was 14px, so the most common interaction in the app ended in a lurch. |
+| `inputMode` on numeric fields | `decimal` for hours, `numeric` for intervals. A number pad instead of a full keyboard. |
+| `enterKeyHint="send"` | The mobile return key says Send rather than Go. |
+| `overscroll-behavior: contain` on the sheet | Stops a flick inside the sheet chaining to the page behind it once it hits the end. |
+| `max-height: 88svh` on the sheet | `svh`, not `vh`: `vh` ignores the mobile URL bar and the sheet ends up taller than the screen. |
+| `text-wrap: balance` on headings | No heading leaves one word alone on the last line. |
+| `text-wrap: pretty` on body | No paragraph ends in an orphan. |
+| `font-variant-numeric: tabular-nums` | A counting figure would otherwise reflow on every frame. |
+| `::selection` in `--accent-soft` | Selecting text should not reveal the browser's blue. |
+| `title` on every medal | The description clamps to two lines; the full text is still reachable. |
 
 ---
 

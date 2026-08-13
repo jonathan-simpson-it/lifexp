@@ -108,6 +108,7 @@ export function DraftCard({
             <Field label="Hours">
               <input
                 type="number"
+                inputMode="decimal"
                 step="0.25"
                 min="0"
                 placeholder="-"

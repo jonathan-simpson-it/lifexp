@@ -62,6 +62,7 @@ export default async function MaintenancePage() {
               id="item-interval"
               name="intervalDays"
               type="number"
+              inputMode="numeric"
               min={1}
               max={3650}
               defaultValue={7}
