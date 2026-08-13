@@ -23,7 +23,7 @@ const stroke = {
   strokeLinejoin: "round" as const,
 };
 
-/** Language — a speech bubble with a character stroke. */
+/** Language, a speech bubble with a character stroke. */
 function Language({ size = 20 }: Props) {
   return (
     <svg {...svg(size)}>
@@ -36,7 +36,7 @@ function Language({ size = 20 }: Props) {
   );
 }
 
-/** Music — a note. */
+/** Music, a note. */
 function Music({ size = 20 }: Props) {
   return (
     <svg {...svg(size)}>
@@ -47,7 +47,7 @@ function Music({ size = 20 }: Props) {
   );
 }
 
-/** Fitness — a mountain, which covers running, climbing and the gym alike. */
+/** Fitness, a mountain, which covers running, climbing and the gym alike. */
 function Fitness({ size = 20 }: Props) {
   return (
     <svg {...svg(size)}>
@@ -57,7 +57,7 @@ function Fitness({ size = 20 }: Props) {
   );
 }
 
-/** Reading — an open book. */
+/** Reading, an open book. */
 function Reading({ size = 20 }: Props) {
   return (
     <svg {...svg(size)}>
@@ -67,7 +67,7 @@ function Reading({ size = 20 }: Props) {
   );
 }
 
-/** Mindfulness — a still circle with a rising line. */
+/** Mindfulness, a still circle with a rising line. */
 function Mindfulness({ size = 20 }: Props) {
   return (
     <svg {...svg(size)}>
@@ -77,7 +77,7 @@ function Mindfulness({ size = 20 }: Props) {
   );
 }
 
-/** Craft — a pen nib. */
+/** Craft, a pen nib. */
 function Craft({ size = 20 }: Props) {
   return (
     <svg {...svg(size)}>
@@ -87,7 +87,7 @@ function Craft({ size = 20 }: Props) {
   );
 }
 
-/** Fallback — a spark, for anything that matched no template. */
+/** Fallback, a spark, for anything that matched no template. */
 function Generic({ size = 20 }: Props) {
   return (
     <svg {...svg(size)}>

@@ -2,7 +2,7 @@
  * Pure aggregation helpers.
  *
  * Split out from `aggregate.ts` specifically so they carry no Prisma import and
- * can be unit-tested without a database — the same rule the progress and
+ * can be unit-tested without a database, the same rule the progress and
  * maintenance modules follow.
  */
 
@@ -25,7 +25,7 @@ export type WeekSummary = {
  * "3 skills · 18h · 5 new experiences".
  *
  * Minutes are summed over DISTINCT experiences. An evening that counted toward
- * both Japanese and Reading is 75 minutes of the user's life, not 150 — even
+ * both Japanese and Reading is 75 minutes of the user's life, not 150, even
  * though it is legitimately 75 minutes against each skill's own total.
  */
 export function summariseWeek(

@@ -7,7 +7,7 @@ import { extractExperiences } from "@/lib/ai/provider";
  * Chat extraction.
  *
  * This endpoint READS ONLY. It returns drafts for the user to confirm and
- * writes nothing to the Experience table — "human first, AI assists" is
+ * writes nothing to the Experience table, "human first, AI assists" is
  * enforced here, at the boundary, rather than left to the UI to honour.
  */
 export async function POST(request: Request) {
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
   }
   if (text.length > 2000) {
     return NextResponse.json(
-      { error: "That's longer than this box is meant for — try one thing at a time." },
+      { error: "That's longer than this box is meant for. Try one thing at a time." },
       { status: 400 },
     );
   }

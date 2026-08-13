@@ -15,7 +15,7 @@ import { CountingFigure } from "./counting-figure";
  * milestone, and the remaining distance falling.
  *
  * It renders here rather than over the garden itself because logging works
- * from every screen — /calendar, /medals, /settings — and the garden only
+ * from every screen, /calendar, /medals, /settings, and the garden only
  * exists on /today. Watering the plant inside the confirmation means the
  * moment is the same everywhere, with no cross-tree coordination and nothing
  * to scroll into view.
@@ -47,7 +47,7 @@ export function WateredToast({
 
     Crossing a milestone replaces the target: `before.remaining` was the
     distance to Elementary, `after.remaining` is the distance to the one after
-    it — a larger number. Interpolating between them would show the figure
+    it: a larger number. Interpolating between them would show the figure
     counting *upward*, which is the one direction a number in this product is
     never allowed to move on its own.
   */
@@ -75,7 +75,7 @@ export function WateredToast({
         />
 
         <div className="min-w-0">
-          <p className="truncate text-body font-medium">Recorded — {what}</p>
+          <p className="truncate text-body font-medium">Recorded: {what}</p>
 
           {after.nextLabel && after.remaining != null && after.remainingUnit ? (
             <p className="truncate text-caption text-muted">

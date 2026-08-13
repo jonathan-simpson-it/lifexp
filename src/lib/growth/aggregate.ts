@@ -271,7 +271,7 @@ const dayKey = (date: Date) => date.toISOString().slice(0, 10);
  * Everything that happened in one month, bucketed by day.
  *
  * Returns a bucket for every day that has something in it; the grid fills the
- * blanks. Days are UTC — consistent with `bucketByDay`, and at personal scale
+ * blanks. Days are UTC, consistent with `bucketByDay`, and at personal scale
  * the timezone edges are not worth per-user day boundaries.
  */
 export async function getMonth(
@@ -347,7 +347,7 @@ export async function getMonth(
     month,
     days: [...byDay.values()].sort((a, b) => a.date.localeCompare(b.date)),
     totals: {
-      // Summed over distinct experiences — see the note on ExperienceSkill.
+      // Summed over distinct experiences, see the note on ExperienceSkill.
       minutes: experiences.reduce((sum, e) => sum + (e.minutes ?? 0), 0),
       experiences: experiences.length,
       skills: skillIds.size,

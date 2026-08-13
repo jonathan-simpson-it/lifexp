@@ -8,7 +8,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/lib/db";
 
 /**
- * Google sign-in is the primary path — the calendar write-back needs a Google
+ * Google sign-in is the primary path. The calendar write-back needs a Google
  * account anyway, so asking for a second identity would be pointless friction.
  *
  * We deliberately request ONLY the default identity scopes here. Calendar
@@ -50,7 +50,7 @@ if (hasGoogleCredentials) {
 
 /**
  * Development-only escape hatch. Without it, nobody can open the app until a
- * Google Cloud project exists — which would block all UI work and every demo on
+ * Google Cloud project exists, which would block all UI work and every demo on
  * an OAuth consent screen. Never registered in production.
  */
 if (!hasGoogleCredentials && process.env.NODE_ENV !== "production") {
@@ -106,7 +106,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
  * The signed-in user's id, or null. Every data read is scoped through this.
  *
  * The session is a JWT, so it keeps asserting a user id long after that user
- * has been deleted — the token is cryptographically valid and there is nothing
+ * has been deleted, the token is cryptographically valid and there is nothing
  * in it to invalidate. The failure mode is nasty and quiet: reads scoped to a
  * missing user return empty rather than erroring, so pages render fine and look
  * merely empty, and the first sign of trouble is a foreign-key violation on the

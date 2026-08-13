@@ -57,7 +57,7 @@ export function resolveProvider(env = process.env): ExtractionProvider {
  * Extract, with the rule-based provider as a runtime safety net.
  *
  * A vendor outage, a rate limit or an unparseable response should cost the user
- * some accuracy on one message — not the ability to record what they did.
+ * some accuracy on one message, not the ability to record what they did.
  */
 export async function extractExperiences(
   input: ExtractionInput,

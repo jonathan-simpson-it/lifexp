@@ -58,7 +58,7 @@ export function DraftCard({
 
           {uncertain && !expanded && (
             <p className="mt-1 text-xs text-muted">
-              I wasn&rsquo;t sure about this one — worth a look.
+              I wasn&rsquo;t sure about this one, worth a look.
             </p>
           )}
         </div>
@@ -110,7 +110,7 @@ export function DraftCard({
                 type="number"
                 step="0.25"
                 min="0"
-                placeholder="—"
+                placeholder="-"
                 value={hoursValue}
                 onChange={(e) =>
                   setEdited((p) => ({

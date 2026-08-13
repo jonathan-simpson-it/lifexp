@@ -17,7 +17,7 @@ import {
  * Effort is set to "low": this is a short extraction from one sentence, and low
  * effort keeps latency and cost down on what is an interactive, type-and-wait
  * interaction. Thinking is intentionally left at its default rather than
- * disabled — on current Claude models, disabling thinking is the more expensive
+ * disabled, on current Claude models, disabling thinking is the more expensive
  * lever and carries its own failure modes, whereas low effort is the cheap one.
  */
 export class AnthropicProvider implements ExtractionProvider {

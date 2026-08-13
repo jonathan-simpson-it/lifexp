@@ -66,7 +66,7 @@ const SOIL_WIDTH: Record<PlantStage, number> = {
  *
  * A seedling whips about in a breeze and a grand tree barely moves. Falling
  * amplitude is most of what stops a row of plants reading as one sprite
- * repeated — the other half is the per-index delay the garden sets.
+ * repeated, the other half is the per-index delay the garden sets.
  */
 export const SWAY_AMPLITUDE: Record<PlantStage, string> = {
   seed: "0.6deg",
@@ -82,7 +82,7 @@ export const SWAY_AMPLITUDE: Record<PlantStage, string> = {
  * The plant itself, without an `<svg>` wrapper.
  *
  * Split out so the watering scene can compose a plant, a can and falling
- * droplets into a single coordinate space — droplets have to land on the soil,
+ * droplets into a single coordinate space, droplets have to land on the soil,
  * which means they must share the plant's viewBox rather than be positioned
  * over a nested SVG.
  */
@@ -97,7 +97,7 @@ export function PlantGlyph({
 
   return (
     <>
-      {/* Soil is always present — even a seed sits in ground that is tended. */}
+      {/* Soil is always present, even a seed sits in ground that is tended. */}
       <ellipse cx="32" cy="57" rx={soil} ry={soil * 0.26} fill="var(--line)" />
       <ellipse
         cx="32"
@@ -157,7 +157,7 @@ const stem = {
 
 /*
   Each stage is drawn to a distinctly different height and silhouette. Adjacent
-  stages have to be tellable apart at a glance in a 76px box — an earlier pass
+  stages have to be tellable apart at a glance in a 76px box, an earlier pass
   differed only in leaf count and a skill with ten times the evidence of its
   neighbour looked identical to it, which defeats the point of the garden.
 
@@ -197,7 +197,7 @@ function Sapling({ color }: { color: string }) {
   );
 }
 
-/** First stage with a true canopy — the silhouette changes from leaves to tree. */
+/** First stage with a true canopy, the silhouette changes from leaves to tree. */
 function YoungTree({ color }: { color: string }) {
   return (
     <g>
@@ -218,7 +218,7 @@ function Flowering({ color }: { color: string }) {
       <circle cx="32" cy="20" r="12" fill={color} opacity="0.92" />
       <circle cx="21" cy="27.5" r="7.2" fill={color} opacity="0.74" />
       <circle cx="43" cy="27.5" r="7.2" fill={color} opacity="0.74" />
-      {/* Blossom — the first stage that reads as reward rather than growth. */}
+      {/* Blossom, the first stage that reads as reward rather than growth. */}
       <circle cx="25.5" cy="17" r="2.8" fill="var(--paper-raised)" />
       <circle cx="37.5" cy="23" r="2.8" fill="var(--paper-raised)" />
       <circle cx="33" cy="13" r="2.4" fill="var(--paper-raised)" />

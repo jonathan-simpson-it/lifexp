@@ -10,13 +10,13 @@ import type { QuickSkill } from "@/lib/growth/aggregate";
  * Client shell around every signed-in page.
  *
  * It owns the two things that outlive a route change: whether the log sheet is
- * open, and what the last save earned. Pages stay server components — they come
+ * open, and what the last save earned. Pages stay server components, they come
  * through untouched as `children`.
  *
  * Both the sheet and the celebration are **mounted fresh** rather than told to
  * reset. A counter drives their `key`, so opening the sheet a second time gets
  * clean initial state for free, and neither component needs an effect that
- * copies props into state — which would cost an extra render pass every time.
+ * copies props into state, which would cost an extra render pass every time.
  */
 export function AppShell({
   skills,

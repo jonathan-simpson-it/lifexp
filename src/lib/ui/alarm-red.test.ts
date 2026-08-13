@@ -73,7 +73,7 @@ describe("alarm-red detection", () => {
       expect(isAlarmRed("rgb(255, 255, 255)")).toBe(false);
     });
 
-    it("ignores pale pinks — desaturated, not an alarm", () => {
+    it("ignores pale pinks, desaturated, not an alarm", () => {
       expect(isAlarmRed(rgb("#fbe7dd"))).toBe(false);
       expect(isAlarmRed(rgb("#ffe4e6"))).toBe(false);
     });

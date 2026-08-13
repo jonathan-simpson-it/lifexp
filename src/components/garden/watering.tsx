@@ -3,7 +3,7 @@
 import { PlantGlyph, type PlantStage } from "@/components/icons";
 
 /**
- * Watering the plant — what logging looks like.
+ * Watering the plant, what logging looks like.
  *
  * The design trap this component exists to avoid: in every farming game,
  * watering is an *obligation*. The plant gets thirsty, you owe it water, and
@@ -19,7 +19,7 @@ import { PlantGlyph, type PlantStage } from "@/components/icons";
  *   0.00s  can swings in from the upper right and tips
  *   0.25s  droplets begin falling, staggered
  *   0.60s  soil darkens where they land
- *   0.70s  plant squashes and stretches — and, if this log crossed a
+ *   0.70s  plant squashes and stretches, and, if this log crossed a
  *          milestone, the next stage cross-fades in *during* the squash, so
  *          the water visibly caused the growth
  *   1.05s  can lifts away
@@ -28,7 +28,7 @@ import { PlantGlyph, type PlantStage } from "@/components/icons";
  * no droplets. Nothing moves and nothing is lost.
  */
 
-/** Where each droplet falls, and when. Irregular on purpose — evenly spaced
+/** Where each droplet falls, and when. Irregular on purpose, evenly spaced
  *  drops read as a machine rather than a can. */
 const DROPS = [
   { x: 26, delay: 0.25 },
@@ -61,7 +61,7 @@ export function Watering({
       aria-hidden
       className="shrink-0"
     >
-      {/* The plant before. Only rendered when the stage actually changed —
+      {/* The plant before. Only rendered when the stage actually changed,
           otherwise it would sit behind an identical copy of itself. */}
       {grew && (
         <g className="water-plant water-stage-out">

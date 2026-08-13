@@ -200,7 +200,7 @@ describe("award engine", () => {
       });
 
       // Every badge earned by showing up daily is also reachable by showing up
-      // irregularly — nothing is gated on the days being consecutive.
+      // irregularly, nothing is gated on the days being consecutive.
       const dailyOnly = keys(consecutive).filter((k) => !keys(scattered).includes(k));
       expect(dailyOnly).toEqual([]);
     });

@@ -6,13 +6,13 @@
  * scans every computed colour on every page through it.
  *
  * Hue-based rather than a raw RGB comparison. An earlier `r > 150 && g < 90 &&
- * b < 90` box had both failure modes at once — it rejected warm terracotta
+ * b < 90` box had both failure modes at once, it rejected warm terracotta
  * (which is an action colour, not a warning) and it MISSED dark reds like
  * #8b0000, whose red channel is too low to clear the threshold. Hue targets
  * what the rule actually means: saturated red at a visible lightness.
  *
  * Kept dependency-free and pure so it can be unit-tested against known alarm
- * reds directly — see alarm-red.test.ts.
+ * reds directly, see alarm-red.test.ts.
  */
 export function isAlarmRed(cssColor: string): boolean {
   const match = cssColor.match(/rgba?\(([^)]+)\)/);

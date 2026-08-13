@@ -4,8 +4,8 @@ import type { MilestoneTier } from "@/lib/progress/milestones";
  * Stable per-skill colour, derived from the seed stored on the row.
  *
  * Every skill is a variant of the one sage hue rather than a point on the full
- * colour wheel. Skills still need to be told apart — the calendar draws a dot
- * per skill and the garden tints each plant — but a rainbow of arbitrary hues
+ * colour wheel. Skills still need to be told apart, the calendar draws a dot
+ * per skill and the garden tints each plant, but a rainbow of arbitrary hues
  * made those the loudest thing on screen and contradicted a palette that is
  * meant to be a single colour.
  *
@@ -24,7 +24,7 @@ export function skillColor(
   if (opts.soft) return `oklch(0.93 0.022 ${hue})`;
 
   /*
-    `solid` is for a fill with white text on it — the selected skill chip.
+    `solid` is for a fill with white text on it, the selected skill chip.
 
     The default band runs to L0.69, where white measures 2.70:1. That shipped:
     whether a chip was readable depended on which seed the skill happened to
@@ -49,7 +49,7 @@ export function skillColor(
  * The distance to a milestone, as a bare quantity: "70.1h", "81 sessions".
  *
  * Deliberately without the trailing "to go" that `remainingLabel` carries,
- * because every place this appears already says where it is going —
+ * because every place this appears already says where it is going,
  * "70.1h to Elementary". Using the label there produced "70.1h to go to
  * Elementary", which is what shipped until someone read it out loud.
  */
@@ -74,9 +74,9 @@ export const TIER_COLOR: Record<MilestoneTier, string> = {
   CUSTOM: "var(--medal)",
 };
 
-/** "1.5h", "327h", "45m", "—" for nothing recorded. */
+/** "1.5h", "327h", "45m", "-" for nothing recorded. */
 export function formatDuration(minutes: number | null | undefined): string {
-  if (minutes === null || minutes === undefined) return "—";
+  if (minutes === null || minutes === undefined) return "-";
   if (minutes < 60) return `${Math.round(minutes)}m`;
   const hours = minutes / 60;
   return hours >= 100 ? `${Math.round(hours)}h` : `${Number(hours.toFixed(1))}h`;

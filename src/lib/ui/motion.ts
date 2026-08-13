@@ -10,7 +10,7 @@ import type { Transition } from "motion/react";
  * whose whole premise is that a slow month still counts must not own an
  * animation that can express loss.
  *
- * Most motion in the app is plain CSS — see globals.css. `motion` is reached
+ * Most motion in the app is plain CSS, see globals.css. `motion` is reached
  * for only where CSS genuinely cannot go:
  *
  *   - shared-element transitions (`layoutId`), which have no CSS equivalent
@@ -20,7 +20,7 @@ import type { Transition } from "motion/react";
  * engine to fade a card in.
  */
 
-/** The house spring. Overshoots slightly, then settles — used for anything
+/** The house spring. Overshoots slightly, then settles, used for anything
  *  that should feel physical rather than merely animated. */
 export const SPRING: Transition = {
   type: "spring",

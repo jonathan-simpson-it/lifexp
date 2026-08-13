@@ -8,7 +8,7 @@ import { formatHours } from "@/lib/progress/milestones";
  * A distance counting down to its new value.
  *
  * This is the app's one counting number, and it is here rather than on a page
- * total for two reasons. It is *earned* — it moves because the user just did
+ * total for two reasons. It is *earned*, it moves because the user just did
  * something, which is the goal-gradient reward landing at the instant of
  * effort. And it is honest about direction: the figure only ever falls, which
  * is the only way a number in this product is allowed to move on its own.
@@ -34,8 +34,8 @@ export function CountingFigure({
   useEffect(() => {
     // Reduced motion and "nothing changed" are handled as a zero-length
     // animation rather than an early setState. Every path then settles inside
-    // the frame callback, which keeps the state update out of the effect body
-    // — a synchronous one there costs a second render pass on every save.
+    // the frame callback, which keeps the state update out of the effect body,
+    // a synchronous one there costs a second render pass on every save.
     const duration = prefersReducedMotion() || from === to ? 0 : durationMs;
 
     let raf = 0;

@@ -11,7 +11,7 @@ import { WateredToast } from "./watered-toast";
 /**
  * Rewards, scaled to what actually happened.
  *
- * Logging something gets a toast and gets out of the way — someone recording
+ * Logging something gets a toast and gets out of the way, someone recording
  * their fourth thing of the day should not be interrupted four times. Earning a
  * medal gets the full moment, because that is genuinely rare.
  *
@@ -34,8 +34,8 @@ export function CelebrationHost({ result }: { result: LogResult }) {
   return (
     <>
       {/* With a skill attached, the confirmation *is* the reward: that skill's
-          plant gets watered and its remaining distance falls. Without one —
-          an entry logged against no skill — there is no plant to water, so it
+          plant gets watered and its remaining distance falls. Without one (an
+          entry logged against no skill) there is no plant to water, so it
           falls back to the plain line. */}
       {!toastDone &&
         (result.moment ? (
@@ -46,7 +46,7 @@ export function CelebrationHost({ result }: { result: LogResult }) {
           />
         ) : (
           <Toast
-            message={`Recorded — ${what}`}
+            message={`Recorded: ${what}`}
             onDone={() => setToastDone(true)}
           />
         ))}
@@ -102,7 +102,7 @@ function MedalMoment({
         </span>
 
         <h2 className="display mt-4 text-2xl font-semibold">{badge.title}</h2>
-        {/* States what happened. Never praises the person for being good — the
+        {/* States what happened. Never praises the person for being good, the
             medal is evidence, not a compliment. */}
         <p className="mt-2 text-ink-soft">{badge.description}</p>
 

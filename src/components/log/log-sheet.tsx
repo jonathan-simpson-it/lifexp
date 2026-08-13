@@ -25,7 +25,7 @@ export type LogResult = {
  * The quick-log sheet behind the centre button.
  *
  * The whole product rests on this being fast. Tapping a skill chip and then a
- * duration logs the thing in two taps and closes — no confirmation screen, no
+ * duration logs the thing in two taps and closes, no confirmation screen, no
  * date picker, no scrolling. Chat and the full form stay one tap deeper for the
  * cases the presets cannot express.
  */
@@ -154,7 +154,7 @@ export function LogSheet({
               </ul>
             ) : (
               <p className="text-sm text-muted">
-                No skills yet — describe what you did and one will be created.
+                No skills yet. Describe what you did and one will be created.
               </p>
             )}
 

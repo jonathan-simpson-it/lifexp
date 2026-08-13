@@ -7,8 +7,8 @@ import type { MilestoneTier } from "@/lib/progress/milestones";
  *
  * These assert the property the garden rests on: nothing in the plant system
  * can express decay. It is checked here rather than trusted to a comment,
- * because the tempting version of "watering" — a plant that gets thirsty and
- * browns when neglected — is a streak wearing a costume, and it would arrive
+ * because the tempting version of "watering", a plant that gets thirsty and
+ * browns when neglected, is a streak wearing a costume, and it would arrive
  * as a small, reasonable-looking patch.
  */
 

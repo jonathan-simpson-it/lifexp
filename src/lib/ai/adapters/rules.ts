@@ -10,7 +10,7 @@ import type {
  * The no-key extractor.
  *
  * This is not a stub. It is the reason the whole product can be demoed on a
- * laptop with no account, no key and no network — which matters a great deal
+ * laptop with no account, no key and no network, which matters a great deal
  * for the user interviews the PRD asks for, and for local development.
  *
  * It is deliberately conservative: it will decline to extract rather than
@@ -133,7 +133,7 @@ const WEEKDAYS = [
   "saturday",
 ];
 
-/** Words that mean "this did not happen" — an intent, not a record. */
+/** Words that mean "this did not happen", an intent, not a record. */
 const NON_EVENT = [
   /\bi (?:should|need to|want to|will|plan to|might|hope to)\b/i,
   /\bgoing to\b/i,
@@ -203,7 +203,7 @@ function parseDate(text: string, today: string): { date: string; explicit: boole
     };
   }
 
-  // "on tuesday", "last friday" — the most recent one that has passed.
+  // "on tuesday", "last friday", the most recent one that has passed.
   for (let i = 0; i < WEEKDAYS.length; i++) {
     if (new RegExp(`\\b(?:last |on )?${WEEKDAYS[i]}\\b`).test(lower)) {
       const todayDow = base.getUTCDay();
@@ -250,7 +250,7 @@ function matchSkills(
     return { names: [canonical], certain: false };
   }
 
-  // Nothing of theirs matched — fall back to well-known activity keywords.
+  // Nothing of theirs matched, fall back to well-known activity keywords.
   for (const template of TEMPLATES) {
     for (const keyword of template.match) {
       if (keyword.length >= 4 && new RegExp(`\\b${keyword}`, "i").test(lower)) {
@@ -281,14 +281,14 @@ function buildTitle(text: string): string {
       /^\s*(?:i|we)?\s*(?:just\s+)?(?:did|went to|went|had|spent|finished|started|got|attended)\b\s*/i,
       "",
     )
-    // Time references — already captured as occurredAt.
+    // Time references, already captured as occurredAt.
     .replace(
       /\b(?:today|yesterday|this morning|this afternoon|tonight|this evening|last night)\b/gi,
       "",
     )
     .replace(new RegExp(`\\b(?:last |on )?(?:${weekdayAlternation})\\b`, "gi"), "")
     .replace(/\b\d+\s*(?:days?|weeks?)\s*ago\b/gi, "")
-    // Durations — already captured as minutes.
+    // Durations, already captured as minutes.
     .replace(
       new RegExp(
         `\\b(?:for\\s+)?(?:\\d+(?:[.,]\\d+)?|${NUMBER_WORD_RE}|an|a)\\s*(?:and a half\\s*)?(?:h|hr|hrs|hour|hours|m|min|mins|minute|minutes)\\b`,
@@ -378,7 +378,7 @@ export class RulesExtractionProvider implements ExtractionProvider {
     return {
       items,
       clarification: needsSkill
-        ? "I couldn't tell which skill this belongs to — pick one below."
+        ? "I couldn't tell which skill this belongs to, pick one below."
         : null,
     };
   }

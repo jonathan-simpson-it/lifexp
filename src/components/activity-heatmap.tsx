@@ -39,7 +39,7 @@ export function ActivityHeatmap({
               return (
                 <span
                   key={day.date.toISOString()}
-                  title={`${day.date.toISOString().slice(0, 10)} — ${
+                  title={`${day.date.toISOString().slice(0, 10)}: ${
                     day.count === 0
                       ? "nothing recorded"
                       : `${day.count} ${day.count === 1 ? "experience" : "experiences"}`

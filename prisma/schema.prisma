@@ -1,4 +1,4 @@
-// LifeXP — schema
+// LifeXP, schema
 //
 // Two independent systems live here:
 //   Growth      Experience -> ExperienceSkill -> Skill -> Milestone
@@ -18,7 +18,7 @@ datasource db {
 }
 
 // ---------------------------------------------------------------------------
-// Auth.js (@auth/prisma-adapter) — field names are fixed by the adapter
+// Auth.js (@auth/prisma-adapter), field names are fixed by the adapter
 // ---------------------------------------------------------------------------
 
 model User {
@@ -32,7 +32,7 @@ model User {
   timezone String @default("UTC")
 
   // Google Calendar write-back. Null until the user opts in from Settings.
-  // We only ever touch the calendar whose id is stored here — the one we made.
+  // We only ever touch the calendar whose id is stored here, the one we made.
   lifexpCalendarId  String?
   calendarSyncError String?
 
@@ -132,7 +132,7 @@ model Experience {
   // When it happened, as opposed to when it was recorded.
   occurredAt DateTime
 
-  // Nullable on purpose. An experience with no duration is still evidence —
+  // Nullable on purpose. An experience with no duration is still evidence,
   // it contributes +1 to the skill's experience count.
   minutes Int?
 

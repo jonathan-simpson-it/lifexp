@@ -7,7 +7,7 @@ import "./globals.css";
 
   Newsreader is a literary serif with a real optical-size axis, so a 34px total
   and a 12px caption are drawn differently rather than scaled from one master.
-  It carries every number in the app — the numbers are the emotional payload,
+  It carries every number in the app. The numbers are the emotional payload,
   and this face makes "330h" read like something recorded rather than computed.
   Its italic is the product's voice (see `.voice` in globals.css).
 
@@ -16,7 +16,7 @@ import "./globals.css";
 
   next/font self-hosts both at build time: no request to Google from the
   browser, no layout shift, nothing to fetch at runtime. Only the first build
-  needs network — if that ever becomes a problem, drop the woff2 files into
+  needs network. If that ever becomes a problem, drop the woff2 files into
   src/app/fonts/ and swap to next/font/local; the variables stay the same.
 */
 
@@ -24,7 +24,7 @@ const display = Newsreader({
   subsets: ["latin"],
   variable: "--font-display-face",
   style: ["normal", "italic"],
-  // Not included by default — next/font ships wght only, to keep the file
+  // Not included by default, next/font ships wght only, to keep the file
   // small. Without this, font-optical-sizing has nothing to act on.
   axes: ["opsz"],
   display: "swap",
@@ -39,7 +39,7 @@ const sans = Hanken_Grotesk({
 export const metadata: Metadata = {
   title: "LifeXP",
   description:
-    "LifeXP makes invisible progress visible. No streaks, no guilt — just evidence of the person you are gradually becoming.",
+    "LifeXP makes invisible progress visible. No streaks, no guilt. Just evidence of the person you are gradually becoming.",
 };
 
 export const viewport: Viewport = {

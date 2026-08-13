@@ -4,7 +4,7 @@ import { signIn } from "./helpers";
 /**
  * Design review captures.
  *
- * Not assertions — these exist so a person (or an agent) can look at the app
+ * Not assertions, these exist so a person (or an agent) can look at the app
  * rather than reason about it. Several defects in this codebase were only ever
  * found by looking: the plant stages that were indistinguishable at 76px, and
  * the milestone chip whose label was the tier colour.

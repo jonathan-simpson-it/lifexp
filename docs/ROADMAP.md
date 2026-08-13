@@ -1,4 +1,4 @@
-# LifeXP — Roadmap
+# LifeXP Roadmap
 
 Where the build is against the PRD, what is deliberately missing, and what comes
 next. PRD stages are from [`../../LifeXP-PRD.md`](../../LifeXP-PRD.md).
@@ -9,16 +9,16 @@ next. PRD stages are from [`../../LifeXP-PRD.md`](../../LifeXP-PRD.md).
 
 | PRD stage | Status |
 |---|---|
-| **Stage 0 — Prototype** | ✅ Complete |
-| **Stage 1 — MVP** | ✅ Complete |
-| **Redesign — gamified product** | ✅ Complete (design system, mobile shell, garden, calendar, celebrations, landing page) |
-| Stage 2 — Calendar, imports, AI suggestions | 🟡 Calendar write-back done; imports and suggestions not started |
-| Stage 3 — Health apps, third-party, subscriptions | ⬜ Not started |
-| Stage 4 — Life analytics, reviews | ⬜ Not started |
+| **Stage 0, Prototype** | ✅ Complete |
+| **Stage 1, MVP** | ✅ Complete |
+| **Redesign, gamified product** | ✅ Complete (design system, mobile shell, garden, calendar, celebrations, landing page) |
+| Stage 2, Calendar, imports, AI suggestions | 🟡 Calendar write-back done; imports and suggestions not started |
+| Stage 3, Health apps, third-party, subscriptions | ⬜ Not started |
+| Stage 4, Life analytics, reviews | ⬜ Not started |
 
 ---
 
-## Stage 0 — Prototype ✅
+## Stage 0, Prototype ✅
 
 Goal: validate whether people understand the idea.
 
@@ -36,7 +36,7 @@ bar, E (input → LLM → JSON → DB) the extraction pipeline.
 
 ---
 
-## Stage 1 — MVP ✅
+## Stage 1, MVP ✅
 
 | PRD item | Where |
 |---|---|
@@ -91,14 +91,14 @@ to accept or reject:
 | Question | Recommendation |
 |---|---|
 | What exactly is an "experience"? | Something that *happened*, in the past, that the person did. Not a plan, not a feeling. This is already how the extractor behaves. |
-| Can one experience belong to multiple skills? | Yes — implemented, with full duration to each. See ARCHITECTURE §4.1. |
+| Can one experience belong to multiple skills? | Yes, implemented, with full duration to each. See ARCHITECTURE §4.1. |
 | Should duration always matter? | No. `minutes` is nullable and an undated experience still counts as evidence. |
 | Is "evidence" better than XP? | Yes as language; the UI never says XP. But medals need countable substrate, which is what hours and counts are. |
 | Should every skill have measurable units? | Hours + count universally; `secondaryUnit` decorative. |
-| How should users create skills? | Both — explicitly on `/growth`, or implicitly by mentioning one in chat. |
+| How should users create skills? | Both, explicitly on `/growth`, or implicitly by mentioning one in chat. |
 | When should AI ask follow-ups? | When it cannot attribute a skill, or confidence < 0.6. Implemented. |
 | How confident before auto-categorising? | It never auto-categorises without confirmation. That is the point. |
-| Is chat the default homepage? | No — dashboard with chat pinned. Decided this session. |
+| Is chat the default homepage? | No, dashboard with chat pinned. Decided this session. |
 | Is structured input still necessary? | Yes. Typing "45" is faster than composing a sentence. |
 | Is 3 skills the right free tier? | Unknown. Do not decide before the interviews. |
 
@@ -117,7 +117,7 @@ Learning Mode.
 | `npm run test:e2e` | 14 passing |
 | `npm run build` | succeeds, 12 routes |
 
-**Guard tests to keep green** — these encode the product, not just the code:
+**Guard tests to keep green**, these encode the product, not just the code:
 `e2e/philosophy.spec.ts` (no punitive language, no red anywhere) and the
 "no streak mechanics" block in `award-engine.test.ts`.
 

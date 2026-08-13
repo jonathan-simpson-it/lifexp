@@ -22,7 +22,7 @@ const TIME = new Intl.DateTimeFormat("en-GB", {
  * calendar.
  *
  * This exists so the calendar feature can be inspected and understood without
- * Google credentials — otherwise it is the one part of the product that is
+ * Google credentials, otherwise it is the one part of the product that is
  * invisible on a machine that hasn't been through an OAuth setup. It calls the
  * same `buildEventBody` the live sync uses, so what you see here is what would
  * be sent, not an illustration of it.

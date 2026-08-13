@@ -12,7 +12,7 @@ import { formatDuration, skillColor } from "@/lib/ui/format";
  * Month grid.
  *
  * Days with activity carry one dot per skill in that skill's colour. Empty days
- * render a faint dot rather than a gap — the same rule the heatmap follows,
+ * render a faint dot rather than a gap, the same rule the heatmap follows,
  * because a row of holes reads as a broken chain, and there is no chain here to
  * break.
  */
@@ -146,8 +146,8 @@ export function MonthGrid({ data }: { data: CalendarMonth }) {
                   No negative z-index. The obvious `-z-10` sends the pill behind
                   the enclosing card's background rather than merely behind the
                   cell's contents, because a `position: relative` button with
-                  `z-index: auto` establishes no stacking context to contain it
-                  — so the pill vanished and the selected day was left as cream
+                  `z-index: auto` establishes no stacking context to contain it,
+                  so the pill vanished and the selected day was left as cream
                   text on cream. Paint order is handled by making the pill and
                   the contents siblings, with the contents positioned so they
                   land on top. */}

@@ -3,7 +3,7 @@
  *
  * The whole point of this module is what it refuses to compute. There is no
  * "overdue" boolean, no days-late number, no failure count, and no streak. An
- * item that has not been done in a while is simply *faded* — the gradient runs
+ * item that has not been done in a while is simply *faded*, the gradient runs
  * from fresh to faded and stops there.
  *
  * Pure and dependency-free so a test can assert the vocabulary directly.
@@ -71,7 +71,7 @@ export type MaintenanceCard = {
 
 /**
  * Most faded first, so the answer to "what could use attention?" is just the
- * top of the list — without the app ever having to say anything is wrong.
+ * top of the list, without the app ever having to say anything is wrong.
  */
 export function sortByFaded(cards: MaintenanceCard[]): MaintenanceCard[] {
   return [...cards].sort((a, b) => {

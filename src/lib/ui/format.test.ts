@@ -51,7 +51,7 @@ describe("skillColor solid", () => {
 
   it("still tells skills apart", () => {
     // Compressing lightness for contrast must not collapse the set into one
-    // colour — that would make the calendar dots useless.
+    // colour, that would make the calendar dots useless.
     const distinct = new Set(SEEDS.map((s) => skillColor(s, { solid: true })));
     expect(distinct.size).toBeGreaterThan(30);
   });

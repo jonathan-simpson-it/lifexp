@@ -35,7 +35,7 @@ export default async function MedalsPage() {
 
         {milestones.length === 0 ? (
           <p className="mt-2 text-sm text-muted">
-            None yet. They arrive on their own as the hours accumulate — there is
+            None yet. They arrive on their own as the hours accumulate. There is
             nothing to claim.
           </p>
         ) : (

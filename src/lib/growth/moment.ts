@@ -9,8 +9,8 @@ import {
  * One skill's state at one instant.
  *
  * This exists for the reward moment. When something is logged the app wants to
- * show what actually changed — the plant growing a stage, the remaining
- * distance dropping — and "what changed" needs a before and an after, which no
+ * show what actually changed, the plant growing a stage, the remaining
+ * distance dropping, and "what changed" needs a before and an after, which no
  * other read model provides. `getGrowthOverview` loads every skill a user has;
  * this loads one, so it is cheap enough to call twice on a write path.
  */
@@ -19,7 +19,7 @@ export type SkillMoment = {
   name: string;
   colorSeed: number;
   templateKey: string | null;
-  /** Highest achieved tier — the plant's stage comes from this and nothing else. */
+  /** Highest achieved tier, the plant's stage comes from this and nothing else. */
   tier: MilestoneTier | null;
   totalMinutes: number;
   experienceCount: number;
@@ -45,8 +45,8 @@ export async function getSkillMoment(
   if (!skill) return null;
 
   // Only this skill's experiences. An experience's full duration counts toward
-  // each skill it is linked to, so this is a straight sum with no apportioning
-  // — the same rule ARCHITECTURE §4.1 describes.
+  // each skill it is linked to, so this is a straight sum with no apportioning,
+  // the same rule ARCHITECTURE §4.1 describes.
   const rows = await db.experience.findMany({
     where: { userId, skills: { some: { skillId } } },
     select: { minutes: true },

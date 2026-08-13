@@ -89,7 +89,7 @@ export async function createExperience(input: ExperienceInput) {
     skillIds.add(skill.id);
   }
 
-  // Only link skills that actually belong to this user — skillIds arrives from
+  // Only link skills that actually belong to this user, skillIds arrives from
   // the client, and a server action is reachable by direct POST.
   const owned = await db.skill.findMany({
     where: { userId, id: { in: [...skillIds] } },
@@ -97,7 +97,7 @@ export async function createExperience(input: ExperienceInput) {
   });
 
   // Snapshot the skill *before* the write so the reward moment can show what
-  // changed — the plant's stage and the distance still to go. Taken here
+  // changed, the plant's stage and the distance still to go. Taken here
   // rather than in the client because the client only knows the skill's name
   // and colour, not where it sits on its ladder.
   const primarySkillId = owned[0]?.id ?? null;
@@ -213,7 +213,7 @@ export async function deleteExperience(id: string) {
   }
 
   await db.experience.delete({ where: { id } });
-  // Remove the mirror too — a deleted experience that lingers in the calendar
+  // Remove the mirror too, a deleted experience that lingers in the calendar
   // makes the record untrustworthy in exactly the way this product can't afford.
   await deleteExperienceEvent(userId, existing.googleEventId);
   await syncProgress(userId);

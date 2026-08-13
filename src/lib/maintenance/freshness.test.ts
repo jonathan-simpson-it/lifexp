@@ -29,7 +29,7 @@ describe("freshness", () => {
 
   /**
    * The important one. Going far past the interval must saturate, never
-   * overflow into a growing overdue quantity — there is no such measure in
+   * overflow into a growing overdue quantity, there is no such measure in
    * this product.
    */
   it("caps at full instead of overflowing", () => {
@@ -57,7 +57,7 @@ describe("freshness", () => {
 
   /**
    * The vocabulary guarantee. If someone later adds "overdue" to a label, this
-   * fails — which is the point.
+   * fails, which is the point.
    */
   it("never uses punitive language", () => {
     const forbidden = /overdue|late|missed|failed|behind|due|expired|neglect/i;

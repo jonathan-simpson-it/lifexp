@@ -45,7 +45,7 @@ export default function AppError({
         </>
       ) : (
         <p className="mt-3 text-ink-soft">
-          Nothing you recorded is affected — this is a display failure, not a
+          Nothing you recorded is affected. This is a display failure, not a
           data one.
         </p>
       )}

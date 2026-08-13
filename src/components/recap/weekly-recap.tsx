@@ -26,7 +26,7 @@ const DISMISS_KEY = "lifexp:recap-dismissed-week";
 
 /**
  * localStorage is an external store, so it is read through the API React
- * provides for exactly that. The alternative — setState inside an effect —
+ * provides for exactly that. The alternative, setState inside an effect,
  * triggers a second render pass on every mount.
  */
 function subscribe(onChange: () => void) {
@@ -88,7 +88,7 @@ export function WeeklyRecap({
       <p className="text-eyebrow text-accent-deep uppercase">Your week</p>
 
       {/* The reassurance lines get the voice italic; the factual one does not.
-          That split is the point of the treatment — it marks which sentences
+          That split is the point of the treatment, it marks which sentences
           are the product speaking rather than reporting. */}
       {quiet ? (
         <>
@@ -107,7 +107,7 @@ export function WeeklyRecap({
           </h2>
           {light ? (
             <p className="voice mt-1.5">
-              A lighter week than usual. It still counts — that is the whole
+              A lighter week than usual. It still counts, that is the whole
               point.
             </p>
           ) : (

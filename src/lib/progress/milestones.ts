@@ -1,7 +1,7 @@
 /**
  * Milestone ladders.
  *
- * Deliberately dependency-free — no Prisma import — so this and the award
+ * Deliberately dependency-free, no Prisma import, so this and the award
  * engine can be unit-tested without a generated client or a database. The tier
  * strings match the Prisma `MilestoneTier` enum by value, which is all Prisma
  * requires when writing.
@@ -218,7 +218,7 @@ export function nextMilestone(
    * The same distance as `remainingLabel`, unformatted.
    *
    * The reward moment animates this value downward as the log lands, which
-   * needs a number — a formatted string cannot be interpolated. Null once
+   * needs a number, a formatted string cannot be interpolated. Null once
    * every milestone is reached.
    */
   remaining: number | null;
@@ -268,7 +268,7 @@ export function nextMilestone(
   };
 }
 
-/** "1.5h", "327h", "45m" — compact and never zero-padded. */
+/** "1.5h", "327h", "45m", compact and never zero-padded. */
 export function formatHours(minutes: number): string {
   if (minutes < 60) return `${Math.round(minutes)}m`;
   const hours = minutes / 60;

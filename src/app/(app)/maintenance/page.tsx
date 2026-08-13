@@ -40,7 +40,7 @@ export default async function MaintenancePage() {
         </h2>
         <p className="mt-1 text-sm text-muted">
           The interval is your own sense of rhythm, not a deadline. Nothing
-          happens when it passes — the item just looks a little more faded.
+          happens when it passes. The item just looks a little more faded.
         </p>
 
         <form action={createMaintenanceItem} className="mt-3 space-y-2">

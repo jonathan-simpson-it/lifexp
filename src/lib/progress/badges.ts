@@ -2,7 +2,7 @@
  * Global badge definitions.
  *
  * The philosophical centre of the app lives in this file. Every predicate here
- * rewards accumulation, breadth, or *returning* — never consecutive days. There
+ * rewards accumulation, breadth, or *returning*, never consecutive days. There
  * is deliberately no streak badge, and `quiet-month` exists specifically to
  * celebrate a month where almost nothing happened.
  *

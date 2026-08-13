@@ -6,11 +6,11 @@ import { Logo, Plant, Medal } from "@/components/icons";
 import { formatDuration } from "@/lib/ui/format";
 
 export const metadata: Metadata = {
-  title: "LifeXP — you've done more than you remember",
+  title: "LifeXP: you've done more than you remember",
   description:
     "LifeXP keeps the evidence of everything you're slowly getting better at, so the progress is visible while you're still in the middle of it. No streaks, ever.",
   openGraph: {
-    title: "LifeXP — you've done more than you remember",
+    title: "LifeXP, you've done more than you remember",
     description:
       "Track the things with feedback cycles measured in years. No streaks, no guilt, a slow month still counts.",
     type: "website",
@@ -71,7 +71,7 @@ function Hero() {
         </h1>
 
         <p className="mt-5 text-lg text-ink-soft">
-          The things most worth doing pay off over months or years — a language,
+          The things most worth doing pay off over months or years: a language,
           an instrument, a body, a mind. Progress that slow is invisible, so it
           feels like nothing is happening. LifeXP keeps the evidence.
         </p>
@@ -189,7 +189,7 @@ function ThePromise() {
   const promises = [
     {
       title: "No streaks",
-      body: "There is no counter to break, because there is no counter. Miss three weeks and nothing is lost — one badge exists purely to welcome you back.",
+      body: "There is no counter to break, because there is no counter. Miss three weeks and nothing is lost. One badge exists purely to welcome you back.",
     },
     {
       title: "No guilt",
@@ -197,7 +197,7 @@ function ThePromise() {
     },
     {
       title: "A slow month still counts",
-      body: "There is a medal for a month where you managed almost nothing — because showing up at all in a hard month is the part that matters.",
+      body: "There is a medal for a month where you managed almost nothing, because showing up at all in a hard month is the part that matters.",
     },
   ];
 
@@ -207,7 +207,7 @@ function ThePromise() {
         Built to be kind to you
       </h2>
       <p className="mt-2 max-w-2xl text-ink-soft">
-        Most trackers motivate with loss — a streak you mustn&rsquo;t break, a
+        Most trackers motivate with loss: a streak you mustn&rsquo;t break, a
         chain you mustn&rsquo;t drop. That works right up until life happens, and
         then it makes you feel like a failure and you quit. LifeXP has none of it.
       </p>

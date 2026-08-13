@@ -23,9 +23,9 @@ test.describe("recording an experience", () => {
     await expect(sheet.getByRole("button", { name: "1h", exact: true })).toBeVisible();
     await sheet.getByRole("button", { name: "1h", exact: true }).click();
 
-    // Sheet closes and the quiet confirmation appears — no blocking dialog.
+    // Sheet closes and the quiet confirmation appears, no blocking dialog.
     await expect(sheet).toBeHidden();
-    await expect(page.getByText(/Recorded — 1h of Japanese/)).toBeVisible();
+    await expect(page.getByText(/Recorded: 1h of Japanese/)).toBeVisible();
   });
 
   test("chat extracts a draft and only saves once confirmed", async ({ page }) => {
@@ -77,6 +77,6 @@ test.describe("recording an experience", () => {
 
     await page.keyboard.press("Escape");
     await expect(sheet).toBeHidden();
-    await expect(page.getByText(/Recorded —/)).toHaveCount(0);
+    await expect(page.getByText(/Recorded: /)).toHaveCount(0);
   });
 });

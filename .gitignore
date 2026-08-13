@@ -42,7 +42,7 @@ yarn-error.log*
 /playwright-report
 
 # editor-specific skill mirrors written by `prisma init`
-# (.claude/ is kept — it is the convention this repo already uses)
+# (.claude/ is kept, it is the convention this repo already uses)
 /.agents
 /.windsurf
 

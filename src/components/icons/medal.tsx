@@ -5,7 +5,7 @@ import type { MilestoneTier } from "@/lib/progress/milestones";
  *
  * One shape family across all tiers so a shelf of them reads as a set, with
  * rank expressed through the ribbon, the number of points on the star, and the
- * metal — not through size. A Gold medal is not bigger than a Bronze; nobody's
+ * metal, not through size. A Gold medal is not bigger than a Bronze; nobody's
  * first milestone should look small next to someone's fifth.
  */
 

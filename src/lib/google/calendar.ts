@@ -132,7 +132,7 @@ export async function ensureLifeXPCalendar(userId: string): Promise<string | nul
   const calendar = google.calendar({ version: "v3", auth: client });
 
   if (user?.lifexpCalendarId) {
-    // Confirm it still exists — the user may have deleted it on their end.
+    // Confirm it still exists, the user may have deleted it on their end.
     try {
       await calendar.calendars.get({ calendarId: user.lifexpCalendarId });
       return user.lifexpCalendarId;
@@ -148,7 +148,7 @@ export async function ensureLifeXPCalendar(userId: string): Promise<string | nul
     requestBody: {
       summary: CALENDAR_NAME,
       description:
-        "Experiences recorded in LifeXP. Safe to hide or delete — LifeXP keeps its own copy.",
+        "Experiences recorded in LifeXP. Safe to hide or delete, LifeXP keeps its own copy.",
     },
   });
 
@@ -222,7 +222,7 @@ function eventBody(experience: SyncableExperience) {
  * Mirror an experience into the user's LifeXP calendar.
  *
  * Returns the event id, or null if the user hasn't connected calendar access.
- * Never throws — callers treat calendar sync as a side effect of saving, not a
+ * Never throws, callers treat calendar sync as a side effect of saving, not a
  * precondition for it.
  */
 export async function upsertExperienceEvent(
@@ -261,7 +261,7 @@ export async function upsertExperienceEvent(
     console.error("[lifexp] calendar write failed:", error);
     await recordSyncError(
       userId,
-      "Couldn't reach Google Calendar. Your experiences are saved — syncing will resume automatically.",
+      "Couldn't reach Google Calendar. Your experiences are saved, syncing will resume automatically.",
     );
     return null;
   }

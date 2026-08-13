@@ -25,7 +25,7 @@ export function SkillCardList({ skills }: { skills: SkillCardData[] }) {
  * The goal-gradient card.
  *
  * The distance to the next milestone is the single strongest habit mechanic in
- * the product — people accelerate as a goal gets closer — so it is set larger
+ * the product, people accelerate as a goal gets closer, so it is set larger
  * than the running total and in the action colour. The total is evidence; the
  * remaining distance is the pull.
  */
@@ -62,7 +62,7 @@ export function SkillCard({ skill }: { skill: SkillCardData }) {
           // The tier colour is a DOT, not the text colour.
           //
           // It used to colour the label itself, which measured 3.24:1 for gold
-          // and 3.29:1 for first-steps against cream — fine for a graphic,
+          // and 3.29:1 for first-steps against cream, fine for a graphic,
           // well under the 4.5:1 small text needs. The tier colours were
           // classified as graphical when the palette was audited, and this was
           // the one place they were not being used as graphics. As a dot they

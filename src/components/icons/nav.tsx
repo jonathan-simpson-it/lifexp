@@ -2,7 +2,7 @@
  * Bottom-bar and sidebar icons.
  *
  * Each takes an `active` flag and renders a filled variant rather than swapping
- * to a different glyph — the shape stays constant so the eye tracks it through
+ * to a different glyph, the shape stays constant so the eye tracks it through
  * the transition, and only the weight changes.
  *
  * 24px grid, 2px rounded strokes, drawn to sit optically centred above a label.
@@ -28,7 +28,7 @@ const stroke = {
   strokeLinejoin: "round" as const,
 };
 
-/** Today — a sun over the horizon. Warmer than a house, and about *now*. */
+/** Today, a sun over the horizon. Warmer than a house, and about *now*. */
 export function IconToday({ active, size = 24 }: IconProps) {
   return (
     <svg {...base(size)}>
@@ -45,7 +45,7 @@ export function IconToday({ active, size = 24 }: IconProps) {
   );
 }
 
-/** Growth — a plant, echoing the garden. */
+/** Growth, a plant, echoing the garden. */
 export function IconGrowth({ active, size = 24 }: IconProps) {
   return (
     <svg {...base(size)}>
@@ -65,7 +65,7 @@ export function IconGrowth({ active, size = 24 }: IconProps) {
   );
 }
 
-/** Calendar — a month grid, matching the page it opens. */
+/** Calendar, a month grid, matching the page it opens. */
 export function IconCalendar({ active, size = 24 }: IconProps) {
   return (
     <svg {...base(size)}>
@@ -90,7 +90,7 @@ export function IconCalendar({ active, size = 24 }: IconProps) {
   );
 }
 
-/** Medals — a rosette. */
+/** Medals, a rosette. */
 export function IconMedals({ active, size = 24 }: IconProps) {
   return (
     <svg {...base(size)}>

@@ -1,4 +1,4 @@
-# LifeXP — Architecture
+# LifeXP Architecture
 
 Full technical context for the app. Read this before changing anything
 structural; `../README.md` is the short version for getting it running.
@@ -18,7 +18,7 @@ Two independent systems under one shell.
 | **Maintenance** | "When was the last time I did this?" | `MaintenanceItem` → `MaintenanceLog` |
 
 They share a user and a dashboard and nothing else. A change to one should not
-require touching the other — if it does, something has been coupled that
+require touching the other. If it does, something has been coupled that
 shouldn't be.
 
 On top of both sits a **medal layer** (`BadgeAward`) that reads from everything
@@ -30,13 +30,13 @@ and writes only to itself.
 
 | Concern | Choice | Note |
 |---|---|---|
-| Framework | Next.js 16.3, App Router, Turbopack | Turbopack is the default in 16 — no flag |
+| Framework | Next.js 16.3, App Router, Turbopack | Turbopack is the default in 16, no flag |
 | React | 19.2 | |
 | Language | TypeScript, strict | |
 | Styling | Tailwind v4 (`@theme` tokens in `globals.css`) | no config file; tokens are CSS variables. The visual language they encode is written down in [`DESIGN.md`](../DESIGN.md) |
 | Typefaces | Newsreader + Hanken Grotesk via `next/font` | self-hosted at build time; no CDN request, no layout shift |
 | Database | Postgres via Prisma 7 | Prisma 7 requires a **driver adapter** (`@prisma/adapter-pg`) |
-| Auth | Auth.js v5 (`next-auth@beta`) + `@auth/prisma-adapter` | JWT sessions — see §6 |
+| Auth | Auth.js v5 (`next-auth@beta`) + `@auth/prisma-adapter` | JWT sessions, see §6 |
 | Icons | `lucide-react` | explicit import map, no dynamic lookup |
 | Unit tests | Vitest | `vitest.config.mts` |
 | E2E | Playwright | mobile viewport by default |
@@ -44,7 +44,7 @@ and writes only to itself.
 ### Next.js 16 specifics that will bite you
 
 The bundled docs at `node_modules/next/dist/docs/` are version-matched and
-authoritative — `AGENTS.md` points there deliberately. The changes that matter
+authoritative; `AGENTS.md` points there deliberately. The changes that matter
 here:
 
 - `params`, `searchParams`, `cookies()`, `headers()` are **async only**. See
@@ -99,7 +99,7 @@ bd/
         │   │   └── calendar.ts
         │   └── api/
         │       ├── auth/[...nextauth]/
-        │       ├── chat/          extraction — READ ONLY, never writes
+        │       ├── chat/          extraction, READ ONLY, never writes
         │       └── export/        full JSON export
         ├── components/            presentational + small client islands
         │   ├── icons/             custom SVG set: plants, medals, nav, logo
@@ -140,7 +140,7 @@ If you add logic worth testing, put it in one of those, not in a query module.
 
 ## 4. Data model
 
-See `prisma/schema.prisma` — it is commented at the points that matter. The
+See `prisma/schema.prisma`, it is commented at the points that matter. The
 non-obvious parts:
 
 ### 4.1 Multi-skill duration (the subtle rule)
@@ -161,7 +161,7 @@ into a join-table aggregate without re-reading that test.
 ### 4.2 Nullable duration
 
 `Experience.minutes` is nullable and that is load-bearing. "Ordered lunch
-entirely in Japanese" has no duration and is still evidence — it contributes +1
+entirely in Japanese" has no duration and is still evidence, it contributes +1
 to the skill's experience count. Never default it to a guess.
 
 ### 4.3 No streak field
@@ -209,7 +209,7 @@ user types
           → revalidatePath("/", "layout")
 ```
 
-The write path is **one function** — `createExperience` — shared by chat and the
+The write path is **one function**, `createExperience`, shared by chat and the
 structured form, so validation cannot drift between them.
 
 ### 5.2 syncProgress (`lib/progress/sync.ts`)
@@ -234,7 +234,7 @@ dropping back below a threshold leaves the medal in place. See DECISIONS §4.
 ### 5.3 Freshness (`lib/maintenance/freshness.ts`)
 
 `fraction = clamp(daysSince / intervalDays, 0, 1)`. It **saturates** rather than
-overflowing — there is no "days late" quantity anywhere in the system. The tone
+overflowing, there is no "days late" quantity anywhere in the system. The tone
 ladder is `fresh → settling → aging → distant`, and "been a while" is as pointed
 as the copy ever gets.
 
@@ -269,7 +269,7 @@ lib/ai/types.ts       ExtractionProvider, Zod schema, JSON Schema mirror
 lib/ai/prompt.ts      one shared system prompt
 lib/ai/provider.ts    resolveProvider() + extractExperiences() with fallback
 lib/ai/adapters/
-  rules.ts              default — no key, no network, fully tested
+  rules.ts              default, no key, no network, fully tested
   openai-compatible.ts  raw fetch: OpenAI, Groq, OpenRouter, DeepSeek, Ollama
   anthropic.ts          official SDK, structured outputs, effort: low
   google.ts             Gemini REST, restricted OpenAPI schema dialect
@@ -294,7 +294,7 @@ changes.
 
 Opt-in from Settings, never at sign-in.
 
-- Scope: `calendar.app.created` — the narrowest one that exists. It grants access
+- Scope: `calendar.app.created`, the narrowest one that exists. It grants access
   only to calendars this app created, so LifeXP *cannot* read existing calendars.
 - LifeXP creates one secondary calendar named **LifeXP** and writes only there.
 - `Experience.googleEventId` links the two. Edits update the event; deletes
@@ -302,7 +302,7 @@ Opt-in from Settings, never at sign-in.
 - Every function in `lib/google/calendar.ts` swallows its own errors and records
   a banner on `User.calendarSyncError`. **A calendar failure must never fail a
   save.**
-- Disconnecting stops syncing and leaves the calendar in place — it is the
+- Disconnecting stops syncing and leaves the calendar in place, it is the
   user's record.
 
 > ⚠️ Re-verify the scope string against current Google Calendar API docs before
@@ -329,8 +329,8 @@ which is every machine used for a user interview.
 | Vitest | 80 | `npm test` |
 | Playwright | 14 | `npm run test:e2e` |
 
-The e2e config sets `LIFEXP_E2E=1`, which turns off the Next dev-tools indicator
-— its portal is pinned to the bottom of the viewport and swallows clicks on the
+The e2e config sets `LIFEXP_E2E=1`, which turns off the Next dev-tools indicator,
+its portal is pinned to the bottom of the viewport and swallows clicks on the
 capture bar.
 
 **`e2e/philosophy.spec.ts` is not a nice-to-have.** It walks every page and fails
@@ -345,11 +345,11 @@ are the tests that keep the product honest as it grows.
 | Task | File |
 |---|---|
 | Add a badge | `lib/progress/badges.ts` (+ icon in `components/badge-icon.tsx`) |
-| Change a milestone ladder | `lib/progress/milestones.ts` — affects **new** skills only |
+| Change a milestone ladder | `lib/progress/milestones.ts`, affects **new** skills only |
 | Add an AI provider | `lib/ai/adapters/`, then `lib/ai/provider.ts` |
 | Change what chat understands | `lib/ai/adapters/rules.ts` and/or `lib/ai/prompt.ts` |
-| Add a mutation | `app/actions/` — must call `requireUserId()` |
-| Change colours/typography | `app/globals.css` (`:root` + `@theme`) — then update [`DESIGN.md`](../DESIGN.md), and re-check contrast against **all four** grounds, not just the papers |
-| Add or change an animation | `app/globals.css` keyframes; `lib/ui/motion.ts` only for shared-element transitions and animated numbers. Read [`DESIGN.md`](../DESIGN.md) §7 first — motion may only move in the direction of growth |
+| Add a mutation | `app/actions/`, must call `requireUserId()` |
+| Change colours/typography | `app/globals.css` (`:root` + `@theme`), then update [`DESIGN.md`](../DESIGN.md), and re-check contrast against **all four** grounds, not just the papers |
+| Add or change an animation | `app/globals.css` keyframes; `lib/ui/motion.ts` only for shared-element transitions and animated numbers. Read [`DESIGN.md`](../DESIGN.md) §7 first, motion may only move in the direction of growth |
 | Change dashboard composition | `app/(app)/page.tsx` |
 | Change what export contains | `app/api/export/route.ts` |

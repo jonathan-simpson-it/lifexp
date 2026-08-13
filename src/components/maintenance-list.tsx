@@ -18,8 +18,8 @@ import { logMaintenance, undoLastMaintenance } from "@/app/actions/maintenance";
 
   These used to mix --growth (a *text* token) with --muted, which produced a
   near-black bar. Since the bar fills as time passes, the least-recently-done
-  item ended up with the darkest, widest, heaviest element on the whole screen
-  — on maintenance, the least important section. That is a hierarchy inversion,
+  item ended up with the darkest, widest, heaviest element on the whole screen,
+  on maintenance, the least important section. That is a hierarchy inversion,
   and on something a user has "not done for a while" it reads as an alarm in a
   product that refuses to nag.
 
@@ -54,7 +54,7 @@ export function MaintenanceList({
     return (
       <p className="text-sm text-muted">
         Nothing here yet. Maintenance is for the recurring things you&rsquo;d
-        rather not hold in your head — bedsheets, plants, the gym.
+        rather not hold in your head, bedsheets, plants, the gym.
       </p>
     );
   }

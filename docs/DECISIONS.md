@@ -1,16 +1,16 @@
-# LifeXP — Decision log
+# LifeXP Decision log
 
 Why things are the way they are. Each entry records the decision, what it rules
 out, and what would justify revisiting it.
 
-Read this before overturning something that looks arbitrary — most of these look
+Read this before overturning something that looks arbitrary, most of these look
 arbitrary until you hit the case they were made for.
 
 ---
 
 ## 1. Hours + experience count as the substrate; medals as the surface
 
-**Decision.** Every skill accumulates two universal numbers — total minutes and
+**Decision.** Every skill accumulates two universal numbers, total minutes and
 number of experiences. Milestone medals and global badges are computed from
 those. An optional `secondaryUnit` ("books", "km") is decorative only and never
 awards anything.
@@ -18,13 +18,13 @@ awards anything.
 **Why.** The client asked for something closer to GitHub achievements than to a
 points system. Medals need something countable underneath them, and per-skill
 custom units (books for reading, km for running) would mean per-unit logic in
-every ladder, dashboard, and cross-skill total — roughly double the surface area
+every ladder, dashboard, and cross-skill total, roughly double the surface area
 for a gain that is mostly cosmetic.
 
 **Rules out.** Cross-skill leaderboards in mixed units; "500 km" as a milestone.
 
 **Revisit if.** Users consistently report that hours misrepresent a skill they
-care about — reading is the likeliest candidate.
+care about, reading is the likeliest candidate.
 
 ---
 
@@ -48,7 +48,7 @@ app is.
 
 ---
 
-## 3. AI proposes, the user confirms — enforced at the boundary
+## 3. AI proposes, the user confirms, enforced at the boundary
 
 **Decision.** `/api/chat` returns drafts and has no write path to the
 `Experience` table. Saving is a separate server action triggered by the user.
@@ -58,7 +58,7 @@ product sells one thing: that the history is real evidence of what actually
 happened. A model that silently pads a vague sentence into a confident record
 destroys that, and no amount of later editing restores trust in it.
 
-**Consequence.** Drafts below 0.6 confidence open pre-expanded for editing —
+**Consequence.** Drafts below 0.6 confidence open pre-expanded for editing,
 when the extractor is guessing, the honest thing is to show the guess.
 
 ---
@@ -120,7 +120,7 @@ is rules. A hosted provider that fails falls back to rules.
 
 **Why.** The client asked for "any API, not limited to Claude". Beyond that, the
 rule-based path is what makes the app demoable with no key, no account, and no
-network — which matters directly for the five user interviews the PRD asks for,
+network, which matters directly for the five user interviews the PRD asks for,
 and for every future developer's first ten minutes.
 
 **Consequence.** The rule-based extractor is maintained as a real feature (34
@@ -136,14 +136,14 @@ its structured-output API.
 ## 8. A separate Google calendar, requested after sign-in
 
 **Decision.** Sign-in requests only `openid email profile`. Calendar access is a
-second, later consent from Settings, using `calendar.app.created` — a scope that
+second, later consent from Settings, using `calendar.app.created`, a scope that
 covers only calendars the app itself created. LifeXP creates one calendar named
 "LifeXP" and writes only there.
 
 **Why.** Two reasons. Asking for calendar permission at the door costs sign-ups
 from people who will never want it. And writing into someone's primary calendar
 mixes a record of their life with their appointments, which is both messy and
-hard to undo — a separate calendar can be hidden or deleted in one click.
+hard to undo, a separate calendar can be hidden or deleted in one click.
 
 **Consequence.** Disconnecting stops syncing and does **not** delete the
 calendar. It is the user's record.
@@ -179,20 +179,20 @@ migrations stop connecting, re-run it and update `.env`.
 growth, warm metal for medals. The palette defines **no red**.
 
 **Why.** The product is a record of a life, not a dashboard. And nothing in it is
-an error state — not a maintenance item untouched for a month, not a skill
+an error state, not a maintenance item untouched for a month, not a skill
 dormant since spring. Omitting the token means any red would have to be
 deliberately hardcoded, and an e2e test scans for it.
 
 ---
 
-## 12. Light only — no dark mode
+## 12. Light only, no dark mode
 
 **Decision.** `--paper` is cream (`#f7f1e1`) and there is **no**
 `prefers-color-scheme: dark` block. `color-scheme: only light` is set on
 `:root`, and `viewport.themeColor` is a single value.
 
 **Why.** The client asked for a light app. A dark-mode block would have
-overridden the cream on any device set to dark — which is most phones, and
+overridden the cream on any device set to dark, which is most phones, and
 therefore most of the devices the app will actually be demoed on. Honouring the
 request means light for everyone, not light-unless-your-phone-disagrees.
 
@@ -202,7 +202,7 @@ controls, scrollbars and autofill backgrounds underneath the palette.
 **Cost.** People who prefer dark interfaces get a bright app.
 
 **Revisit if.** The client wants a dark theme. It is one media block in
-`globals.css` — nothing else assumes a light ground, because every colour is a
+`globals.css`, nothing else assumes a light ground, because every colour is a
 token. The `cream ground` tests in `philosophy.spec.ts` would need updating at
 the same time; they currently assert cream under *both* colour schemes.
 
@@ -220,7 +220,7 @@ threatening loss. This product's premise is that a slow month still counts, so
 those mechanics are unavailable by definition. The four chosen loops can only
 ever deliver good news.
 
-**The strongest of them is the goal gradient** — people accelerate as a goal
+**The strongest of them is the goal gradient**, people accelerate as a goal
 gets closer, and the reward lands at the instant of effort, when the remaining
 distance visibly drops after logging.
 
@@ -232,14 +232,14 @@ distance visibly drops after logging.
 milestone. The component takes no `lastActiveAt` and no date of any kind.
 
 **Why.** There is then no code path that can wilt a plant. A skill untouched
-since spring renders exactly as it did the day it was last logged — the
+since spring renders exactly as it did the day it was last logged, the
 anti-streak rule expressed visually rather than merely promised.
 
 **Known consequence.** Two skills at the same tier render identically even when
 one has ten times the evidence: Japanese at 332h and Piano at 34.5h are both
-"Foundation", so both are saplings. This is defensible — each plant shows
+"Foundation", so both are saplings. This is defensible, each plant shows
 progress along *that skill's own ladder*, and the hours label underneath carries
-the absolute figure — but it is a real trade-off.
+the absolute figure, but it is a real trade-off.
 
 **Revisit if.** Users read the garden as a comparison between skills rather than
 as each skill's own journey. The fix would be to blend tier with absolute
@@ -250,7 +250,7 @@ evidence, at the cost of the mapping no longer being exactly the ladder.
 ## 15. Sage is the only colour, in three values
 
 **Decision.** `--accent` (#80988f), `--accent-deep` (#4f7266) and
-`--accent-soft` (#e3e9e6) — one hue (158) at three depths. `--growth` aliases
+`--accent-soft` (#e3e9e6), one hue (158) at three depths. `--growth` aliases
 the accent rather than holding a second green, and per-skill colours are
 generated inside the same hue band.
 
@@ -261,8 +261,8 @@ buttons or abandoning the chosen colour. The deep variant carries everything
 with text; the light one stays decorative. The audit script encodes exactly that
 rule, so using `--accent` for text fails the check.
 
-**Per-skill colours are sage too.** Skills still need to be distinguishable —
-the calendar draws a dot per skill — but arbitrary hues made those the loudest
+**Per-skill colours are sage too.** Skills still need to be distinguishable,
+the calendar draws a dot per skill, but arbitrary hues made those the loudest
 thing on screen in a palette meant to be a single colour. `skillColor` now
 varies **lightness** within hue 148–187, which separates cleanly inside one
 family.
@@ -284,14 +284,14 @@ ancestor background, so a half-applied theme fails the build.
 ## 16. Two chosen typefaces, and a scale of roles
 
 **Decision.** Newsreader (display, numerals, voice) and Hanken Grotesk (UI,
-body), self-hosted via `next/font`. Seven role-named type tokens —
-`text-eyebrow` through `text-hero` — each carrying its own line height, tracking
+body), self-hosted via `next/font`. Seven role-named type tokens,
+`text-eyebrow` through `text-hero`, each carrying its own line height, tracking
 and weight. The face changes at 20px: serif at or above `text-title`, sans below.
 
 **Why.** The app previously had no chosen typeface at all: `--font-display` was
 `Georgia` and `--font-sans` was the system stack, so the type was whatever the
 device happened to have. It was the one part of the design never actually
-designed, and with a palette this small — one colour, two grounds — type and
+designed, and with a palette this small, one colour, two grounds, type and
 space are what have to carry the hierarchy.
 
 Newsreader specifically for its optical-size axis. A 34px total and a 12px
@@ -304,7 +304,7 @@ the call site. `text-eyebrow` is a complete typographic decision, not a size tha
 still needs four more classes to look right.
 
 **Consequence.** A webfont that fails to load looks *almost* right, because the
-fallback stack is deliberately close — which makes it the one visual regression
+fallback stack is deliberately close, which makes it the one visual regression
 nobody spots by eye. `typefaces › the chosen faces are actually applied` asserts
 the computed family instead.
 
@@ -316,7 +316,7 @@ variables stay the same.
 
 ## 17. Motion only ever moves in the direction of growth
 
-**Decision.** Nothing in the app animates downward, drains, wilts or empties —
+**Decision.** Nothing in the app animates downward, drains, wilts or empties,
 except a UI element being dismissed, and the remaining-distance figure, which
 counts down because a smaller distance is good news. `src/lib/ui/motion.ts`
 deliberately contains no shrink, decay or fade-to-nothing preset.
@@ -327,21 +327,21 @@ because that animation will eventually get used.
 
 **The watering rule follows from it.** Logging waters the skill's plant, and a
 milestone crossing grows it a stage *while the water is on it*. In every farming
-game watering is an obligation — the plant gets thirsty, you owe it water, you
-feel bad when you don't — and that is a streak wearing a costume. So there is no
+game watering is an obligation, the plant gets thirsty, you owe it water, you
+feel bad when you don't, and that is a streak wearing a costume. So there is no
 thirsty state, no "needs water" prompt, and nothing that ever asks to be
 watered. Watering only ever happens as a consequence of the user recording
 something.
 
 **Two simplifications, both deliberate.** The watering renders inside the
 confirmation rather than over the garden, because logging works from every
-screen and the garden only exists on `/today` — one placement means the same
+screen and the garden only exists on `/today`, one placement means the same
 moment everywhere with no cross-tree coordination. And the garden's grow-in
 replays on every visit rather than once per session: a once-per-session flag has
 to survive SSR, and a wrong guess on the server means either a hydration
 mismatch or a flash of the settled state.
 
-**`motion` is used only where CSS cannot go** — shared-element transitions
+**`motion` is used only where CSS cannot go**, shared-element transitions
 (`layoutId`) and animating a number. Everything else is CSS keyframes. Without
 that boundary the bundle grows a physics engine to fade a card in.
 
@@ -357,8 +357,8 @@ that boundary the bundle grows a physics engine to fade a card in.
 sit on: `--paper`, `--paper-raised`, `--accent-soft` and `--medal-soft`.
 
 **Why.** The original audit measured foregrounds against the two paper grounds
-only. Half the text in the app sits on a tint instead — badge chips on
-`--medal-soft`, the active sidebar item on `--accent-soft` — and four
+only. Half the text in the app sits on a tint instead, badge chips on
+`--medal-soft`, the active sidebar item on `--accent-soft`, and four
 combinations were below AA without anyone noticing:
 
 | | |
@@ -374,7 +374,7 @@ reintroduce the problem. `--accent` is untouched: it is the client's chosen sage
 and it is a fill, never text.
 
 **The deeper cause was the test.** `no text is light-on-light` used a 3:1
-threshold — the bar for graphics, not for text — so everything above passed.
+threshold, the bar for graphics, not for text, so everything above passed.
 It now uses 4.5:1, which is what the palette always claimed. That change alone
 also catches the milestone chip on skill cards, which was rendering its label in
 the tier colour at 3.24:1.

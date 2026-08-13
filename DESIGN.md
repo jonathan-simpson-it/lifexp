@@ -1,4 +1,4 @@
-# LifeXP — Design System
+# LifeXP Design System
 
 A portable description of LifeXP's visual language, in the format design agents
 can act on. Attach this file to Claude Design, Cursor, v0 or Copilot and it
@@ -14,15 +14,15 @@ bug.**
 
 **LifeXP is a record of a life, not a dashboard of a life.**
 
-It holds evidence of what someone has slowly got better at — hours of Japanese,
+It holds evidence of what someone has slowly got better at: hours of Japanese,
 a piano ladder climbed over two years, a month where almost nothing happened.
 The visual language is printed matter: warm off-white grounds, a literary serif
 for anything that states a quantity, generous space, and one quiet colour.
 
 Three adjectives, in order: **warm, quiet, adult.**
 
-The atmosphere supports one emotional claim — *you have done more than you
-remember* — so the design is calm rather than energetic. Nothing shouts, because
+The atmosphere supports one emotional claim, *you have done more than you
+remember*, so the design is calm rather than energetic. Nothing shouts, because
 the numbers are already impressive to the person reading them, and shouting
 would make them feel sold to.
 
@@ -31,7 +31,7 @@ would make them feel sold to.
 > **Nothing in this product is an error, a warning, or a failure.**
 
 Not a maintenance item untouched for a month. Not a skill dormant since spring.
-Not a week with nothing in it. There is no failure state to design — which is
+Not a week with nothing in it. There is no failure state to design, which is
 why there is no red in the palette, no wilted plant, no broken-chain graphic,
 and no animation that can move downward.
 
@@ -82,7 +82,7 @@ noticing.
 White on `--accent-deep` is **5.98:1**, which is why every primary button uses
 the deep variant.
 
-### Decorative tokens — fills and graphics only
+### Decorative tokens (fills and graphics only)
 
 | Token | Hex | Role | On paper |
 |---|---|---|---|
@@ -113,7 +113,7 @@ The split exists because of contrast, not decoration:
 > `--accent-deep`. Using `--accent` for text is the single easiest way to break
 > this design system.
 
-### Tier colours — graphics only
+### Tier colours (graphics only)
 
 | Tier | Hex | On paper |
 |---|---|---|
@@ -126,12 +126,12 @@ The split exists because of contrast, not decoration:
 
 > These clear 3:1 as graphics and most do **not** clear 4.5:1 as text. A tier
 > colour may fill a medal mark or draw a dot. It may never be the colour of a
-> label, however small. Tier labels use `--ink-soft` beside a tier-coloured dot
-> — see the milestone chip on the skill card.
+> label, however small. Tier labels use `--ink-soft` beside a tier-coloured dot.
+> See the milestone chip on the skill card.
 
 ### Per-skill colours
 
-Skills must be tellable apart — the calendar draws a dot per skill — but a
+Skills must be tellable apart (the calendar draws a dot per skill) but a
 rainbow would be the loudest thing in a single-colour palette. `skillColor()`
 in `src/lib/ui/format.ts` generates inside the sage band:
 
@@ -146,7 +146,7 @@ hue.
 
 **A generated colour obeys the same law as `--accent`: light for fills, deep for
 anything carrying text.** The band above runs to L0.69, which is right for a
-calendar dot or a progress fill on cream and **cannot carry white text** — at
+calendar dot or a progress fill on cream and **cannot carry white text**. At
 the top of the range white measures 2.70:1. For a solid fill with a label on it,
 such as the selected skill chip in the log sheet:
 
@@ -158,8 +158,8 @@ chroma     0.062                          // slightly higher, to keep skills
                                           // apart despite the compressed range
 ```
 
-White clears 4.5:1 on that band for every seed and every hue in it — 6.35:1 at
-the worst corner. This mattered: the chip previously used the default band, so
+White clears 4.5:1 on that band for every seed and every hue in it, and 6.35:1
+at the worst corner. This mattered: the chip previously used the default band, so
 whether its label was readable depended on which seed a skill happened to be
 given. `src/lib/ui/format.test.ts` walks 300 seeds and asserts both the contrast
 and that the set stays distinguishable, because a runtime-generated colour is
@@ -171,7 +171,7 @@ The palette defines no red, no warning amber, no destructive colour. Any red on
 screen therefore had to be hardcoded deliberately, and `philosophy.spec.ts`
 walks the rendered DOM looking for it.
 
-If a genuinely destructive action ever needs one — permanent account deletion —
+If a genuinely destructive action ever needs one (permanent account deletion)
 add it then, consciously, and write down why.
 
 ### Light only
@@ -186,24 +186,24 @@ schemes.
 
 ## 3. Typography Rules
 
-Two faces, both self-hosted through `next/font` — no CDN request, no layout
+Two faces, both self-hosted through `next/font`: no CDN request, no layout
 shift, nothing to fetch at runtime.
 
 ### The faces
 
-**Newsreader** — titles, all numerals, and the voice.
+**Newsreader** carries titles, all numerals, and the voice.
 A literary serif with a genuine optical-size axis (`opsz` 6–72, requested
 explicitly in `layout.tsx` because `next/font` ships weight only by default).
 A 34px total and a 12px caption are therefore *drawn* differently rather than
 scaled from one master. It is what makes `330h` read like something recorded
 rather than computed.
 
-**Hanken Grotesk** — UI and body.
+**Hanken Grotesk** carries UI and body.
 A warm humanist sans with a large x-height, which is what keeps 11px nav labels
 and 12.5px captions legible on a phone.
 
 The fallback stacks after each face are genuine fallbacks, not the design. **If
-Georgia appears on screen, the webfont failed to load** — a regression that
+Georgia appears on screen, the webfont failed to load**. It is a regression that
 looks *almost* right, which is why `typefaces › the chosen faces are actually
 applied` asserts the computed family rather than trusting the eye.
 
@@ -211,20 +211,20 @@ applied` asserts the computed family rather than trusting the eye.
 
 Seven roles, not seven sizes. Each name states a job, so "what size is this" is
 never a judgement call at the call site. Line height, tracking and weight travel
-with the size — `text-eyebrow` is a complete typographic decision, not a size
+with the size, so `text-eyebrow` is a complete typographic decision, not a size
 that still needs four more classes.
 
 | Role | Size | Line | Tracking | Weight | Face | Used for |
 |---|---|---|---|---|---|---|
 | `text-eyebrow` | 11px | 1.2 | +0.08em | 600 | Hanken | Uppercase section labels |
-| `text-caption` | 12.5px | 1.4 | — | 400 | Hanken | Metadata, hours under a plant |
-| `text-body` | 15px | 1.55 | — | 400 | Hanken | Everything read |
-| `text-lead` | 17px | 1.5 | — | 400 | Hanken | Sheet prompts, empty states |
+| `text-caption` | 12.5px | 1.4 | - | 400 | Hanken | Metadata, hours under a plant |
+| `text-body` | 15px | 1.55 | - | 400 | Hanken | Everything read |
+| `text-lead` | 17px | 1.5 | - | 400 | Hanken | Sheet prompts, empty states |
 | `text-title` | 20px | 1.25 | −0.01em | 600 | Newsreader | Card and section titles |
 | `text-figure` | 26px | 1.1 | −0.015em | 500 | Newsreader | Totals, month figures |
 | `text-hero` | 34px | 1.05 | −0.025em | 600 | Newsreader | The one figure per screen |
 
-Body text is 15px rather than the browser's 16 — Hanken's x-height is large
+Body text is 15px rather than the browser's 16. Hanken's x-height is large
 enough that 15 reads like 16 in a neutral face, and it buys back a line of room
 on a phone.
 
@@ -253,7 +253,7 @@ is being watered, and proportional digits would reflow the line on every frame.
 
 ### The italic is the product's voice
 
-Newsreader's italic carries every line that reassures — and nothing else.
+Newsreader's italic carries every line that reassures, and nothing else.
 
 > *A quiet week. 2 hours, all Japanese. It still counts.*
 >
@@ -264,7 +264,7 @@ lines read as written by a person rather than emitted by an app, which is the
 whole difference between this product and a tracker.
 
 Note the split inside the weekly recap: the reassurance is italic, the factual
-sentence beside it is not. That is the treatment doing its job — marking which
+sentence beside it is not. That is the treatment doing its job: marking which
 sentences are the product *speaking* rather than *reporting*.
 
 **Never use `.voice` for UI copy**, button labels, or anything the user must act
@@ -272,7 +272,7 @@ on.
 
 ### Copy rules
 
-- State what happened; never praise the person. "The Return — you came back
+- State what happened; never praise the person. "The Return: you came back
   after 34 days", not "Amazing work!"
 - No guilt vocabulary, ever: *missed*, *broken*, *failed*, *behind*, *streak*,
   *don't lose*, *keep it up*. `philosophy.spec.ts` scans every page for these.
@@ -307,7 +307,7 @@ Hover on pointer devices lifts it to `--shadow-2`. Never move it.
 | Secondary | transparent, `1px --line` | `--ink` | 14px |
 | Quiet | transparent | `--muted` → `--ink` on hover | 14px |
 
-Every button carries `.tappable` — `scale(0.96)` on `:active` over 120ms. It is
+Every button carries `.tappable`: `scale(0.96)` on `:active` over 120ms. It is
 the cheapest way to make a web app feel native and it costs one class.
 
 ### Chip
@@ -359,7 +359,7 @@ MASTERY → grand tree
 ```
 
 - Tinted with that skill's generated sage.
-- Soil width scales with the stage — a seedling in a wide bed looks lost, a
+- Soil width scales with the stage. A seedling in a wide bed looks lost; a
   grand tree in a narrow one looks potted.
 - Idle sway: 7s, offset per index (`--sway-delay`), amplitude **falling** as the
   plant grows (`--sway-amp`: sprout 1.5°, grand tree 0.5°). That is how it works
@@ -376,14 +376,14 @@ track: 8px, --line, fully rounded
 fill:  the skill's colour, min-width 3% so a new skill still reads as started
 ```
 
-Beneath it, the *remaining distance* — `67.5h to Elementary` — figure in
+Beneath it, the *remaining distance* (`67.5h to Elementary`) with the figure in
 `--accent-deep`, label in `--muted`. It is the only coloured text on the card:
 the total above is evidence, this is the pull.
 
 ### Medal
 
 Mark filled with `--medal-bright` or its tier colour on `--medal-soft`, label in
-`--medal`. Unearned medals render as `? ? ?` — discovery is the mechanic, so
+`--medal`. Unearned medals render as `? ? ?`. Discovery is the mechanic, so
 never list what has not been earned.
 
 ---
@@ -411,10 +411,10 @@ Three levels. There is no fourth.
 
 | Level | Token | What sits here |
 |---|---|---|
-| 0 | — | The page ground |
+| 0 | - | The page ground |
 | 1 | `--shadow-1` | Cards, list items |
 | 2 | `--shadow-2` | Sheets, dialogs, the medal moment |
-| — | `--shadow-accent-lift` | The centre button, and only that |
+| - | `--shadow-accent-lift` | The centre button, and only that |
 
 ```css
 --shadow-1: 0 1px 2px rgb(94 74 40 / .06), 0 2px 6px rgb(94 74 40 / .05);
@@ -422,7 +422,7 @@ Three levels. There is no fourth.
 --shadow-accent-lift: 0 4px 10px rgb(48 74 66 / .22), 0 10px 26px rgb(48 74 66 / .16);
 ```
 
-**Shadows are warm-tinted, never neutral grey** — grey on cream reads as dirt.
+**Shadows are warm-tinted, never neutral grey.** Grey on cream reads as dirt.
 The centre button's shadow is tinted with the sage rather than the ground, so it
 casts a shadow of its own colour.
 
@@ -437,7 +437,7 @@ centre button.
 
 > **Motion only ever moves in the direction of growth.**
 >
-> Nothing animates downward, drains, wilts or empties — except a UI element
+> Nothing animates downward, drains, wilts or empties, with two exceptions: a UI element
 > being dismissed, and the one figure that counts *down* because a smaller
 > remaining distance is good news. There is deliberately no shrink, decay or
 > fade-to-nothing preset in `src/lib/ui/motion.ts`: a product whose premise is
@@ -458,7 +458,7 @@ costume.** LifeXP therefore has:
 - nothing anywhere that asks to be watered
 
 Watering happens **only** as a consequence of the user recording something. It
-is what logging *looks like* — the plant is watered, and if the entry crossed a
+is what logging *looks like*. The plant is watered, and if the entry crossed a
 milestone it grows a stage while the water is still on it, so the water is
 visibly the cause.
 
@@ -471,7 +471,7 @@ visibly the cause.
   counts."
 - Measure contrast against **every ground the text can sit on**, including chip
   tints. Never eyeball it.
-- Encode state in form as well as number — a chip, a stage, a fill — so a screen
+- Encode state in form as well as number (a chip, a stage, a fill) so a screen
   reads at a glance.
 
 ### Don't
@@ -484,7 +484,7 @@ visibly the cause.
 - **No punitive copy** (see §3).
 - **No `--accent` as or behind text. No tier colour as a text colour.**
 - No parallax, no scroll-triggered reveals, no animated skeletons or shimmer.
-- No looping attention-seekers — no pulsing log button, no bouncing CTA. A pulse
+- No looping attention-seekers: no pulsing log button, no bouncing CTA. A pulse
   that says *log something* is a nag, and nags are streak-logic.
 - No emoji as section markers; no `01 / 02 / 03` eyebrows unless the content
   genuinely is a sequence.
@@ -544,7 +544,7 @@ One breakpoint: **768px**. There is no tablet-specific layout.
 | Content | Full width, 16px gutters | Centred, 48rem, inset 240px left |
 | Log sheet | Bottom sheet with a grabber | Centred dialog, all corners rounded |
 | Bottom padding | 112px | 40px |
-| Garden | Horizontal scroll, 80px per plant — four fit across a phone | Same, rarely scrolls |
+| Garden | Horizontal scroll, 80px per plant, so four fit across a phone | Same, rarely scrolls |
 
 Mobile is the primary target, not the fallback. Every interaction must be
 reachable with one thumb, and the centre button sits where the thumb already
@@ -575,13 +575,13 @@ Paste-ready prompts. Attach this file alongside each one.
 > recipe (paper-raised, 1px `--line`, 20px radius, `--shadow-1`, 16px padding).
 > Every tappable element gets `.tappable`. Encode state in form as well as
 > number. Verify each text colour clears 4.5:1 against every ground it can sit
-> on — `--paper`, `--paper-raised`, `--accent-soft` and `--medal-soft`.
+> on, `--paper`, `--paper-raised`, `--accent-soft` and `--medal-soft`.
 > `--accent` and the tier colours are decorative and must never carry text.
 
 ### Copy
 
 > Write the copy for `<surface>` in LifeXP's voice per DESIGN.md §3. State what
-> happened; never praise the person. No guilt vocabulary — nothing may imply the
+> happened; never praise the person. No guilt vocabulary: nothing may imply the
 > user missed, broke, lost or fell behind. A quiet period must read as
 > acceptable, not as a problem to fix. Reassurance lines get `.voice`
 > (Newsreader italic); everything actionable stays in Hanken.
@@ -589,7 +589,7 @@ Paste-ready prompts. Attach this file alongside each one.
 ### Motion
 
 > Add motion to `<surface>` per DESIGN.md §7. Governing rule: motion only moves
-> in the direction of growth — nothing shrinks, drains or wilts. Prefer CSS;
+> in the direction of growth: nothing shrinks, drains or wilts. Prefer CSS;
 > reach for `motion` only for shared-element transitions or for animating a
 > number. Give the surface one orchestrated moment and keep the rest still. No
 > parallax, no scroll reveals, no looping attention-seekers. Honour
@@ -608,10 +608,10 @@ Paste-ready prompts. Attach this file alongside each one.
 
 ## Related
 
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — how the app is built
-- [`docs/DECISIONS.md`](docs/DECISIONS.md) — why, including the palette,
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for how the app is built
+- [`docs/DECISIONS.md`](docs/DECISIONS.md) for why, including the palette,
   typography and motion decisions
-- [`src/app/globals.css`](src/app/globals.css) — the tokens themselves, which
+- [`src/app/globals.css`](src/app/globals.css) for the tokens themselves, which
   are the real source of truth
-- [`e2e/philosophy.spec.ts`](e2e/philosophy.spec.ts) — the rules in this file
+- [`e2e/philosophy.spec.ts`](e2e/philosophy.spec.ts) for the rules in this file
   that are enforced rather than merely written down

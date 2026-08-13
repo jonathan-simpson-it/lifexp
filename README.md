@@ -13,8 +13,8 @@ This is the Prototype + Stage 1 MVP from [`../LifeXP-PRD.md`](../LifeXP-PRD.md).
 | | |
 |---|---|
 | **This file** | how to run it, and the short version of everything else |
-| [`DESIGN.md`](DESIGN.md) | the visual language — palette with measured contrast, type scale, components, motion rules. Portable: attach it to Claude Design, Cursor or v0 and they build on-brand |
-| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | full technical context — directory map, data model, flows, invariants, where to change what |
+| [`DESIGN.md`](DESIGN.md) | the visual language: palette with measured contrast, type scale, components, motion rules. Portable: attach it to Claude Design, Cursor or v0 and they build on-brand |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | full technical context: directory map, data model, flows, invariants, where to change what |
 | [`docs/DECISIONS.md`](docs/DECISIONS.md) | why things are the way they are, and what would justify changing them |
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | what is built against the PRD, what is deliberately missing, what comes next |
 | [`../LifeXP-PRD.md`](../LifeXP-PRD.md) | product source of truth |
@@ -34,7 +34,7 @@ npm run dev
 
 Open http://localhost:3000 and continue as `demo@lifexp.local`.
 
-> Keep the `prisma dev` terminal open — it *is* the database. If you close it,
+> Keep the `prisma dev` terminal open. It *is* the database. If you close it,
 > the app shows a page telling you how to start it again.
 
 ### Every feature works with no API key
@@ -46,7 +46,7 @@ vendor console is a demo that fails at the wrong moment.
 | Feature | Without any keys |
 |---|---|
 | Sign-in | Local development sign-in. `demo@lifexp.local` has ~2 years of history; any other email starts an empty account so you can see first-run. |
-| Chat capture | Full rule-based extractor — durations, relative dates, weekday references, multiple activities per message, and refusing to log a plan. |
+| Chat capture | Full rule-based extractor: durations, relative dates, weekday references, multiple activities per message, and refusing to log a plan. |
 | Structured entry, timeline, skills, milestones, medals, maintenance, heatmaps, export | Fully working. |
 | **Google Calendar** | Settings renders the exact events LifeXP would write, built by the same code that talks to Google. Connecting for real needs `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET`, and nothing else changes. |
 
@@ -57,7 +57,7 @@ anything that was previously hidden.
 
 `npm run dev` prints a Network URL. Private LAN ranges are already allowed in
 `next.config.ts`, so it works from another device on the same Wi-Fi with no
-further setup — worth doing, since this is a mobile-first product.
+further setup. Worth doing, since this is a mobile-first product.
 
 | Command | |
 |---|---|
@@ -83,7 +83,7 @@ asserted by tests, so they survive contact with future features:
 - **No alarm colours.** The palette contains no red token, and an end-to-end test
   scans computed styles for red pixels on the maintenance page.
 - **A slow month is celebrated.** The `quiet-month` badge fires for a completed
-  month with one or two experiences — and deliberately ignores the month
+  month with one or two experiences, and deliberately ignores the month
   currently underway, so it can never tell someone they have written off a month
   that is still happening.
 - **AI never writes.** `/api/chat` returns drafts and has no write path to the
@@ -131,7 +131,7 @@ Chat runs through one interface with four implementations behind it:
 | `AI_PROVIDER` | Notes |
 |---|---|
 | unset / `rules` | **Default.** No key, no network. Handles durations, relative dates, and skills you already track. |
-| `openai` | Any OpenAI-compatible `/v1` endpoint — OpenAI, Groq, OpenRouter, DeepSeek, Together, local Ollama. Set `AI_BASE_URL`. |
+| `openai` | Any OpenAI-compatible `/v1` endpoint: OpenAI, Groq, OpenRouter, DeepSeek, Together, local Ollama. Set `AI_BASE_URL`. |
 | `anthropic` | Official Anthropic SDK, structured outputs, `claude-opus-5` by default. |
 | `google` | Gemini REST, `responseSchema`. |
 
@@ -139,14 +139,14 @@ A configured provider that is unreachable, rate-limited, or returns something
 unparseable **falls back to the rule-based extractor** rather than removing the
 feature. Whatever is actually running is shown in Settings.
 
-The rule-based extractor is not a stub — see `rules.test.ts` for the 34 cases it
+The rule-based extractor is not a stub. See `rules.test.ts` for the 34 cases it
 handles, including refusing to extract from "I should practise piano tomorrow".
 
 ---
 
 ## Google Calendar
 
-Opt-in, from Settings, after sign-in — never as a condition of signing in.
+Opt-in from Settings after sign-in, never as a condition of signing in.
 
 LifeXP creates a secondary calendar called **LifeXP** and writes only there. The
 scope requested (`calendar.app.created`) covers only calendars the app itself
@@ -154,10 +154,10 @@ created, so LifeXP *cannot* read the user's existing calendars even if it tried.
 
 Writes are best-effort: a calendar failure records a quiet banner and never
 prevents an experience from being saved. Disconnecting stops syncing and leaves
-the calendar in place — it is the user's record, and deleting it is their call.
+the calendar in place. It is the user's record, and deleting it is their call.
 
 **Without Google credentials**, Settings still renders the events LifeXP would
-write, using `buildEventBody` — the same function the live sync calls. So the
+write, using `buildEventBody`: the same function the live sync calls. So the
 feature is inspectable on any machine, and the preview cannot drift away from
 what actually gets sent.
 

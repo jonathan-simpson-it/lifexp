@@ -11,7 +11,7 @@ import { useEffect, useRef } from "react";
  */
 
 /**
- * Sage and gold only — the product's two materials. Confetti is the one place
+ * Sage and gold only, the product's two materials. Confetti is the one place
  * it would be easy to reach for a party palette, and a burst of colours the app
  * never otherwise uses would look borrowed.
  */

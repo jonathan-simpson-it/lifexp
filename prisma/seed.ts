@@ -7,7 +7,7 @@
  * near-empty month that earns "Quiet Month", and maintenance items at a spread
  * of freshness.
  *
- * Deterministic — a seeded PRNG, and dates measured back from a fixed anchor —
+ * Deterministic, a seeded PRNG, and dates measured back from a fixed anchor,
  * so screenshots and tests do not drift between runs.
  *
  * Run with: npm run seed
@@ -20,7 +20,7 @@ import { syncProgress } from "../src/lib/progress/sync";
 const DEMO_EMAIL = "demo@lifexp.local";
 const DAY = 86_400_000;
 
-// Mulberry32 — small, fast, and reproducible.
+// Mulberry32, small, fast, and reproducible.
 function makeRandom(seed: number) {
   return function random() {
     seed |= 0;
@@ -61,7 +61,7 @@ function at(daysAgo: number, hour: number, minute = 0): Date {
 }
 
 /**
- * A genuine period away from LifeXP — no skill logged anything. This is what
+ * A genuine period away from LifeXP, no skill logged anything. This is what
  * "The Return" is meant to notice, so it has to be a gap in the whole record,
  * not just in one skill.
  */
@@ -86,7 +86,7 @@ async function main() {
 
     Upserting keeps developers signed in across seeds. (currentUserId now
     verifies the user exists regardless, so a stale token is handled properly
-    either way — this just stops provoking it every single run.)
+    either way, this just stops provoking it every single run.)
   */
   const user = await db.user.upsert({
     where: { email: DEMO_EMAIL },
@@ -227,7 +227,7 @@ async function main() {
     skills: [japanese.id, running.id],
   });
 
-  // One experience with no duration at all — evidence without a number.
+  // One experience with no duration at all, evidence without a number.
   plans.push({
     daysAgo: 2,
     hour: 13,

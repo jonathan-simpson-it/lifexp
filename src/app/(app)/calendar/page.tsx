@@ -69,7 +69,7 @@ export default async function CalendarPage({
             weeks={52}
           />
           <p className="mt-3 text-sm text-muted">
-            A year of evidence. Gaps are just time — there is nothing here to
+            A year of evidence. Gaps are just time. There is nothing here to
             break.
           </p>
         </div>

@@ -55,8 +55,8 @@ export default async function SettingsPage() {
         {calendar.state === "unavailable" && (
           <>
             <p className="mt-2 text-sm text-ink-soft">
-              {calendar.reason} You can still see exactly what LifeXP would write
-              — this preview is built by the same code that talks to Google, so
+              {calendar.reason} You can still see exactly what LifeXP would write.
+              this preview is built by the same code that talks to Google, so
               nothing here is a mock-up.
             </p>
             <CalendarPreview experiences={recent} connected={false} />
@@ -72,7 +72,7 @@ export default async function SettingsPage() {
             <p className="mt-2 text-sm text-ink-soft">
               LifeXP can mirror what you record into a calendar called{" "}
               <strong>LifeXP</strong>, created just for this. Your existing
-              calendars stay untouched — the permission LifeXP asks for only
+              calendars stay untouched. The permission LifeXP asks for only
               covers calendars it made itself, so it cannot read them.
             </p>
             <form action={connectCalendar} className="mt-3">
@@ -127,7 +127,7 @@ export default async function SettingsPage() {
 
             <p className="mt-2 text-xs text-muted">
               Stopping keeps everything already in your calendar. It&rsquo;s your
-              record — deleting it is your call, from Google Calendar.
+              record. Deleting it is your call, from Google Calendar.
             </p>
 
             <CalendarPreview experiences={recent} connected />

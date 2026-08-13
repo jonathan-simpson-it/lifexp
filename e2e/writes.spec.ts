@@ -6,7 +6,7 @@ import { deleteUser, signIn } from "./helpers";
  *
  * These exist because two of them shipped broken. Creating a skill and creating
  * a maintenance item both 500ed with a foreign-key violation and nothing caught
- * it — the suite covered reading every page and logging via the sheet, but
+ * it, the suite covered reading every page and logging via the sheet, but
  * never the two plain forms. Reads scoped to a missing user return empty rather
  * than throwing, so the app looked fine right up until someone tried to save.
  *
@@ -93,7 +93,7 @@ test.describe("write paths", () => {
  * Sessions are JWTs, so a token keeps asserting a user id after that user is
  * gone. This is the exact failure that shipped: the token stays
  * cryptographically valid, reads scoped to the missing user return empty
- * instead of throwing, so every page renders 200 and merely looks empty — and
+ * instead of throwing, so every page renders 200 and merely looks empty, and
  * the first write dies on a foreign key.
  *
  * Reproduced properly by deleting the user out from under a live session,
@@ -140,7 +140,7 @@ test.describe("a session pointing at a deleted user", () => {
     await expect(page).toHaveURL(/\/signin$/);
 
     // A fresh sign-in mints a token for the newly created user and everything
-    // works again — including writes, which is what broke before.
+    // works again, including writes, which is what broke before.
     await page.getByLabel("Development sign-in").fill(email);
     await page.getByRole("button", { name: "Continue" }).click();
     await page.waitForURL("/today");

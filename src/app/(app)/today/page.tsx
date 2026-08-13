@@ -127,8 +127,8 @@ function Section({
  * Hierarchy is the whole point of this block. One figure is the answer and gets
  * hero treatment; the label above and the breakdown below are support. Before
  * this, the same three numbers sat inline in a sentence at equal weight, which
- * meant the screen had to be *read* to be understood rather than glanced at —
- * and this is a screen people open for four seconds.
+ * meant the screen had to be *read* to be understood rather than glanced at.
+ * This is a screen people open for four seconds.
  */
 function WeekStrip({
   skillCount,
@@ -151,7 +151,7 @@ function WeekStrip({
 
       {nothingThisWeek ? (
         // A quiet week is not a failure state, so it does not get an empty
-        // shell of zeroes — it gets the long view, in the product's voice.
+        // shell of zeroes, it gets the long view, in the product's voice.
         <p className="voice mt-1.5">
           Nothing recorded yet this week. Your{" "}
           <span className="numeral">{formatDuration(totalMinutes)}</span> so far
@@ -184,7 +184,7 @@ function FirstRun() {
       <h2 className="display text-title">Start anywhere</h2>
       <p className="mt-2 text-ink-soft">
         Tap the <span className="font-semibold text-accent-deep">+</span> button
-        and tell LifeXP something you did — today, last week, whenever. It
+        and tell LifeXP something you did: today, last week, whenever. It
         doesn&rsquo;t need to be impressive, and there&rsquo;s nothing to set up
         first.
       </p>

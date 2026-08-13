@@ -12,7 +12,7 @@ export type PendingAward = {
  * Pure: no I/O, no clock read, no randomness. The caller supplies `now` on the
  * snapshot, which is what makes badge behaviour testable at exact boundaries.
  *
- * Safe to run after every single write — the caller persists results through a
+ * Safe to run after every single write, the caller persists results through a
  * unique (userId, badgeKey) constraint, so a double-run awards nothing twice.
  */
 export function evaluateAwards(

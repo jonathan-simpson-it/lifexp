@@ -10,8 +10,8 @@ import {
  * Gemini adapter over the REST API.
  *
  * Gemini's `responseSchema` is a restricted OpenAPI dialect rather than full
- * JSON Schema — it rejects `additionalProperties` and union types like
- * `["integer","null"]` — so the schema is expressed separately here, with
+ * JSON Schema, it rejects `additionalProperties` and union types like
+ * `["integer","null"]`, so the schema is expressed separately here, with
  * `nullable` instead. The Zod parse is still the arbiter of the final shape.
  */
 const GEMINI_SCHEMA = {

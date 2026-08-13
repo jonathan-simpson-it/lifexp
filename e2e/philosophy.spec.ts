@@ -125,7 +125,7 @@ test.describe("usable without any keys", () => {
 
 /**
  * The client asked for a light, cream app. The risk is not that someone edits
- * the token — it is that a `prefers-color-scheme: dark` rule creeps back in and
+ * the token, it is that a `prefers-color-scheme: dark` rule creeps back in and
  * the app turns dark on exactly the phones nobody tests on.
  */
 test.describe("cream ground", () => {
@@ -159,7 +159,7 @@ test.describe("cream ground", () => {
     await signIn(page);
 
     // Light text is fine on a dark chip (the active nav pill is cream on ink).
-    // The failure this guards against is light text on a LIGHT background —
+    // The failure this guards against is light text on a LIGHT background,
     // what a half-applied dark theme looks like, and what would make the app
     // unreadable on the cream ground.
     const unreadable = await page.evaluate(() => {
@@ -197,7 +197,7 @@ test.describe("cream ground", () => {
 
         const [hi, lo] = [lum(fg), lum(groundOf(el))].sort((a, b) => b - a);
         const contrast = (hi + 0.05) / (lo + 0.05);
-        // 4.5:1 — the AA bar for body text, not the 3:1 graphical one.
+        // 4.5:1, the AA bar for body text, not the 3:1 graphical one.
         //
         // This was 3:1, and that gap is exactly how the milestone chip on
         // skill cards shipped with the tier colour as its text colour: gold
@@ -218,7 +218,7 @@ test.describe("cream ground", () => {
 /**
  * Typography.
  *
- * A webfont that fails to load does not look broken — it looks *almost right*,
+ * A webfont that fails to load does not look broken, it looks *almost right*,
  * because the fallback stack is deliberately close. That makes it the one
  * visual regression nobody notices by eye, so it is asserted instead.
  */
@@ -241,7 +241,7 @@ test.describe("typefaces", () => {
 
   test("the voice is set in the display italic", async ({ page }) => {
     await signIn(page);
-    // A month with nothing in it — no day is preselected, so the calendar
+    // A month with nothing in it, no day is preselected, so the calendar
     // shows its "nothing recorded is just a day that went unrecorded" line.
     // Every other place the voice appears is conditional on a quiet week or an
     // empty garden, none of which the seed guarantees.
@@ -316,7 +316,7 @@ test.describe("motion", () => {
     // The selected day's label is cream, so it is legible only because the
     // pill is painted behind it. The pill is a *sibling* of the label rather
     // than an ancestor, which puts it outside what the light-on-light DOM walk
-    // can see — it looks for the nearest opaque ancestor background and would
+    // can see, it looks for the nearest opaque ancestor background and would
     // report cream on cream either way.
     //
     // This shipped once: giving the pill `-z-10` sent it behind the enclosing

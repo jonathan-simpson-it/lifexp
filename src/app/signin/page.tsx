@@ -77,13 +77,13 @@ export default async function SignInPage() {
           <p className="text-sm font-medium">Everything works without any keys</p>
           <p className="mt-1.5 text-sm text-muted">
             Continue as <code>demo@lifexp.local</code> for two years of example
-            history — a skill deep into its ladder, medals earned and still to
+            history: a skill deep into its ladder, medals earned and still to
             find, and maintenance at every stage of freshness.
           </p>
           <ul className="mt-2.5 space-y-1 text-sm text-muted">
             <li>
               <strong className="font-medium text-ink-soft">Chat</strong> runs on a
-              built-in extractor — no API key, no network.
+              built-in extractor, no API key, no network.
             </li>
             <li>
               <strong className="font-medium text-ink-soft">Calendar</strong> shows

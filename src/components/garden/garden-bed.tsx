@@ -10,7 +10,7 @@ import { formatDuration, skillColor } from "@/lib/ui/format";
  * reached. It is the home screen's emotional centre and the thing that makes
  * "life is an accumulation of experiences" literal rather than a tagline.
  *
- * There is no wilted stage and no time input to this component — only
+ * There is no wilted stage and no time input to this component, only
  * `achievedTier`. A skill you have not touched since spring looks exactly as
  * grown as the day you left it. That is the anti-streak rule made visual, and
  * it is why this cannot take a `lastActiveAt`.

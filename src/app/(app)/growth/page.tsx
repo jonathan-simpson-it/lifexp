@@ -36,7 +36,7 @@ export default async function GrowthPage() {
           Add a skill
         </h2>
         <p className="mt-1 text-sm text-muted">
-          LifeXP will fit a milestone ladder to it automatically — languages,
+          LifeXP will fit a milestone ladder to it automatically: languages,
           music, fitness and reading each get their own.
         </p>
         <form action={createSkill} className="mt-3 flex gap-2">

@@ -87,7 +87,7 @@ test.describe("the garden", () => {
 
   /**
    * The anti-streak rule, made testable. A plant has no time input at all, so
-   * there is no code path that can wilt one — this asserts the vocabulary never
+   * there is no code path that can wilt one, this asserts the vocabulary never
    * appears even as a class name or label.
    */
   test("no plant can ever wilt", async ({ page }) => {

@@ -8,14 +8,14 @@
   anything that states a quantity, and generous space.
 
   There is no red token here, and that is deliberate. Nothing in this product is
-  an error, a warning, or a failure — not a maintenance item left for a month,
+  an error, a warning, or a failure, not a maintenance item left for a month,
   not a skill untouched since spring. If a future screen genuinely needs a
   destructive colour, add it then, consciously.
 */
 
 :root {
   /* Cream ground. The client asked for a light app, so this is the only
-     palette — see the note on colour-scheme below. */
+     palette, see the note on colour-scheme below. */
   --paper: #f7f1e1;
   --paper-raised: #fdfaf2;
   --ink: #211e16;
@@ -27,13 +27,13 @@
   --line-strong: #c4b087;
 
   /*
-    Sage — the only colour.
+    Sage: the only colour.
 
     Three values of one hue (158), not three colours. The split exists because
     of contrast, not decoration:
 
-    --accent      the sage itself. A FILL for graphics — progress bars, chips,
-                  plant tints — where the 3:1 bar applies. On cream it is
+    --accent      the sage itself. A FILL for graphics: progress bars, chips,
+                  plant tints, where the 3:1 bar applies. On cream it is
                   2.74:1, so nothing legible may sit on it and it may never be
                   used for text.
     --accent-deep everything carrying small text: a button with a white label
@@ -45,8 +45,8 @@
     genuinely one colour in the product.
 
     --accent-deep was #4f7266 until it was measured against the *chip tints*
-    rather than only against the two paper grounds. Sage text on a sage chip —
-    the active sidebar item — was 4.34:1, and the audit had never looked at
+    rather than only against the two paper grounds. Sage text on a sage chip
+    (the active sidebar item) was 4.34:1, and the audit had never looked at
     that pair. It is darkened just far enough to clear 4.5 on every ground in
     the palette with room to spare.
   */
@@ -54,12 +54,12 @@
   --accent-deep: #496a5f;
   --accent-soft: #e3e9e6;
 
-  /* Accumulation, freshness, anything alive — the same sage. */
+  /* Accumulation, freshness, anything alive: the same sage. */
   --growth: var(--accent-deep);
   --growth-soft: var(--accent-soft);
 
   /* Medals: warm metal. Tiers step up in brightness, not in loudness. */
-  /* Deep enough to clear 4.5:1 on every ground in the palette — it is used for
+  /* Deep enough to clear 4.5:1 on every ground in the palette, it is used for
      small text on the medal shelf and on the recap's badge chips, not just as
      a swatch. Was #8a6124, which measured 4.40:1 on --medal-soft: the tint it
      most often sits on, and the one combination the original audit never
@@ -78,7 +78,7 @@
   /*
     Type scale.
 
-    Seven roles, not seven sizes — each name states a job, so "what size is
+    Seven roles, not seven sizes. Each name states a job, so "what size is
     this" is never a judgement call at the call site. Sizes are raw here and
     mirrored into Tailwind's --text-* namespace below, the same two-step the
     colours use.
@@ -88,19 +88,19 @@
     serif; everything below it is the sans. That one boundary is why the
     hierarchy reads without needing much weight contrast.
   */
-  --size-eyebrow: 0.6875rem; /* 11px   — uppercase section labels */
-  --size-caption: 0.78125rem; /* 12.5px — hours under a plant, metadata */
-  --size-body: 0.9375rem; /* 15px   — everything read */
-  --size-lead: 1.0625rem; /* 17px   — sheet prompts, empty states */
-  --size-title: 1.25rem; /* 20px   — card and section titles */
-  --size-figure: 1.625rem; /* 26px   — totals, month figures */
-  --size-hero: 2.125rem; /* 34px   — the one number per screen */
+  --size-eyebrow: 0.6875rem; /* 11px, uppercase section labels */
+  --size-caption: 0.78125rem; /* 12.5px, hours under a plant, metadata */
+  --size-body: 0.9375rem; /* 15px, everything read */
+  --size-lead: 1.0625rem; /* 17px, sheet prompts, empty states */
+  --size-title: 1.25rem; /* 20px, card and section titles */
+  --size-figure: 1.625rem; /* 26px, totals, month figures */
+  --size-hero: 2.125rem; /* 34px, the one number per screen */
 
   --radius: 14px;
   --radius-lg: 20px;
   --radius-sheet: 28px;
 
-  /* Elevation. Warm-tinted shadows — a neutral grey shadow reads as dirt on
+  /* Elevation. Warm-tinted shadows: a neutral grey shadow reads as dirt on
      cream. */
   --shadow-1: 0 1px 2px rgb(94 74 40 / 0.06), 0 2px 6px rgb(94 74 40 / 0.05);
   --shadow-2: 0 2px 6px rgb(94 74 40 / 0.08), 0 8px 20px rgb(94 74 40 / 0.09);
@@ -127,7 +127,7 @@
   `color-scheme: only light` also stops the browser from darkening form
   controls, scrollbars and autofill backgrounds underneath us.
 
-  To reintroduce a dark theme later, add the media block back here — nothing
+  To reintroduce a dark theme later, add the media block back here. Nothing
   else in the codebase assumes a light ground; every colour is a token.
 */
 :root {
@@ -166,7 +166,7 @@
     --font-sans-face and --font-display-face on <html>.
 
     The stacks after them are genuine fallbacks, not the design. If Georgia
-    ever appears on screen the webfont failed to load, which is a bug — the
+    ever appears on screen the webfont failed to load, which is a bug, the
     `chosen typefaces are actually applied` test in philosophy.spec.ts exists
     to catch exactly that, because a silent fallback looks almost right.
   */
@@ -232,7 +232,7 @@ body {
 }
 
 /*
-  Numbers are the emotional payload of this app — set them in the serif.
+  Numbers are the emotional payload of this app. Set them in the serif.
 
   `tabular-nums` is not cosmetic here. A figure that counts down while the
   plant is being watered would otherwise reflow on every frame as digit widths
@@ -254,8 +254,8 @@ body {
 /*
   The product's voice.
 
-  Newsreader's italic carries every line that reassures — "It still counts",
-  "Nothing recorded is just a day that went unrecorded" — and nothing else.
+  Newsreader's italic carries every line that reassures, "It still counts",
+  "Nothing recorded is just a day that went unrecorded", and nothing else.
   Reserving one treatment for one job is what makes those lines read as written
   by a person rather than emitted by an app, which is the difference between
   this product and a tracker.
@@ -347,7 +347,7 @@ body {
 
   Plants grow up out of the soil rather than fading in, with the origin pinned
   at the soil line so nothing appears to float. Staggered by index, it reads as
-  the page settling — deliberately short, because it replays on every visit to
+  the page settling. Deliberately short, because it replays on every visit to
   /today and anything longer would wear out fast.
 
   Suppressing it after the first visit was considered and rejected: the flag
@@ -399,7 +399,7 @@ body {
 
   A single slow pass across the disc, clipped to it. Metal is the one material
   in this palette that should catch the light, and this is the only place in
-  the app where anything gleams — which is what keeps it feeling like an event
+  the app where anything gleams, which is what keeps it feeling like an event
   rather than a texture.
 */
 .medal-shine {
@@ -429,7 +429,7 @@ body {
 }
 
 /*
-  Watering — the reward for recording something.
+  Watering: the reward for recording something.
 
   Read the header of components/garden/watering.tsx before changing any of
   this: the sequence is timed so the plant's growth lands *while* the water is
@@ -438,7 +438,7 @@ body {
 
   Every animation here runs `both` and finishes at its resting state, so when
   the reduced-motion block below collapses the durations to nothing, what
-  remains is the end of the sequence — a grown plant, no can, no droplets —
+  remains is the end of the sequence: a grown plant, no can, no droplets,
   rather than a half-drawn frame.
 */
 .water-can {

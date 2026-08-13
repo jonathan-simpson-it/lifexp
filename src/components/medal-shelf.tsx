@@ -5,7 +5,7 @@ import { BadgeIcon } from "./badge-icon";
 /**
  * The shelf.
  *
- * Unearned badges are shown, not hidden — a locked slot with a hint, or "? ? ?"
+ * Unearned badges are shown, not hidden, a locked slot with a hint, or "? ? ?"
  * for the ones meant to be a surprise. Seeing what is still out there is the
  * collection feeling; it is also the only place in the app that hints at what
  * to do next, and it does so without ever implying you are behind.
@@ -66,7 +66,7 @@ function BadgeChip({ badge, compact }: { badge: BadgeState; compact: boolean }) 
   if (compact) {
     return (
       <span
-        title={`${title}${subtitle ? ` — ${subtitle}` : ""}`}
+        title={`${title}${subtitle ? `, ${subtitle}` : ""}`}
         className={[
           "flex size-10 items-center justify-center rounded-full border",
           earned
