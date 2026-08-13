@@ -49,9 +49,14 @@ export function MedalTile({
         // fractional widths, and a broken rail reads as a rendering fault.
         className="absolute -inset-x-2.5 top-0 h-[3px] bg-line-strong"
       />
+      {/* The shadow deliberately does NOT bleed like the rail above it. The
+          rail is opaque, so overlapping neighbours join invisibly; this is
+          semi-transparent, and overlapping it doubles the alpha into a visible
+          dark band at every tile boundary. Not bleeding leaves a 12px gap in a
+          6px-tall 6% shadow, which nobody can see. */}
       <span
         aria-hidden
-        className="absolute -inset-x-2.5 top-[3px] h-1.5 bg-gradient-to-b from-ink/8 to-transparent"
+        className="absolute inset-x-0 top-[3px] h-1.5 bg-gradient-to-b from-ink/6 to-transparent"
       />
 
       {/* Hangs from the rail, so it swings from the top rather than pivoting
