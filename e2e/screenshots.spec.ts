@@ -1,5 +1,5 @@
 import { test, type Page } from "@playwright/test";
-import { revokeBadge, signIn } from "./helpers";
+import { revokeBadge, setLocalHour, signIn } from "./helpers";
 
 /**
  * Design review captures.
@@ -24,6 +24,12 @@ async function settle(page: Page) {
 }
 
 test.describe("@shots design review", () => {
+  // Pin the demo user to mid-morning so the set is captured under ordinary
+  // daylight. Without this, a run at 04:00 UTC puts every screen under the
+  // night wash, which is real behaviour but a poor representation of the app.
+  test.beforeAll(() => {
+    setLocalHour(11);
+  });
   const PAGES: [string, string][] = [
     ["/today", "01-today"],
     ["/growth", "02-growth"],
@@ -55,6 +61,19 @@ test.describe("@shots design review", () => {
       path: `${OUT}/phone-08-skill-detail.png`,
       fullPage: true,
     });
+  });
+
+  test("phone 08b-garden-resting", async ({ page }) => {
+    await signIn(page);
+    // The garden scrolls, and the resting skill is the last plant in it. This
+    // is the one view where dormancy is actually visible: same stage, same
+    // size, cooler and still.
+    const strip = page.getByRole("region", { name: "Your garden" }).locator("ul");
+    await strip.evaluate((el) => el.scrollTo({ left: el.scrollWidth }));
+    await page.waitForTimeout(600);
+    await page
+      .getByRole("region", { name: "Your garden" })
+      .screenshot({ path: `${OUT}/phone-08b-garden-resting.png` });
   });
 
   test("phone 09-log-sheet", async ({ page }) => {
@@ -92,6 +111,19 @@ test.describe("@shots design review", () => {
     // Mid-strike: the ring is still expanding and the ribbon is unfurling.
     await page.waitForTimeout(420);
     await page.screenshot({ path: `${OUT}/phone-10b-medal-moment.png` });
+  });
+
+  test("phone 10c-garden-at-night", async ({ page }) => {
+    setLocalHour(23);
+    await signIn(page);
+    // The grow-in is staggered per plant, so a capture taken immediately after
+    // sign-in catches the later ones still at zero opacity and the garden looks
+    // half empty.
+    await settle(page);
+    await page
+      .getByRole("region", { name: "Your garden" })
+      .screenshot({ path: `${OUT}/phone-10c-garden-at-night.png` });
+    setLocalHour(11);
   });
 
   test("landing 11-public", async ({ page }) => {

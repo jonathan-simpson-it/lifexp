@@ -27,6 +27,31 @@ export function revokeBadge(badgeKey: string, email = "demo@lifexp.local") {
 }
 
 /**
+ * Pins the demo user's local hour, by picking the fixed-offset zone that puts
+ * their clock at `hour` right now.
+ *
+ * The garden's light follows the user's local time, so a capture run at 04:00
+ * UTC would show every screen under the night wash. `Etc/GMT±N` zones are real
+ * IANA zones with no DST, and their sign is inverted by definition: Etc/GMT-8
+ * is UTC+8.
+ */
+export function setLocalHour(hour: number, email = "demo@lifexp.local") {
+  const utcHour = new Date().getUTCHours();
+  // Normalised into the -12..+14 range the Etc zones actually cover.
+  let offset = hour - utcHour;
+  if (offset > 14) offset -= 24;
+  if (offset < -12) offset += 24;
+
+  const zone =
+    offset === 0 ? "UTC" : `Etc/GMT${offset > 0 ? "-" : "+"}${Math.abs(offset)}`;
+
+  execFileSync("npx", ["tsx", "e2e/support/set-timezone.ts", email, zone], {
+    stdio: "pipe",
+  });
+  return zone;
+}
+
+/**
  * Signs in through the development credentials provider.
  *
  * These tests run against the app as configured for local development, where
