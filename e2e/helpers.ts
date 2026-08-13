@@ -14,6 +14,19 @@ export function deleteUser(email: string) {
 }
 
 /**
+ * Removes one badge award so the next qualifying write earns it again.
+ *
+ * The only way to reach the medal moment in a seeded database where the demo
+ * user has already earned nearly everything. Nothing is faked: `syncProgress`
+ * genuinely re-awards it.
+ */
+export function revokeBadge(badgeKey: string, email = "demo@lifexp.local") {
+  execFileSync("npx", ["tsx", "e2e/support/revoke-badge.ts", email, badgeKey], {
+    stdio: "pipe",
+  });
+}
+
+/**
  * Signs in through the development credentials provider.
  *
  * These tests run against the app as configured for local development, where

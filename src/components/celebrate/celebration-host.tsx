@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { BADGES_BY_KEY } from "@/lib/progress/badges";
-import { BadgeIcon } from "@/components/badge-icon";
+import { badgeVisual } from "@/components/badge-icon";
+import { Medal } from "@/components/icons";
 import type { LogResult } from "@/components/log/log-sheet";
 import { Confetti } from "./confetti";
 import { Toast } from "./toast";
@@ -78,6 +79,8 @@ function MedalMoment({
 
   if (!badge) return null;
 
+  const { symbol, metal } = badgeVisual(badgeKey);
+
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-6">
       <button
@@ -93,15 +96,16 @@ function MedalMoment({
         aria-modal="true"
         className="pop-in relative w-full max-w-xs rounded-[var(--radius-sheet)] border border-line bg-paper-raised p-6 text-center shadow-raised"
       >
-        <p className="text-xs font-semibold tracking-widest text-medal uppercase">
-          Medal earned
-        </p>
+        <p className="text-eyebrow text-medal uppercase">Medal earned</p>
 
-        <span className="medal-shine mx-auto mt-4 flex size-20 items-center justify-center rounded-full bg-medal-soft text-medal">
-          <BadgeIcon name={badge.icon} size={40} />
+        {/* The medal is struck rather than faded in: it arrives oversized and
+            slams to rest, a ring expands off the rim, the ribbon unfurls, and
+            one gleam crosses the face. See the medal-* keyframes. */}
+        <span className="mx-auto mt-3 block w-fit">
+          <Medal tier={metal} size={112} symbol={symbol} striking />
         </span>
 
-        <h2 className="display mt-4 text-2xl font-semibold">{badge.title}</h2>
+        <h2 className="display mt-3 text-title">{badge.title}</h2>
         {/* States what happened. Never praises the person for being good, the
             medal is evidence, not a compliment. */}
         <p className="mt-2 text-ink-soft">{badge.description}</p>

@@ -395,36 +395,138 @@ body {
 }
 
 /*
-  The shine on an earned medal.
+  The gleam on a medal being struck.
 
-  A single slow pass across the disc, clipped to it. Metal is the one material
-  in this palette that should catch the light, and this is the only place in
-  the app where anything gleams, which is what keeps it feeling like an event
-  rather than a texture.
+  A single slow pass across the face, clipped to it inside the SVG. Metal is
+  the one material in this palette that should catch the light, and this is the
+  only place in the app where anything gleams, which is what keeps it feeling
+  like an event rather than a texture.
 */
-.medal-shine {
-  position: relative;
-  overflow: hidden;
+.medal-gleam {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: medal-gleam 1.1s var(--ease-out) 0.42s both;
 }
 
-.medal-shine::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(
-    100deg,
-    transparent 35%,
-    rgb(255 255 255 / 0.75) 50%,
-    transparent 65%
-  );
-  transform: translateX(-140%);
-  animation: medal-shine 1.5s var(--ease-out) 0.32s both;
+@keyframes medal-gleam {
+  0% {
+    opacity: 0;
+    transform: translateX(-34px);
+  }
+  25% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(34px);
+  }
 }
 
-@keyframes medal-shine {
-  to {
-    transform: translateX(140%);
+/*
+  Earning a medal.
+
+  The point of the sequence is that the medal is *struck*, not faded in. It
+  arrives oversized and slams to rest in under 200ms, a ring expands off the
+  rim like the sound made visible, the ribbon unfurls behind it, and the star
+  is drawn last so rank is something you watch being counted.
+
+  Timings are shared deliberately: the ring leaves as the ribbon arrives, so
+  the whole thing reads as one event rather than four animations that happen to
+  overlap.
+*/
+.medal-strike {
+  animation: medal-strike 0.62s var(--spring) both;
+}
+
+@keyframes medal-strike {
+  0% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+  38% {
+    opacity: 1;
+    transform: scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* The disc settles a beat after the strike, so metal and ribbon do not move as
+   one flat sprite. */
+.medal-disc {
+  transform-origin: 50% 62%;
+  animation: medal-settle 1.5s var(--ease-out) 0.18s both;
+}
+
+@keyframes medal-settle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  30% {
+    transform: rotate(2.2deg);
+  }
+  55% {
+    transform: rotate(-1.4deg);
+  }
+  78% {
+    transform: rotate(0.6deg);
+  }
+}
+
+/* The ribbon unfurls downward from the top edge. */
+.medal-ribbon {
+  transform-origin: 50% 6%;
+  animation: medal-ribbon 0.5s var(--ease-out) 0.1s both;
+}
+
+@keyframes medal-ribbon {
+  0% {
+    opacity: 0;
+    transform: scaleY(0.2);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The star arrives last, and slightly overshoots. */
+.medal-star {
+  transform-origin: 50% 62%;
+  animation: medal-star 0.55s var(--spring) 0.34s both;
+}
+
+@keyframes medal-star {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(-35deg);
+  }
+  100% {
+    opacity: 0.62;
+    transform: none;
+  }
+}
+
+/* A single ring off the rim. Expands and fades: the strike, made visible.
+   `transform-box: fill-box` is what makes percentage origins work on an SVG
+   shape; without it the origin is the whole viewBox and the ring flies off. */
+.medal-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: medal-ring 0.7s var(--ease-out) 0.12s both;
+}
+
+@keyframes medal-ring {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.72);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
   }
 }
 

@@ -288,14 +288,13 @@ test.describe("motion", () => {
         sway: read("plant-sway"),
         sheet: read("sheet-in"),
         pop: read("pop-in"),
-        // The medal's gleam animates a pseudo-element, which the global
-        // reduced-motion block covers separately from the element itself.
-        shine: (() => {
-          probe.className = "medal-shine";
-          return parseFloat(
-            getComputedStyle(probe, "::after").animationDuration,
-          );
-        })(),
+        // The whole medal-strike sequence.
+        strike: read("medal-strike"),
+        ring: read("medal-ring"),
+        ribbon: read("medal-ribbon"),
+        star: read("medal-star"),
+        gleam: read("medal-gleam"),
+        settle: read("medal-disc"),
       };
       probe.remove();
       return result;

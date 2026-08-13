@@ -3,7 +3,7 @@ import { requireUserId } from "@/lib/auth";
 import { getAchievedMilestones, getBadgeState } from "@/lib/progress/queries";
 import { MedalShelf } from "@/components/medal-shelf";
 import { formatDate } from "@/lib/ui/format";
-import { Medal } from "@/components/icons";
+import { MilestoneTile } from "@/components/medal-tile";
 import type { MilestoneTier } from "@/lib/progress/milestones";
 
 export const metadata = { title: "Medals · LifeXP" };
@@ -18,7 +18,7 @@ export default async function MedalsPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="display text-2xl font-semibold">Medals</h1>
+        <h1 className="display text-title">Medals</h1>
         <p className="mt-1 text-ink-soft">
           Two kinds: markers reached inside a single skill, and badges that cut
           across your whole life.
@@ -26,39 +26,36 @@ export default async function MedalsPage() {
       </header>
 
       <section aria-labelledby="milestones-heading">
-        <h2
-          id="milestones-heading"
-          className="text-sm font-medium tracking-wide text-muted uppercase"
-        >
+        <h2 id="milestones-heading" className="text-eyebrow text-muted uppercase">
           Skill milestones
         </h2>
 
         {milestones.length === 0 ? (
-          <p className="mt-2 text-sm text-muted">
+          <p className="voice mt-2">
             None yet. They arrive on their own as the hours accumulate. There is
             nothing to claim.
           </p>
         ) : (
-          <ul className="mt-3 grid gap-2">
+          // The same grid and the same tile as the badges below, so the two
+          // kinds of medal finally read as one collection.
+          <ul className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
             {milestones.map((milestone) => (
-              <li key={milestone.id} className="card flex items-center gap-3 p-3">
-                <span aria-hidden className="shrink-0">
-                  <Medal tier={milestone.tier as MilestoneTier} size={40} />
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate font-medium">{milestone.label}</p>
-                  <Link
-                    href={`/growth/${milestone.skill.slug}`}
-                    className="text-sm text-muted hover:text-ink"
-                  >
-                    {milestone.skill.name}
-                  </Link>
-                </div>
-                {milestone.achievedAt && (
-                  <span className="shrink-0 text-xs text-muted">
-                    {formatDate(milestone.achievedAt)}
-                  </span>
-                )}
+              <li key={milestone.id}>
+                <Link
+                  href={`/growth/${milestone.skill.slug}`}
+                  className="tappable block h-full"
+                >
+                  <MilestoneTile
+                    tier={milestone.tier as MilestoneTier}
+                    label={milestone.label}
+                    skillName={milestone.skill.name}
+                    achievedAt={
+                      milestone.achievedAt
+                        ? formatDate(milestone.achievedAt)
+                        : null
+                    }
+                  />
+                </Link>
               </li>
             ))}
           </ul>

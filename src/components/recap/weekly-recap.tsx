@@ -5,7 +5,8 @@ import { X } from "lucide-react";
 import type { WeekSummary } from "@/lib/growth/summarise";
 import type { RecapBadge } from "@/lib/progress/queries";
 import { formatDuration } from "@/lib/ui/format";
-import { BadgeIcon } from "@/components/badge-icon";
+import { Medal } from "@/components/icons";
+import { badgeVisual } from "@/components/badge-icon";
 
 /**
  * The weekly ritual.
@@ -124,9 +125,16 @@ export function WeeklyRecap({
           {recentBadges.map((badge) => (
             <li
               key={badge.key}
-              className="flex items-center gap-1.5 rounded-full bg-medal-soft px-2.5 py-1 text-caption font-medium text-medal"
+              className="flex items-center gap-1 rounded-full bg-medal-soft py-1 pr-2.5 pl-1 text-caption font-medium text-medal"
             >
-              <BadgeIcon name={badge.icon} size={14} />
+              {/* No ribbon at this size: below about 20px the straps turn into
+                  two dark specks and the medal stops reading as a medal. */}
+              <Medal
+                tier={badgeVisual(badge.key).metal}
+                symbol={badgeVisual(badge.key).symbol}
+                size={22}
+                ribbon={false}
+              />
               {badge.title}
             </li>
           ))}
