@@ -467,6 +467,144 @@ body {
 }
 
 /*
+  The light of the hour, laid over the garden bed.
+
+  Deliberately faint, and fading out before the halfway mark. It should be the
+  difference between opening the app in the morning and opening it at night,
+  not a filter anybody has to look past.
+
+  The first version was roughly twice this strength and covered the whole card,
+  which turned the cream ground grey. On a product whose entire palette is one
+  cream, a wash over the hero card is not atmosphere, it is dirt.
+*/
+.garden-light {
+  transition: background var(--dur-move) var(--ease-out);
+}
+[data-light="dawn"] .garden-light {
+  background: linear-gradient(165deg, rgb(224 178 63 / 0.07), transparent 55%);
+}
+[data-light="day"] .garden-light {
+  background: none;
+}
+[data-light="dusk"] .garden-light {
+  background: linear-gradient(200deg, rgb(201 147 43 / 0.08), transparent 60%);
+}
+[data-light="night"] .garden-light {
+  background: linear-gradient(180deg, rgb(70 84 118 / 0.07), transparent 65%);
+}
+
+/*
+  Fireflies. Three of them, drifting and blinking out of phase.
+
+  This is ambient life, in the same family as the swaying plants: slow, small,
+  and asking for nothing. It appears only at night, which is the one time the
+  garden has anywhere for it to show.
+*/
+.firefly {
+  animation: firefly 7s ease-in-out infinite;
+}
+
+@keyframes firefly {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  35% {
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 0.5;
+    transform: translate(3px, -4px);
+  }
+  70% {
+    opacity: 0.7;
+  }
+}
+
+/* Autumn leaves, already on their way down. */
+.leaf-fall {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: leaf-fall 11s ease-in-out infinite;
+}
+.leaf-fall-late {
+  animation-delay: 4.5s;
+}
+
+@keyframes leaf-fall {
+  0% {
+    opacity: 0;
+    transform: translate(0, -6px) rotate(0deg);
+  }
+  15%,
+  70% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-4px, 12px) rotate(120deg);
+  }
+}
+
+/* Companions: a bee that hovers, a butterfly that drifts. Neither goes far. */
+.companion-hover {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: companion-hover 4.5s ease-in-out infinite;
+}
+
+@keyframes companion-hover {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-1.5px, -2px);
+  }
+}
+
+.companion-drift {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: companion-drift 9s ease-in-out infinite;
+}
+
+@keyframes companion-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(-4deg);
+  }
+  50% {
+    transform: translate(4px, -3px) rotate(4deg);
+  }
+}
+
+/*
+  Waking.
+
+  Plays on a resting plant the moment something is recorded against it. Colour
+  and motion return together, which is the entire point: the garden was asleep,
+  not dying, and recording something is what wakes it.
+
+  It brightens toward its true colour rather than away from anything, so even
+  the wake obeys the rule that motion only ever moves in the direction of
+  growth.
+*/
+.plant-wake {
+  animation: plant-wake 1.1s var(--ease-out) 0.45s both;
+}
+
+@keyframes plant-wake {
+  0% {
+    filter: saturate(0.45) brightness(1.06);
+  }
+  100% {
+    filter: none;
+  }
+}
+
+/*
   A medal hanging on its rail.
 
   Two states, and the restraint matters. At rest it swings a fraction of a

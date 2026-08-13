@@ -5,6 +5,12 @@ import {
   type MilestoneTier,
 } from "@/lib/progress/milestones";
 import { summariseWeek, type WeekSummary } from "./summarise";
+import {
+  gardenConditionsFor,
+  restStateFor,
+  type GardenConditions,
+  type RestState,
+} from "@/lib/garden/conditions";
 
 // Re-exported so callers have one import site for growth reads; the
 // implementations live in ./summarise because they must stay Prisma-free.
@@ -66,6 +72,12 @@ export type SkillCard = {
   fraction: number;
   achievedTier: MilestoneTier | null;
   achievedLabel: string | null;
+  /**
+   * Whether the skill is active, settling or resting. Computed here rather than
+   * in the component, because reading the clock during render is an impure
+   * render and the garden must never have to ask what day it is.
+   */
+  rest: RestState;
 };
 
 export type DashboardData = {
@@ -76,6 +88,10 @@ export type DashboardData = {
 };
 
 export async function getGrowthOverview(userId: string): Promise<DashboardData> {
+  // One clock read for the whole page, so every plant agrees about what day it
+  // is even if the request straddles midnight.
+  const now = new Date();
+
   const [skills, experiences] = await Promise.all([
     db.skill.findMany({
       where: { userId, archivedAt: null },
@@ -135,6 +151,7 @@ export async function getGrowthOverview(userId: string): Promise<DashboardData> 
       fraction,
       achievedTier: (highestAchieved ?? previous)?.tier ?? null,
       achievedLabel: highestAchieved?.label ?? null,
+      rest: restStateFor(own[0]?.occurredAt ?? null, now),
     };
   });
 
@@ -144,6 +161,22 @@ export async function getGrowthOverview(userId: string): Promise<DashboardData> 
     totalMinutes: experiences.reduce((sum, e) => sum + (e.minutes ?? 0), 0),
     totalExperiences: experiences.length,
   };
+}
+
+/**
+ * The season and the light, for the garden bed.
+ *
+ * Loads the user's timezone so dusk is dusk where they are. Neither value can
+ * be influenced by anything the user has or has not done.
+ */
+export async function getGardenConditions(
+  userId: string,
+): Promise<GardenConditions> {
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    select: { timezone: true },
+  });
+  return gardenConditionsFor(new Date(), user?.timezone || "UTC");
 }
 
 export type QuickSkill = {

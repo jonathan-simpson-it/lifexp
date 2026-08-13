@@ -1,6 +1,13 @@
 import Link from "next/link";
 import type { SkillCard } from "@/lib/growth/aggregate";
 import { Plant, stageForTier, STAGE_LABEL } from "@/components/icons";
+import { Fireflies } from "@/components/icons/season";
+import {
+  companionFor,
+  REST_LABEL,
+  soilFor,
+  type GardenConditions,
+} from "@/lib/garden/conditions";
 import { formatDuration, skillColor } from "@/lib/ui/format";
 
 /**
@@ -10,24 +17,46 @@ import { formatDuration, skillColor } from "@/lib/ui/format";
  * reached. It is the home screen's emotional centre and the thing that makes
  * "life is an accumulation of experiences" literal rather than a tagline.
  *
- * There is no wilted stage and no time input to this component, only
- * `achievedTier`. A skill you have not touched since spring looks exactly as
- * grown as the day you left it. That is the anti-streak rule made visual, and
- * it is why this cannot take a `lastActiveAt`.
+ * The garden answers to time, but never to how often you show up. A skill left
+ * alone **rests**: same stage, same size, cooler and still, and it wakes the
+ * moment you record something. It is never smaller, never brown, and there is
+ * no state in which it looks worse than the day you left it. Season, soil and
+ * companions come from the calendar and from totals that only ever rise.
+ *
+ * The one rule that matters when changing any of this: rest may touch tint and
+ * motion, nothing else.
  */
-export function GardenBed({ skills }: { skills: SkillCard[] }) {
+export function GardenBed({
+  skills,
+  conditions,
+}: {
+  skills: SkillCard[];
+  conditions: GardenConditions;
+}) {
   if (skills.length === 0) return <EmptyBed />;
 
+  const { season, light } = conditions;
+
   return (
-    <section aria-labelledby="garden-heading" className="card overflow-hidden p-4">
+    <section
+      aria-labelledby="garden-heading"
+      className="card relative overflow-hidden p-4"
+      data-light={light}
+    >
       <h2 id="garden-heading" className="sr-only">
         Your garden
       </h2>
 
-      <ul className="flex items-end gap-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {/* The light of the hour, laid over the bed rather than any one plant. */}
+      <span aria-hidden className="garden-light pointer-events-none absolute inset-0" />
+
+      {light === "night" && <Fireflies />}
+
+      <ul className="relative flex items-end gap-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {skills.map((skill, index) => {
           const stage = stageForTier(skill.achievedTier);
           const color = skillColor(skill.colorSeed);
+          const resting = REST_LABEL[skill.rest];
 
           return (
             <li key={skill.id} className="shrink-0">
@@ -36,7 +65,7 @@ export function GardenBed({ skills }: { skills: SkillCard[] }) {
                 // 80px wide so four skills fit across a phone without the
                 // fourth being clipped at the edge.
                 className="tappable flex w-20 flex-col items-center rounded-xl px-0.5 py-1 text-center"
-                aria-label={`${skill.name}, ${STAGE_LABEL[stage]}, ${formatDuration(skill.totalMinutes)} recorded`}
+                aria-label={`${skill.name}, ${STAGE_LABEL[stage]}${resting ? `, ${resting}` : ""}, ${formatDuration(skill.totalMinutes)} recorded`}
               >
                 <span
                   className="grow-in block"
@@ -49,7 +78,15 @@ export function GardenBed({ skills }: { skills: SkillCard[] }) {
                     ["--rise-delay" as string]: `${index * 0.06}s`,
                   }}
                 >
-                  <Plant stage={stage} color={color} size={72} />
+                  <Plant
+                    stage={stage}
+                    color={color}
+                    size={72}
+                    rest={skill.rest}
+                    season={season}
+                    soil={soilFor(skill.experienceCount)}
+                    companion={companionFor(skill.achievedTier)}
+                  />
                 </span>
                 <span className="mt-0.5 w-full truncate text-caption font-medium">
                   {skill.name}

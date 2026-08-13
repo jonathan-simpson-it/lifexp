@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { requireUserId } from "@/lib/auth";
-import { getGrowthOverview } from "@/lib/growth/aggregate";
+import { getGardenConditions, getGrowthOverview } from "@/lib/growth/aggregate";
 import { getMaintenanceCards } from "@/lib/maintenance/queries";
 import {
   getBadgeState,
@@ -19,12 +19,14 @@ export const metadata = { title: "Today · LifeXP" };
 export default async function TodayPage() {
   const userId = await requireUserId();
 
-  const [growth, maintenance, badges, recentBadges] = await Promise.all([
-    getGrowthOverview(userId),
-    getMaintenanceCards(userId),
-    getBadgeState(userId),
-    getRecentBadges(userId),
-  ]);
+  const [growth, maintenance, badges, recentBadges, conditions] =
+    await Promise.all([
+      getGrowthOverview(userId),
+      getMaintenanceCards(userId),
+      getBadgeState(userId),
+      getRecentBadges(userId),
+      getGardenConditions(userId),
+    ]);
 
   // Clock read lives in lib, not here: calling Date.now() while rendering is an
   // impure render, and the recap's client half should only have to answer
@@ -46,7 +48,7 @@ export default async function TodayPage() {
         <FirstRun />
       ) : (
         <>
-          <GardenBed skills={growth.skills} />
+          <GardenBed skills={growth.skills} conditions={conditions} />
 
           <WeeklyRecap
             week={growth.week}

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { currentUserId } from "@/lib/auth";
 import { Logo, Plant, Medal } from "@/components/icons";
+import { gardenConditionsFor } from "@/lib/garden/conditions";
 import { formatDuration } from "@/lib/ui/format";
 
 export const metadata: Metadata = {
@@ -100,12 +101,34 @@ function Hero() {
 }
 
 const SAMPLE = [
-  { name: "Japanese", minutes: 19_800, stage: "grand" as const, hue: 24 },
-  { name: "Piano", minutes: 2_070, stage: "sapling" as const, hue: 190 },
-  { name: "Running", minutes: 936, stage: "sprout" as const, hue: 96 },
+  {
+    name: "Japanese",
+    minutes: 19_800,
+    stage: "grand" as const,
+    hue: 24,
+    soil: "rich" as const,
+  },
+  {
+    name: "Piano",
+    minutes: 2_070,
+    stage: "sapling" as const,
+    hue: 190,
+    soil: "mossy" as const,
+  },
+  {
+    name: "Running",
+    minutes: 936,
+    stage: "sprout" as const,
+    hue: 96,
+    soil: "bare" as const,
+  },
 ];
 
 function HeroArt() {
+  // Reads the clock inside lib rather than here, the same way getRecapWindow
+  // keeps the date out of a render.
+  const { season } = gardenConditionsFor();
+
   return (
     <div className="card mx-auto max-w-sm p-4">
       <p className="text-xs font-semibold tracking-widest text-muted uppercase">
@@ -119,10 +142,14 @@ function HeroArt() {
         {SAMPLE.map((skill, i) => (
           <li key={skill.name} className="flex w-24 flex-col items-center text-center">
             <span style={{ ["--sway-delay" as string]: `${i * 0.4}s` }}>
+              {/* The public garden follows the real season too, so the first
+                  thing a visitor sees in October is an October garden. */}
               <Plant
                 stage={skill.stage}
                 color={`oklch(0.58 0.09 ${skill.hue})`}
                 size={76}
+                season={season}
+                soil={skill.soil}
               />
             </span>
             <span className="mt-0.5 truncate text-xs font-medium">{skill.name}</span>

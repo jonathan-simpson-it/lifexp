@@ -1,4 +1,20 @@
 import type { MilestoneTier } from "@/lib/progress/milestones";
+import type {
+  Companion,
+  RestState,
+  Season,
+  Soil,
+} from "@/lib/garden/conditions";
+import {
+  Bee,
+  Bird,
+  Blossom,
+  Butterfly,
+  FallingLeaves,
+  Frost,
+  LeafLitter,
+  Moss,
+} from "./season";
 
 /**
  * The living garden.
@@ -79,58 +95,182 @@ export const SWAY_AMPLITUDE: Record<PlantStage, string> = {
 };
 
 /**
+ * Where the leafy mass of each stage sits, so season accents and companions can
+ * be placed against it. Null for a seed, which has no canopy to decorate.
+ */
+const CANOPY: Record<PlantStage, { cx: number; cy: number; r: number } | null> = {
+  seed: null,
+  sprout: { cx: 32, cy: 40, r: 7 },
+  sapling: { cx: 32, cy: 31, r: 10 },
+  young: { cx: 32, cy: 25, r: 12 },
+  flowering: { cx: 32, cy: 22, r: 14 },
+  fruiting: { cx: 32, cy: 20, r: 15 },
+  grand: { cx: 32, cy: 18, r: 16 },
+};
+
+/**
+ * The plant's colour under the current conditions.
+ *
+ * Rest cools and softens; it never darkens, never browns, and never reduces the
+ * plant's size or opacity to nothing. Autumn warms toward ochre and winter
+ * toward frost, both of which are the calendar talking rather than a comment on
+ * anybody's week.
+ *
+ * `color-mix` rather than opacity on purpose: fading a plant out against cream
+ * reads as disappearing, and nothing in this garden is allowed to disappear.
+ */
+function tint(color: string, rest: RestState, season: Season): string {
+  let result = color;
+
+  if (season === "autumn") {
+    result = `color-mix(in oklab, ${result} 52%, var(--medal-bright))`;
+  } else if (season === "winter") {
+    result = `color-mix(in oklab, ${result} 68%, #b6c7cc)`;
+  }
+
+  /*
+    Applied last, so a resting plant reads as asleep in whatever season it is.
+
+    Mixed toward a COOL grey. The first version mixed toward --line, which is a
+    warm tan, and green plus tan is olive: the plant read as dried out rather
+    than asleep, which is precisely the browning this whole feature promised
+    never to do. Cool desaturation reads as dormant; warm desaturation reads as
+    dying.
+  */
+  if (rest === "resting") {
+    result = `color-mix(in oklab, ${result} 50%, #b9c3c6)`;
+  } else if (rest === "settling") {
+    result = `color-mix(in oklab, ${result} 80%, #b9c3c6)`;
+  }
+
+  return result;
+}
+
+/**
  * The plant itself, without an `<svg>` wrapper.
  *
  * Split out so the watering scene can compose a plant, a can and falling
  * droplets into a single coordinate space, droplets have to land on the soil,
  * which means they must share the plant's viewBox rather than be positioned
  * over a nested SVG.
+ *
+ * **The stage is the only thing that decides how big this is.** Rest, season
+ * and soil may change colour and add accents; none of them may shrink a plant,
+ * take a stage away, or make it look worse than the day it was left. That used
+ * to be guaranteed by the component not knowing the date. It now knows, so the
+ * promise is kept by `src/lib/garden/conditions.test.ts` instead.
  */
 export function PlantGlyph({
   stage,
   color,
+  rest = "active",
+  season = "summer",
+  soil: soilState = "bare",
+  companion = "none",
 }: {
   stage: PlantStage;
   color: string;
+  rest?: RestState;
+  season?: Season;
+  soil?: Soil;
+  companion?: Companion;
 }) {
   const soil = SOIL_WIDTH[stage];
+  const canopy = CANOPY[stage];
+  const shade = tint(color, rest, season);
 
   return (
     <>
       {/* Soil is always present, even a seed sits in ground that is tended. */}
-      <ellipse cx="32" cy="57" rx={soil} ry={soil * 0.26} fill="var(--line)" />
+      <ellipse
+        cx="32"
+        cy="57"
+        rx={soil}
+        ry={soil * 0.26}
+        fill={soilState === "rich" ? "var(--line-strong)" : "var(--line)"}
+      />
       <ellipse
         cx="32"
         cy="56.2"
         rx={soil * 0.72}
         ry={soil * 0.17}
         fill="var(--line-strong)"
-        opacity="0.65"
+        opacity={soilState === "rich" ? 0.85 : 0.65}
       />
+      {soilState !== "bare" && <Moss soil={soil} />}
+      {soilState === "rich" && <LeafLitter soil={soil} />}
+      {season === "winter" && <Frost soil={soil} />}
 
-      {stage === "seed" && <Seed color={color} />}
-      {stage === "sprout" && <Sprout color={color} />}
-      {stage === "sapling" && <Sapling color={color} />}
-      {stage === "young" && <YoungTree color={color} />}
-      {stage === "flowering" && <Flowering color={color} />}
-      {stage === "fruiting" && <Fruiting color={color} />}
-      {stage === "grand" && <GrandTree color={color} />}
+      {/* `color` here is what the stems inherit through currentColor, so stem
+          and canopy age together. */}
+      <g color={tint("var(--growth)", rest, season)}>
+        {stage === "seed" && <Seed color={shade} />}
+        {stage === "sprout" && <Sprout color={shade} />}
+        {stage === "sapling" && <Sapling color={shade} />}
+        {stage === "young" && <YoungTree color={shade} />}
+        {stage === "flowering" && <Flowering color={shade} />}
+        {stage === "fruiting" && <Fruiting color={shade} />}
+        {stage === "grand" && <GrandTree color={shade} />}
+      </g>
+
+      {canopy && (
+        <>
+          {season === "spring" && <Blossom {...canopy} />}
+          {season === "autumn" && <FallingLeaves cx={canopy.cx} cy={canopy.cy} />}
+
+          {/* Companions rest too. They are asleep, not gone. */}
+          {rest !== "resting" && (
+            <>
+              {(companion === "bee" || companion === "all") && <Bee {...canopy} />}
+              {(companion === "bird" || companion === "all") && <Bird {...canopy} />}
+              {(companion === "butterfly" || companion === "all") && (
+                <Butterfly {...canopy} />
+              )}
+            </>
+          )}
+        </>
+      )}
     </>
   );
 }
+
+/**
+ * How much of its usual sway a plant keeps.
+ *
+ * A resting plant is **still**, not drooping. Stillness is the whole visual
+ * vocabulary of dormancy here: nothing sags, nothing browns, it simply stops
+ * moving, and it starts again the moment you record something.
+ */
+const SWAY_SCALE: Record<RestState, number> = {
+  active: 1,
+  settling: 0.55,
+  resting: 0.12,
+};
 
 export function Plant({
   stage,
   color,
   size = 72,
   swaying = true,
+  rest = "active",
+  season = "summer",
+  soil = "bare",
+  companion = "none",
 }: {
   stage: PlantStage;
   /** The skill's colour, so the garden and its cards agree. */
   color: string;
   size?: number;
   swaying?: boolean;
+  rest?: RestState;
+  season?: Season;
+  soil?: Soil;
+  companion?: Companion;
 }) {
+  const amplitude = (
+    parseFloat(SWAY_AMPLITUDE[stage]) * SWAY_SCALE[rest]
+  ).toFixed(2);
+
   return (
     <svg
       width={size}
@@ -139,9 +279,16 @@ export function Plant({
       fill="none"
       aria-hidden
       className={swaying ? "plant-sway" : undefined}
-      style={{ ["--sway-amp" as string]: SWAY_AMPLITUDE[stage] }}
+      style={{ ["--sway-amp" as string]: `${amplitude}deg` }}
     >
-      <PlantGlyph stage={stage} color={color} />
+      <PlantGlyph
+        stage={stage}
+        color={color}
+        rest={rest}
+        season={season}
+        soil={soil}
+        companion={companion}
+      />
     </svg>
   );
 }
@@ -149,7 +296,10 @@ export function Plant({
 /* --- stages ------------------------------------------------------------- */
 
 const stem = {
-  stroke: "var(--growth)",
+  // currentColor, not the raw token: the wrapping group sets it, so the stem
+  // is tinted by season and rest along with the leaves. Hardcoding --growth
+  // here left a resting plant with a wide-awake stem.
+  stroke: "currentColor",
   strokeWidth: 3,
   strokeLinecap: "round" as const,
   fill: "none",
