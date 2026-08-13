@@ -114,6 +114,11 @@ async function main() {
   const piano = await createSkillForUser(user.id, "Piano");
   const running = await createSkillForUser(user.id, "Running");
   const reading = await createSkillForUser(user.id, "Reading");
+  // Woodworking exists to demonstrate dormancy. Its history stops two months
+  // back, so its plant is resting: same stage, same size, cooler and still,
+  // and it wakes the moment anything is logged against it. A demo without one
+  // cannot show the most important thing the garden does with time.
+  const woodworking = await createSkillForUser(user.id, "Woodworking");
 
   type Plan = {
     daysAgo: number;
@@ -209,6 +214,27 @@ async function main() {
     });
   }
 
+  // Woodworking: a real run of it last winter, then set aside. Nothing was
+  // lost by stopping, which is exactly what the resting plant is there to say.
+  // Stops short of the global quiet window rather than running through it. That
+  // window is what "The Return" notices, and filling it with woodworking would
+  // silently delete the badge from the demo.
+  for (let daysAgo = 240; daysAgo >= 100; daysAgo -= 7) {
+    if (isQuietPeriod(daysAgo)) continue;
+    if (random() < 0.3) continue;
+    plans.push({
+      daysAgo,
+      hour: 15,
+      title: pick([
+        "Sanding and finishing",
+        "Cut the joints for the shelf",
+        "Workshop afternoon",
+      ]),
+      minutes: pick([90, 120, 150]),
+      skills: [woodworking.id],
+    });
+  }
+
   // A couple of genuinely cross-skill experiences. These are the ones that make
   // the "count minutes fully per skill, dedupe across skills" rule observable.
   plans.push({
@@ -280,9 +306,14 @@ async function main() {
 
   const result = await syncProgress(user.id);
 
-  const experienceCount = await db.experience.count({ where: { userId: user.id } });
+  // Counted, not asserted. This line read `skills 4` regardless of what was
+  // actually created, so it kept saying 4 after a fifth skill was added.
+  const [experienceCount, skillCount] = await Promise.all([
+    db.experience.count({ where: { userId: user.id } }),
+    db.skill.count({ where: { userId: user.id } }),
+  ]);
   console.log(`  user            ${DEMO_EMAIL}`);
-  console.log(`  skills          4`);
+  console.log(`  skills          ${skillCount}`);
   console.log(`  experiences     ${experienceCount}`);
   console.log(`  milestones hit  ${result.newMilestoneIds.length}`);
   console.log(`  badges earned   ${result.newBadgeKeys.join(", ") || "none"}`);
