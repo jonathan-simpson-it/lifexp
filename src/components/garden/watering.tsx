@@ -1,6 +1,7 @@
 "use client";
 
 import { PlantGlyph, type PlantStage } from "@/components/icons";
+import type { Season, Soil } from "@/lib/garden/conditions";
 
 /**
  * Watering the plant, what logging looks like.
@@ -44,11 +45,18 @@ export function Watering({
   stageAfter,
   color,
   size = 64,
+  season = "summer",
+  soil = "bare",
+  /** True when this skill had gone to sleep. Drives the wake. */
+  wasResting = false,
 }: {
   stageBefore: PlantStage;
   stageAfter: PlantStage;
   color: string;
   size?: number;
+  season?: Season;
+  soil?: Soil;
+  wasResting?: boolean;
 }) {
   const grew = stageBefore !== stageAfter;
 
@@ -59,18 +67,31 @@ export function Watering({
       viewBox="0 0 64 64"
       fill="none"
       aria-hidden
-      className="shrink-0"
+      // Waking is the payoff for coming back: a plant that had gone quiet gets
+      // its colour returned as the water lands. Companions are left out of the
+      // scene entirely; at 56px they are noise.
+      className={`shrink-0${wasResting ? " plant-wake" : ""}`}
     >
       {/* The plant before. Only rendered when the stage actually changed,
           otherwise it would sit behind an identical copy of itself. */}
       {grew && (
         <g className="water-plant water-stage-out">
-          <PlantGlyph stage={stageBefore} color={color} />
+          <PlantGlyph
+            stage={stageBefore}
+            color={color}
+            season={season}
+            soil={soil}
+          />
         </g>
       )}
 
       <g className={`water-plant${grew ? " water-stage-in" : ""}`}>
-        <PlantGlyph stage={stageAfter} color={color} />
+        <PlantGlyph
+          stage={stageAfter}
+          color={color}
+          season={season}
+          soil={soil}
+        />
       </g>
 
       {/* Soil darkening where the water lands. A wet patch, not a shadow. */}

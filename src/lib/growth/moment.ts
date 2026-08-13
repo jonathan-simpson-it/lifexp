@@ -1,5 +1,11 @@
 import { db } from "@/lib/db";
 import {
+  restStateFor,
+  seasonFor,
+  type RestState,
+  type Season,
+} from "@/lib/garden/conditions";
+import {
   nextMilestone,
   type MilestoneRow,
   type MilestoneTier,
@@ -32,12 +38,23 @@ export type SkillMoment = {
   remainingUnit: "minutes" | "sessions" | null;
   /** 0–1 along the current segment, measured from the previous milestone. */
   fraction: number;
+  /**
+   * Whether this skill had gone to sleep. Taken from the *before* snapshot, it
+   * is what tells the reward moment to play the wake: a plant that was resting
+   * gets its colour back as the water lands.
+   */
+  rest: RestState;
+  /** The season, so the plant in the toast matches the one in the garden. */
+  season: Season;
 };
 
 export async function getSkillMoment(
   userId: string,
   skillId: string,
 ): Promise<SkillMoment | null> {
+  // One clock read, shared by rest and season.
+  const now = new Date();
+
   const skill = await db.skill.findFirst({
     where: { id: skillId, userId },
     include: { milestones: { orderBy: { order: "asc" } } },
@@ -49,7 +66,8 @@ export async function getSkillMoment(
   // the same rule ARCHITECTURE §4.1 describes.
   const rows = await db.experience.findMany({
     where: { userId, skills: { some: { skillId } } },
-    select: { minutes: true },
+    select: { minutes: true, occurredAt: true },
+    orderBy: { occurredAt: "desc" },
   });
 
   const totalMinutes = rows.reduce((sum, e) => sum + (e.minutes ?? 0), 0);
@@ -85,5 +103,7 @@ export async function getSkillMoment(
     remaining,
     remainingUnit,
     fraction,
+    rest: restStateFor(rows[0]?.occurredAt ?? null, now),
+    season: seasonFor(now),
   };
 }

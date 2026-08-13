@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import type { SkillMoment } from "@/lib/growth/moment";
 import { Watering } from "@/components/garden/watering";
 import { stageForTier } from "@/components/icons";
+import { soilFor } from "@/lib/garden/conditions";
 import { skillColor } from "@/lib/ui/format";
 import { CountingFigure } from "./counting-figure";
 
@@ -72,6 +73,11 @@ export function WateredToast({
           stageAfter={stageAfter}
           color={skillColor(after.colorSeed)}
           size={56}
+          season={after.season}
+          soil={soilFor(after.experienceCount)}
+          // Read from the *before* snapshot: what matters is that it had gone
+          // quiet, not that it is awake again now.
+          wasResting={before?.rest === "resting"}
         />
 
         <div className="min-w-0">
