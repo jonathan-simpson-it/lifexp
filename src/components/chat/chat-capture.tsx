@@ -115,7 +115,9 @@ export function ChatCapture({
           type="submit"
           disabled={!text.trim() || thinking}
           aria-label="Record this"
-          className="tappable shrink-0 rounded-full bg-accent p-2.5 text-white disabled:opacity-30"
+          // accent-deep, not accent: white on the lighter sage is 3.09:1, and
+          // this glyph is the only thing telling you the button is the submit.
+          className="tappable shrink-0 rounded-full bg-accent-deep p-2.5 text-white disabled:opacity-30"
         >
           {thinking ? (
             <Loader2 size={18} aria-hidden className="animate-spin" />

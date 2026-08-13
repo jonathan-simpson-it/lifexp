@@ -14,16 +14,35 @@ import type { MilestoneTier } from "@/lib/progress/milestones";
  * skills looking like the same paint at different opacity. Low chroma keeps the
  * whole set reading as sage.
  */
-export function skillColor(colorSeed: number, opts: { soft?: boolean } = {}) {
+export function skillColor(
+  colorSeed: number,
+  opts: { soft?: boolean; solid?: boolean } = {},
+) {
   const seed = Math.abs(colorSeed);
   const hue = 148 + (seed % 40);
+
+  if (opts.soft) return `oklch(0.93 0.022 ${hue})`;
+
+  /*
+    `solid` is for a fill with white text on it — the selected skill chip.
+
+    The default band runs to L0.69, where white measures 2.70:1. That shipped:
+    whether a chip was readable depended on which seed the skill happened to
+    get. This band is narrow and dark enough that white clears 4.5:1 for every
+    seed and every hue in the range (6.35:1 at the worst corner), and slightly
+    more chroma keeps the skills apart despite the compressed lightness.
+
+    Enforced by `skillColor solid` in format.test.ts.
+  */
+  if (opts.solid) {
+    const lightness = 0.38 + (((seed * 7) % 11) / 100);
+    return `oklch(${lightness.toFixed(3)} 0.062 ${hue})`;
+  }
+
   // Two different reductions of the seed so hue and lightness do not move
   // together, which would collapse the set back onto one visual axis.
   const lightness = 0.44 + (((seed * 7) % 26) / 100);
-
-  return opts.soft
-    ? `oklch(0.93 0.022 ${hue})`
-    : `oklch(${lightness.toFixed(3)} 0.055 ${hue})`;
+  return `oklch(${lightness.toFixed(3)} 0.055 ${hue})`;
 }
 
 /**

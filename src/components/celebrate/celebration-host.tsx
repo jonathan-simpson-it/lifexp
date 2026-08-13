@@ -97,7 +97,7 @@ function MedalMoment({
           Medal earned
         </p>
 
-        <span className="mx-auto mt-4 flex size-20 items-center justify-center rounded-full bg-medal-soft text-medal">
+        <span className="medal-shine mx-auto mt-4 flex size-20 items-center justify-center rounded-full bg-medal-soft text-medal">
           <BadgeIcon name={badge.icon} size={40} />
         </span>
 

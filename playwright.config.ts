@@ -9,9 +9,10 @@ export default defineConfig({
   retries: 0,
   reporter: [["list"]],
   // The @shots specs capture screenshots for design review rather than
-  // asserting anything, so they stay out of the normal run.
-  // Capture them with: npx playwright test --grep @shots
-  grepInvert: /@shots/,
+  // asserting anything, so they stay out of the normal run. `npm run shots`
+  // sets LIFEXP_SHOTS to let them through — grepInvert wins over --grep, so
+  // this cannot be done from the command line alone.
+  grepInvert: process.env.LIFEXP_SHOTS ? undefined : /@shots/,
   use: {
     baseURL: "http://localhost:3000",
     trace: "retain-on-failure",

@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { motion } from "motion/react";
 import { ChevronLeft, ChevronRight, Check } from "lucide-react";
+import { SPRING } from "@/lib/ui/motion";
 import type { CalendarMonth } from "@/lib/growth/aggregate";
 import { formatDuration, skillColor } from "@/lib/ui/format";
 
@@ -129,18 +131,38 @@ export function MonthGrid({ data }: { data: CalendarMonth }) {
                     : "nothing recorded"
               }`}
               className={[
-                "tappable flex aspect-square flex-col items-center justify-center rounded-xl text-sm",
+                "tappable relative flex aspect-square flex-col items-center justify-center rounded-xl text-body",
                 isSelected
-                  ? "bg-ink text-paper"
+                  ? "text-paper"
                   : isToday
                     ? "bg-accent-soft font-semibold text-accent-deep"
                     : "hover:bg-line/40",
                 isFuture ? "text-muted/60" : "",
               ].join(" ")}
             >
-              <span className="numeral leading-none">{dayNumber}</span>
+              {/* One ink pill that travels to the day you tapped, rather than
+                  a background that cuts from cell to cell.
 
-              <span className="mt-1 flex h-1.5 items-center gap-0.5">
+                  No negative z-index. The obvious `-z-10` sends the pill behind
+                  the enclosing card's background rather than merely behind the
+                  cell's contents, because a `position: relative` button with
+                  `z-index: auto` establishes no stacking context to contain it
+                  — so the pill vanished and the selected day was left as cream
+                  text on cream. Paint order is handled by making the pill and
+                  the contents siblings, with the contents positioned so they
+                  land on top. */}
+              {isSelected && (
+                <motion.span
+                  layoutId="calendar-selected-day"
+                  transition={SPRING}
+                  aria-hidden
+                  className="absolute inset-0 rounded-xl bg-ink"
+                />
+              )}
+
+              <span className="numeral relative leading-none">{dayNumber}</span>
+
+              <span className="relative mt-1 flex h-1.5 items-center gap-0.5">
                 {dots.length > 0 ? (
                   dots.map((skill) => (
                     <span

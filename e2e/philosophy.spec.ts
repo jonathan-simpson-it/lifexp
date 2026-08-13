@@ -286,6 +286,16 @@ test.describe("motion", () => {
         drop: read("water-drop"),
         grow: read("grow-in"),
         sway: read("plant-sway"),
+        sheet: read("sheet-in"),
+        pop: read("pop-in"),
+        // The medal's gleam animates a pseudo-element, which the global
+        // reduced-motion block covers separately from the element itself.
+        shine: (() => {
+          probe.className = "medal-shine";
+          return parseFloat(
+            getComputedStyle(probe, "::after").animationDuration,
+          );
+        })(),
       };
       probe.remove();
       return result;
@@ -294,6 +304,35 @@ test.describe("motion", () => {
     for (const [name, seconds] of Object.entries(durations)) {
       expect(seconds, `${name} should be silenced`).toBeLessThan(0.001);
     }
+  });
+
+  test("the travelling day pill actually paints", async ({ page }) => {
+    await signIn(page);
+    await page.goto("/calendar");
+
+    const selected = page.locator('button[aria-pressed="true"]').first();
+    await expect(selected).toBeVisible();
+
+    // The selected day's label is cream, so it is legible only because the
+    // pill is painted behind it. The pill is a *sibling* of the label rather
+    // than an ancestor, which puts it outside what the light-on-light DOM walk
+    // can see — it looks for the nearest opaque ancestor background and would
+    // report cream on cream either way.
+    //
+    // This shipped once: giving the pill `-z-10` sent it behind the enclosing
+    // card entirely, because a `position: relative` button with `z-index: auto`
+    // establishes no stacking context to contain it. The day vanished.
+    const pill = await selected.evaluate((el) => {
+      const node = el.querySelector("span[aria-hidden]");
+      if (!node) return null;
+      const style = getComputedStyle(node);
+      return { background: style.backgroundColor, zIndex: style.zIndex };
+    });
+
+    expect(pill, "the selected day has no pill element").not.toBeNull();
+    expect(pill!.background).toBe("rgb(33, 30, 22)"); // --ink
+    // A negative z-index here is the exact regression described above.
+    expect(Number(pill!.zIndex) || 0).toBeGreaterThanOrEqual(0);
   });
 
   test("no plant ever renders a wilted state", async ({ page }) => {

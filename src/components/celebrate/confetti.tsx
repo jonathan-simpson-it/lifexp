@@ -15,7 +15,7 @@ import { useEffect, useRef } from "react";
  * it would be easy to reach for a party palette, and a burst of colours the app
  * never otherwise uses would look borrowed.
  */
-const COLORS = ["#80988f", "#4f7266", "#c9932b", "#a8bdb2", "#e0b23f"];
+const COLORS = ["#80988f", "#496a5f", "#c9932b", "#a8bdb2", "#e0b23f"];
 
 type Piece = {
   x: number;
@@ -25,6 +25,10 @@ type Piece = {
   size: number;
   rotation: number;
   spin: number;
+  /** Phase offset for the flutter, so pieces do not sway in unison. */
+  phase: number;
+  /** How far this piece wanders sideways as it falls. */
+  drift: number;
   color: string;
 };
 
@@ -57,6 +61,8 @@ export function Confetti({ pieces = 90 }: { pieces?: number }) {
       size: Math.random() * 6 + 4,
       rotation: Math.random() * Math.PI,
       spin: (Math.random() - 0.5) * 0.28,
+      phase: Math.random() * Math.PI * 2,
+      drift: Math.random() * 0.7 + 0.25,
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
     }));
 
@@ -70,13 +76,18 @@ export function Confetti({ pieces = 90 }: { pieces?: number }) {
       for (const p of items) {
         p.vy += 0.22; // gravity
         p.vx *= 0.995; // drag
-        p.x += p.vx;
+        // Flutter. Paper does not fall in a straight line, and the phase
+        // offset per piece stops the burst swaying as one sheet.
+        p.x += p.vx + Math.sin(frame * 0.07 + p.phase) * p.drift;
         p.y += p.vy;
         p.rotation += p.spin;
 
         ctx.save();
         ctx.translate(p.x, p.y);
         ctx.rotate(p.rotation);
+        // Squashing width by the same phase reads as the piece turning over,
+        // which is most of what makes falling paper look like paper.
+        ctx.scale(Math.cos(frame * 0.07 + p.phase) * 0.4 + 0.6, 1);
         ctx.globalAlpha = Math.max(0, 1 - frame / 130);
         ctx.fillStyle = p.color;
         ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);

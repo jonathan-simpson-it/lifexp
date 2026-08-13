@@ -144,6 +144,27 @@ chroma     0.055                        // low, so the set reads as one family
 If skills become hard to tell apart, widen the **lightness** spread. Never the
 hue.
 
+**A generated colour obeys the same law as `--accent`: light for fills, deep for
+anything carrying text.** The band above runs to L0.69, which is right for a
+calendar dot or a progress fill on cream and **cannot carry white text** — at
+the top of the range white measures 2.70:1. For a solid fill with a label on it,
+such as the selected skill chip in the log sheet:
+
+```
+skillColor(seed, { solid: true })
+
+lightness  0.38 + ((seed * 7) % 11)/100  // a narrow dark band, 0.38–0.48
+chroma     0.062                          // slightly higher, to keep skills
+                                          // apart despite the compressed range
+```
+
+White clears 4.5:1 on that band for every seed and every hue in it — 6.35:1 at
+the worst corner. This mattered: the chip previously used the default band, so
+whether its label was readable depended on which seed a skill happened to be
+given. `src/lib/ui/format.test.ts` walks 300 seeds and asserts both the contrast
+and that the set stays distinguishable, because a runtime-generated colour is
+invisible to the token audit that covers the hex values above.
+
 ### There is no red
 
 The palette defines no red, no warning amber, no destructive colour. Any red on
@@ -476,14 +497,19 @@ visibly the cause.
 | Plant idle | 7s sway, amplitude by stage | CSS |
 | Screen entry | Cards rise 10px | CSS |
 | Garden entry | Plants grow from the soil line, 60ms stagger, 400ms | CSS |
-| Sheet open | Rises, backdrop blurs in | CSS |
+| Sheet open | Springs up 28px, backdrop blurs in | CSS |
 | Skill picked | Duration presets stagger in, 30ms | CSS |
 | Nav change | Active pill slides between tabs | `motion` `layoutId` |
+| Day selected | Ink pill travels to the tapped day | `motion` `layoutId` |
 | Centre button | `+` rotates 45° into a close mark | CSS |
 | **Log saved** | **Can tips, 6 droplets fall, soil darkens, plant squash-stretches** | CSS |
 | Tier crossed | Plant cross-fades to the next stage *during* the squash | CSS |
 | Distance drops | Figure counts down over 900ms | rAF |
-| Medal earned | Card pops in with overshoot, confetti | CSS |
+| Medal earned | Card pops in with overshoot, one shine pass, fluttering confetti | CSS + canvas |
+
+The medal's gleam is the **only** thing in the app that catches the light. Metal
+is the one material in this palette that should, and keeping it to one place is
+what makes it read as an event rather than a texture.
 
 `motion` is reached for **only** where CSS genuinely cannot go: shared-element
 transitions, and animating a *number* (text content, not a style). Keeping that

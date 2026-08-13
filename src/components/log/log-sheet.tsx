@@ -96,7 +96,7 @@ export function LogSheet({
         role="dialog"
         aria-modal="true"
         aria-label="Record something"
-        className="rise-in relative w-full max-w-lg rounded-t-[var(--radius-sheet)] border border-line bg-paper-raised p-4 pb-6 shadow-raised md:rounded-[var(--radius-sheet)]"
+        className="sheet-in relative w-full max-w-lg rounded-t-[var(--radius-sheet)] border border-line bg-paper-raised p-4 pb-6 shadow-raised md:rounded-[var(--radius-sheet)]"
         style={{ paddingBottom: "calc(1.5rem + env(safe-area-inset-bottom))" }}
       >
         <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-line-strong md:hidden" />
@@ -127,7 +127,10 @@ export function LogSheet({
               <ul className="flex flex-wrap gap-2">
                 {skills.map((skill) => {
                   const active = picked?.id === skill.id;
+                  // Two variants of the same hue: the default for text on
+                  // cream, the solid band for a fill carrying white.
                   const color = skillColor(skill.colorSeed);
+                  const solid = skillColor(skill.colorSeed, { solid: true });
                   return (
                     <li key={skill.id}>
                       <button
@@ -140,7 +143,7 @@ export function LogSheet({
                             ? "border-transparent font-semibold text-white"
                             : "border-line bg-paper hover:bg-line/30",
                         ].join(" ")}
-                        style={active ? { background: color } : { color }}
+                        style={active ? { background: solid } : { color }}
                       >
                         <SkillIcon templateKey={skill.templateKey} size={17} />
                         <span className={active ? "" : "text-ink"}>{skill.name}</span>
