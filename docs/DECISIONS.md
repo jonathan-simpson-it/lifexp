@@ -228,12 +228,18 @@ distance visibly drops after logging.
 
 ## 14. Plant stage comes from milestone tier, nothing else
 
-**Decision.** A skill's plant stage is derived solely from its highest achieved
-milestone. The component takes no `lastActiveAt` and no date of any kind.
+**Decision.** A skill's plant **stage** is derived solely from its highest
+achieved milestone.
 
-**Why.** There is then no code path that can wilt a plant. A skill untouched
-since spring renders exactly as it did the day it was last logged, the
-anti-streak rule expressed visually rather than merely promised.
+> **Amended by decision 19.** This decision originally said the component takes
+> no date of any kind, and derived its guarantee from that: no date in, no way
+> to wilt. The plant now receives a rest state, so the guarantee is no longer
+> structural. **The stage is still tier and nothing else**; what changed is that
+> tint and motion may respond to time. See 19 for what replaced the guarantee.
+
+**Why.** A skill untouched since spring is exactly as grown as the day it was
+last logged, the anti-streak rule expressed visually rather than merely
+promised.
 
 **Known consequence.** Two skills at the same tier render identically even when
 one has ten times the evidence: Japanese at 332h and Piano at 34.5h are both
@@ -380,6 +386,54 @@ also catches the milestone chip on skill cards, which was rendering its label in
 the tier colour at 3.24:1.
 
 **Rules out.** Eyeballing a new colour. Add it to the audit or do not add it.
+
+---
+
+## 19. The garden rests, it does not wither
+
+**Decision.** A skill left alone goes **dormant**: cooler, softer, still, at the
+same stage and the same size, and it wakes the moment anything is recorded
+against it. `resting` begins at 21 days, which is exactly the `the-return` badge
+threshold, so the plant wakes in the same instant the badge for coming back is
+awarded.
+
+**Why this exists.** The garden was static, and that is a real weakness. Two
+plants at the same tier looked identical whether one had been logged that
+morning and the other eight months ago. The obvious fix, floated more than once,
+is a plant that gets thirsty.
+
+**Why it is not thirst.** A thirsty plant works by making a gap feel like
+damage. That is a streak wearing a costume, it reverses the client's stated
+no-streak requirement, and it would make watering an obligation rather than a
+reward (see 17). Dormancy carries the same information, that time has passed,
+without any of the debt: a perennial left alone does not die, it rests.
+
+**The guarantee that replaced the structural one.** Decision 14 used to make
+wilting impossible by construction, because the component had no date. It has
+one now, so the promise is kept by tests instead:
+
+> Rest may change **tint and motion only**. Never the stage, never the size,
+> never the soil, never the vocabulary. There is no state in which a plant looks
+> worse than the day you left it, only one in which it looks asleep.
+
+Enforced by `src/lib/garden/conditions.test.ts`, plus the two pre-existing e2e
+guards, which still pass untouched. If either ever needs weakening to make a
+garden feature work, the feature is wrong.
+
+**Cool, not warm.** The first implementation desaturated toward `--line`, a warm
+tan. Green mixed with tan is olive, so the plant read as *dried out*: precisely
+the browning this decision forbids. Dormancy desaturates toward a cool grey.
+Warm desaturation reads as dying; cool desaturation reads as asleep.
+
+**Three ambient layers came with it**, none of which can respond to how often
+anyone logs: **season** from the calendar, **soil** from the cumulative
+experience count so the ground can only ever enrich, and **companions** from the
+highest tier reached, which is itself never revoked. Plus **light** from the
+user's local hour.
+
+**Known simplification.** Season comes from the month, northern hemisphere.
+Guessing from a timezone string would be wrong more often than right, so this is
+stated rather than silent. The fix is a per-user setting.
 
 ---
 

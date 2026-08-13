@@ -364,8 +364,35 @@ MASTERY → grand tree
 - Idle sway: 7s, offset per index (`--sway-delay`), amplitude **falling** as the
   plant grows (`--sway-amp`: sprout 1.5°, grand tree 0.5°). That is how it works
   outside, and it is what stops a row reading as one sprite repeated.
-- **The component takes no date and no `lastActiveAt`.** There is therefore no
-  code path that can wilt a plant.
+### Rest, and the four ambient layers
+
+The garden answers to time. It never answers to how often you show up.
+
+| Layer | Driven by | What it does |
+|---|---|---|
+| **Rest** | Days since the skill was last logged | `active` under 14 days, `settling` to 20, `resting` at 21+. A resting plant is cooler, softer and almost still. |
+| **Season** | The calendar month | Spring blossom, summer green, autumn ochre with falling leaves, winter frost. |
+| **Soil** | Cumulative experience count | Bare, then moss at 25, then rich earth with leaf litter at 100. Only ever enriches. |
+| **Companion** | Highest tier reached | Bee at Bronze, bird at Silver, butterfly at Gold. Arrive and never leave. |
+| **Light** | The user's local hour | Dawn, day, dusk, night. Applied to the bed, with fireflies after dark. |
+
+> **The rule that governs all of it: rest may change tint and motion, nothing
+> else.** Never the stage, never the size, never the soil, never the vocabulary.
+> There is no state in which a plant looks worse than the day you left it, only
+> one in which it looks asleep.
+
+Two specifics that were got wrong first and are worth not repeating:
+
+- **Desaturate toward a cool grey, never a warm one.** Mixing green toward
+  `--line` makes olive, and the plant reads as dried out rather than dormant.
+  Warm desaturation reads as dying; cool reads as sleeping.
+- **Rest is never thirst.** There is no prompt, no debt, and nothing that asks
+  to be watered. Resting is a description of time, not a request. `resting`
+  begins at exactly the `the-return` threshold, so a plant wakes in the same
+  moment the badge for coming back is earned.
+
+- **A plant's stage is its tier and nothing else**, so no code path can wilt
+  one.
 
 ### Progress bar (the goal gradient)
 
