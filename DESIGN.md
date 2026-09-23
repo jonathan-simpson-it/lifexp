@@ -630,9 +630,10 @@ met. There, and only there:
   waiting for JS, and reduced-motion visitors get the settled page.
 - **One looping demo is allowed.** The phone demo replays the quick-log flow
   while it is on screen and stops when it is not.
-- **The hero is interactive, not ambient.** The garden demo is the real
-  components wired to local state; it moves on tap, plays one scripted
-  watering on arrival, and never nags.
+- **The hero is a loop, not a poster.** The garden demo records on its own while
+  it is on screen (Japanese crosses a milestone on the second record), resets
+  after a pass, and takes taps alongside. It pauses when scrolled away and
+  renders settled under reduced motion.
 
 Everything else in this file still applies there: growth-only direction, no
 red, no punitive copy, transform/opacity only, and the reduced-motion collapse.

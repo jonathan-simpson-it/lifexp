@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Check } from "lucide-react";
-import { Medal, Plant, stageForTier, type PlantStage } from "@/components/icons";
+import { Logo, Medal, Plant, stageForTier, type PlantStage } from "@/components/icons";
 import { Watering } from "@/components/garden/watering";
 import { CountingFigure } from "@/components/celebrate/counting-figure";
 import type { Season, Soil } from "@/lib/garden/conditions";
@@ -48,6 +48,21 @@ type DemoSkill = {
 };
 
 const TAP_MINUTES = 30;
+
+/**
+ * The loop's running order. Japanese crosses its milestone on the second
+ * record, so a visitor who stands still for five seconds still sees the
+ * product's best moment: the plant grows a stage and the medal lands.
+ */
+const AUTO_ORDER = [
+  "japanese",
+  "japanese",
+  "piano",
+  "running",
+  "japanese",
+  "piano",
+  "running",
+] as const;
 
 function initialSkills(): DemoSkill[] {
   return [
@@ -122,6 +137,12 @@ export function GardenDemo({
   const [countdown, setCountdown] = useState<Countdown>(null);
   const [weekMinutes, setWeekMinutes] = useState(1_080);
   const [weekEntries, setWeekEntries] = useState(5);
+  /** Bumped on every reset, remounting the row so the plants grow in again. */
+  const [generation, setGeneration] = useState(0);
+  /** True while the card is on screen and motion is welcome. */
+  const [auto, setAuto] = useState(false);
+  const [passDone, setPassDone] = useState(false);
+  const autoIndex = useRef(0);
 
   const cardRef = useRef<HTMLDivElement>(null);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -191,24 +212,60 @@ export function GardenDemo({
     }
   }
 
-  // The page demonstrates itself once, then hands control to the visitor.
-  const introduced = useRef(false);
+  // The loop taps through this ref so the effect below never closes over a
+  // stale `tap` while still re-scheduling as the demo state changes.
+  const tapRef = useRef(tap);
+  useEffect(() => {
+    tapRef.current = tap;
+  });
+
+  function reset() {
+    setSkills(initialSkills());
+    setFocused("japanese");
+    setWeekMinutes(1_080);
+    setWeekEntries(5);
+    setToast(null);
+    setMedal(null);
+    setWatering(null);
+    setCountdown(null);
+    autoIndex.current = 0;
+    setGeneration((g) => g + 1);
+  }
+
+  // Visibility drives the loop: it records while the card is on screen and
+  // stops when it scrolls away. Reduced-motion visitors get the settled card.
   useEffect(() => {
     const el = cardRef.current;
-    if (!el || introduced.current) return;
+    if (!el) return;
     const observer = new IntersectionObserver(
-      (entries) => {
-        if (!entries[0].isIntersecting || introduced.current) return;
-        observer.disconnect();
-        introduced.current = true;
-        if (!prefersReducedMotion()) later(() => tap("japanese"), 900);
-      },
-      { threshold: 0.4 },
+      (entries) => setAuto(entries[0].isIntersecting && !prefersReducedMotion()),
+      { threshold: 0.35 },
     );
     observer.observe(el);
     return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // The loop itself: one record every few seconds once nothing is mid-play,
+  // then a reset after a full pass so the numbers stay in their starting range
+  // and the grow-in replays. No tap required; taps still work alongside it.
+  useEffect(() => {
+    if (!auto || watering || medal || passDone) return;
+    const id = setTimeout(() => {
+      const key = AUTO_ORDER[autoIndex.current % AUTO_ORDER.length];
+      autoIndex.current += 1;
+      tapRef.current(key);
+      if (autoIndex.current % AUTO_ORDER.length === 0) {
+        setPassDone(true);
+        // Long enough for the last toast to finish; the pass ends on Running,
+        // which never crosses, so no medal is cut off.
+        later(() => {
+          reset();
+          setPassDone(false);
+        }, 4_600);
+      }
+    }, 2_200);
+    return () => clearTimeout(id);
+  }, [auto, watering, medal, passDone, generation]);
 
   const focusedSkill = skills.find((s) => s.key === focused) ?? skills[0];
 
@@ -218,7 +275,14 @@ export function GardenDemo({
       <span aria-hidden className="garden-light pointer-events-none absolute inset-0" />
 
       <div className="relative">
-        <div className="flex items-baseline justify-between">
+        {/* The app's chrome, so the card reads as a window into the product
+            rather than a chart. */}
+        <div className="flex items-center justify-between border-b border-line pb-3">
+          <Logo size={15} />
+          <span className="text-eyebrow text-muted uppercase">Today</span>
+        </div>
+
+        <div className="mt-3 flex items-baseline justify-between">
           <p className="text-eyebrow text-muted uppercase">This week</p>
           <p className="text-caption text-muted">
             <span key={weekMinutes} className="rise-in numeral inline-block text-ink">
@@ -232,7 +296,7 @@ export function GardenDemo({
           </p>
         </div>
 
-        <ul className="mt-3 flex items-end justify-around">
+        <ul key={generation} className="mt-3 flex items-end justify-around">
           {skills.map((skill, i) => {
             const color = skillColor(skill.hue);
             const isWatering = watering?.key === skill.key;
@@ -283,7 +347,7 @@ export function GardenDemo({
         </ul>
 
         <p className="mt-1 text-center text-caption text-muted">
-          Tap a plant to record {TAP_MINUTES} minutes
+          It records on its own. Tap a plant to join in.
         </p>
 
         {/* The focused skill's ladder card, mirroring the app's skill card. */}

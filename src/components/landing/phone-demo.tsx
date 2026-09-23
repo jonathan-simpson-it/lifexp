@@ -3,7 +3,15 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useReducedMotion } from "motion/react";
 import { Check } from "lucide-react";
-import { Plant } from "@/components/icons";
+import {
+  IconAdd,
+  IconCalendar,
+  IconGrowth,
+  IconMedals,
+  IconToday,
+  Logo,
+  Plant,
+} from "@/components/icons";
 import { Watering } from "@/components/garden/watering";
 import type { Season } from "@/lib/garden/conditions";
 import { skillColor } from "@/lib/ui/format";
@@ -88,9 +96,16 @@ export function PhoneDemo({ season }: { season: Season }) {
         aria-hidden
         className="border border-ink/80 bg-ink p-1.5 shadow-raised"
       >
-        <div className="relative flex h-[500px] flex-col overflow-hidden bg-paper">
+        <div className="relative flex h-[540px] flex-col overflow-hidden bg-paper">
           {/* The notch, drawn rather than photographed. */}
           <span className="mx-auto mt-2 h-1.5 w-16 bg-ink/15" />
+
+          {/* The app's chrome: logo bar and the bottom navigation, so the loop
+              reads as the product itself rather than a floating form. */}
+          <div className="flex items-center justify-between border-b border-line px-4 pt-3 pb-2">
+            <Logo size={14} />
+            <span className="text-eyebrow text-muted uppercase">Today</span>
+          </div>
 
           {/* A quiet hour of app above the sheet. */}
           <div className="px-4 pt-3">
@@ -98,19 +113,63 @@ export function PhoneDemo({ season }: { season: Season }) {
             <p className="numeral text-hero text-ink">18h</p>
           </div>
 
-          <div className="mt-auto border-t border-line bg-paper-raised px-3 pt-2 pb-5">
+          <div className="mt-auto border-t border-line bg-paper-raised px-3 pt-2 pb-4">
             <span className="mx-auto mb-3 block h-1 w-10 bg-line-strong" />
             {shown === "chips" && <Chips />}
             {shown === "durations" && <Durations />}
             {shown === "watering" && <WateringScene season={season} />}
             {shown === "toast" && <ToastScene season={season} />}
           </div>
+
+          <MiniNav />
         </div>
       </div>
 
       <p className="mt-4 text-center text-sm text-muted">
         Two taps to record. The water is what saving looks like.
       </p>
+    </div>
+  );
+}
+
+/** The app's bottom bar, reduced to its icons. */
+function MiniNav() {
+  const items = [
+    { Icon: IconToday, label: "Today", active: true },
+    { Icon: IconGrowth, label: "Growth", active: false },
+  ];
+  const right = [
+    { Icon: IconCalendar, label: "Calendar", active: false },
+    { Icon: IconMedals, label: "Medals", active: false },
+  ];
+
+  return (
+    <div className="flex items-center justify-around border-t border-line bg-paper px-2 pt-1.5 pb-2">
+      {items.map(({ Icon, label, active }) => (
+        <span
+          key={label}
+          className={`flex flex-col items-center gap-0.5 text-eyebrow ${
+            active ? "text-accent-deep" : "text-muted"
+          }`}
+        >
+          <Icon active={active} size={17} />
+          {label}
+        </span>
+      ))}
+      <span className="-mt-5 flex size-9 items-center justify-center rounded-full bg-accent-deep text-white ring-4 ring-paper">
+        <IconAdd size={16} />
+      </span>
+      {right.map(({ Icon, label, active }) => (
+        <span
+          key={label}
+          className={`flex flex-col items-center gap-0.5 text-eyebrow ${
+            active ? "text-accent-deep" : "text-muted"
+          }`}
+        >
+          <Icon active={active} size={17} />
+          {label}
+        </span>
+      ))}
     </div>
   );
 }
