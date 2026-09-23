@@ -7,7 +7,6 @@ import { ChevronLeft, ChevronRight, Check } from "lucide-react";
 import { SPRING } from "@/lib/ui/motion";
 import type { CalendarMonth } from "@/lib/growth/aggregate";
 import { formatDuration, skillColor } from "@/lib/ui/format";
-
 /**
  * Month grid.
  *
@@ -41,6 +40,8 @@ export function MonthGrid({ data }: { data: CalendarMonth }) {
   const [selected, setSelected] = useState<string | null>(
     byDate.has(todayKey) ? todayKey : (firstWithActivity ?? null),
   );
+  /** Which way the month just travelled, so the grid slides that way. */
+  const [direction, setDirection] = useState(0);
 
   const first = new Date(Date.UTC(year, month - 1, 1));
   const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
@@ -60,6 +61,7 @@ export function MonthGrid({ data }: { data: CalendarMonth }) {
         <Link
           href={`/calendar?y=${prev.y}&m=${prev.m}`}
           aria-label="Previous month"
+          onClick={() => setDirection(-1)}
           className="tappable rounded-full p-2 text-muted hover:bg-line/50"
         >
           <ChevronLeft size={20} aria-hidden />
@@ -77,6 +79,7 @@ export function MonthGrid({ data }: { data: CalendarMonth }) {
           <Link
             href={`/calendar?y=${next.y}&m=${next.m}`}
             aria-label="Next month"
+            onClick={() => setDirection(1)}
             className="tappable rounded-full p-2 text-muted hover:bg-line/50"
           >
             <ChevronRight size={20} aria-hidden />
@@ -84,6 +87,14 @@ export function MonthGrid({ data }: { data: CalendarMonth }) {
         )}
       </div>
 
+      {/* The month arrives from the direction it was travelled from. Keyed by
+          year-month so a re-render for new data replays the entrance. */}
+      <motion.div
+        key={`${year}-${month}`}
+        initial={{ opacity: 0, x: 20 * (direction || 1) }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.24, ease: "easeOut" }}
+      >
       <ul className="mt-4 grid grid-cols-7 gap-1 text-center text-xs text-muted">
         {WEEKDAYS.map((day, i) => (
           <li key={i}>{day}</li>
@@ -131,7 +142,7 @@ export function MonthGrid({ data }: { data: CalendarMonth }) {
                     : "nothing recorded"
               }`}
               className={[
-                "tappable relative flex aspect-square flex-col items-center justify-center rounded-xl text-body",
+                "tappable relative flex aspect-square flex-col items-center justify-center text-body",
                 isSelected
                   ? "text-paper"
                   : isToday
@@ -156,7 +167,7 @@ export function MonthGrid({ data }: { data: CalendarMonth }) {
                   layoutId="calendar-selected-day"
                   transition={SPRING}
                   aria-hidden
-                  className="absolute inset-0 rounded-xl bg-ink"
+                  className="absolute inset-0 bg-ink"
                 />
               )}
 
@@ -193,7 +204,7 @@ export function MonthGrid({ data }: { data: CalendarMonth }) {
       {/* Hours is the answer; the other three are context. They used to be four
           equal numbers, which made the strip something to read rather than
           something to glance at. */}
-      <dl className="mt-5 flex items-center gap-4 rounded-xl border border-line bg-paper px-4 py-3">
+      <dl className="mt-5 flex items-center gap-4 border border-line bg-paper px-4 py-3">
         <div>
           <dt className="sr-only">hours</dt>
           <dd className="numeral text-figure">{formatDuration(totals.minutes)}</dd>
@@ -206,8 +217,17 @@ export function MonthGrid({ data }: { data: CalendarMonth }) {
           <Total label="medals" value={String(totals.medals)} />
         </div>
       </dl>
+      </motion.div>
 
-      <section className="mt-5">
+      {/* The selected day's story, keyed so tapping a day cross-fades the
+          panel rather than snapping it. */}
+      <motion.section
+        key={selected ?? "empty"}
+        className="mt-5"
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.18, ease: "easeOut" }}
+      >
         {selectedDay ? (
           <>
             <h3 className="text-eyebrow text-muted uppercase">
@@ -250,7 +270,7 @@ export function MonthGrid({ data }: { data: CalendarMonth }) {
             went unrecorded.
           </p>
         )}
-      </section>
+      </motion.section>
     </div>
   );
 }

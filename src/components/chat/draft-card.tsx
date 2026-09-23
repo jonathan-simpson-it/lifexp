@@ -76,7 +76,7 @@ export function DraftCard({
             type="button"
             disabled={saving || edited.skills.length === 0}
             onClick={() => onSave(edited)}
-            className="rounded-full border border-growth/40 bg-growth-soft px-3 py-2 text-sm font-medium text-growth transition-opacity hover:opacity-80 disabled:opacity-40"
+            className="border border-growth/40 bg-growth-soft px-3 py-2 text-sm font-medium text-growth transition-opacity hover:opacity-80 disabled:opacity-40"
           >
             <span className="flex items-center gap-1.5">
               <Check size={15} aria-hidden />
@@ -100,7 +100,7 @@ export function DraftCard({
             <input
               value={edited.title}
               onChange={(e) => setEdited((p) => ({ ...p, title: e.target.value }))}
-              className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
+              className="w-full border border-line bg-paper px-3 py-2 text-sm"
             />
           </Field>
 
@@ -121,7 +121,7 @@ export function DraftCard({
                       : null,
                   }))
                 }
-                className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
+                className="w-full border border-line bg-paper px-3 py-2 text-sm"
               />
             </Field>
 
@@ -132,7 +132,7 @@ export function DraftCard({
                 onChange={(e) =>
                   setEdited((p) => ({ ...p, occurredAt: e.target.value }))
                 }
-                className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
+                className="w-full border border-line bg-paper px-3 py-2 text-sm"
               />
             </Field>
           </div>
@@ -155,7 +155,7 @@ export function DraftCard({
                     type="button"
                     onClick={() => toggleSkill(name)}
                     className={[
-                      "rounded-full border px-2.5 py-1 text-xs transition-colors",
+                      "border px-2.5 py-1 text-xs transition-colors",
                       active
                         ? "border-growth/50 bg-growth-soft text-growth"
                         : "border-line text-muted hover:bg-line/40",
@@ -182,7 +182,7 @@ export function DraftCard({
                 setEdited((p) => ({ ...p, notes: e.target.value || null }))
               }
               placeholder="Anything worth remembering about it"
-              className="w-full resize-y rounded-lg border border-line bg-paper px-3 py-2 text-sm"
+              className="w-full resize-y border border-line bg-paper px-3 py-2 text-sm"
             />
           </Field>
         </div>

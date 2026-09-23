@@ -108,7 +108,7 @@ function NavItem({ item, active }: { item: Destination; active: boolean }) {
         href={href}
         aria-current={active ? "page" : undefined}
         className={[
-          "tappable relative flex flex-col items-center gap-0.5 rounded-xl px-1 py-1.5 text-eyebrow",
+          "tappable relative flex flex-col items-center gap-0.5 px-1 py-1.5 text-eyebrow",
           active ? "text-accent-deep" : "text-muted",
         ].join(" ")}
       >
@@ -120,7 +120,7 @@ function NavItem({ item, active }: { item: Destination; active: boolean }) {
             layoutId="nav-pill-mobile"
             transition={SPRING}
             aria-hidden
-            className="absolute inset-x-1.5 inset-y-0.5 -z-10 rounded-xl bg-accent-soft"
+            className="absolute inset-x-1.5 inset-y-0.5 -z-10 bg-accent-soft"
           />
         )}
         <span className={active ? "pop-in" : undefined}>
@@ -144,7 +144,7 @@ function AddButton({ onAdd, open }: { onAdd: () => void; open: boolean }) {
       aria-label="Record something"
       aria-expanded={open}
       // accent-deep rather than accent: the white plus needs to be crisp, and
-      // on the lighter sage it would sit at 3.1:1 rather than 5.3:1.
+      // on the lighter green it would sit at 3.1:1 rather than 5.9:1.
       className="tappable -mt-6 flex size-14 items-center justify-center rounded-full bg-accent-deep text-white shadow-accent ring-4 ring-paper"
     >
       {/* The plus turns into a close mark while the sheet is up, which ties
@@ -178,7 +178,7 @@ function Sidebar({ onAdd }: { onAdd: () => void }) {
       <button
         type="button"
         onClick={onAdd}
-        className="tappable mb-6 flex items-center justify-center gap-2 rounded-full bg-accent-deep px-4 py-3 text-body font-semibold text-white shadow-accent"
+        className="tappable mb-6 flex items-center justify-center gap-2 bg-accent-deep px-4 py-3 text-body font-semibold text-white shadow-accent"
       >
         <IconAdd size={20} />
         Record something
@@ -193,7 +193,7 @@ function Sidebar({ onAdd }: { onAdd: () => void }) {
                 href={href}
                 aria-current={active ? "page" : undefined}
                 className={[
-                  "tappable relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-body",
+                  "tappable relative flex items-center gap-3 px-3 py-2.5 text-body",
                   active
                     ? "font-semibold text-accent-deep"
                     : "text-muted hover:bg-line/40 hover:text-ink",
@@ -204,7 +204,7 @@ function Sidebar({ onAdd }: { onAdd: () => void }) {
                     layoutId="nav-pill-desktop"
                     transition={SPRING}
                     aria-hidden
-                    className="absolute inset-0 -z-10 rounded-xl bg-accent-soft"
+                    className="absolute inset-0 -z-10 bg-accent-soft"
                   />
                 )}
                 <Icon active={active} size={22} />
@@ -217,7 +217,7 @@ function Sidebar({ onAdd }: { onAdd: () => void }) {
 
       <Link
         href="/settings"
-        className="tappable rounded-xl px-3 py-2.5 text-body text-muted hover:bg-line/40 hover:text-ink"
+        className="tappable px-3 py-2.5 text-body text-muted hover:bg-line/40 hover:text-ink"
       >
         Settings
       </Link>

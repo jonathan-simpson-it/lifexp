@@ -70,7 +70,7 @@ export function CalendarPreview({
   }
 
   return (
-    <div className="mt-3 overflow-hidden rounded-xl border border-line">
+    <div className="mt-3 overflow-hidden border border-line">
       {/* A calendar-ish chrome, so it reads as "this is what your calendar
           would look like" rather than as a table of JSON. */}
       <div className="flex items-center gap-2 border-b border-line bg-paper px-3 py-2">
@@ -94,7 +94,7 @@ export function CalendarPreview({
                 <li key={event.id} className="flex items-start gap-2">
                   <span
                     aria-hidden
-                    className="mt-1 w-1 self-stretch rounded-full"
+                    className="mt-1 w-1 self-stretch"
                     style={{ background: "var(--growth)", minHeight: "1.75rem" }}
                   />
                   <div className="min-w-0 flex-1">

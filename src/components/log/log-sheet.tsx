@@ -2,10 +2,12 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { AnimatePresence, motion } from "motion/react";
 import { X } from "lucide-react";
 import { createExperience } from "@/app/actions/experiences";
 import type { QuickSkill } from "@/lib/growth/aggregate";
 import type { SkillMoment } from "@/lib/growth/moment";
+import { SPRING_SOFT } from "@/lib/ui/motion";
 import { SkillIcon } from "@/components/icons";
 import { skillColor } from "@/lib/ui/format";
 import { ChatCapture } from "@/components/chat/chat-capture";
@@ -47,6 +49,14 @@ export function LogSheet({
   const [mode, setMode] = useState<Mode>("quick");
   const [picked, setPicked] = useState<QuickSkill | null>(null);
   const [saving, startSaving] = useTransition();
+  /** Which way the mode panels slide: -1 back, 1 forward. */
+  const [direction, setDirection] = useState(1);
+
+  function go(next: Mode) {
+    const order = { quick: 0, chat: 1, form: 2 } as const;
+    setDirection(Math.sign(order[next] - order[mode]) || 1);
+    setMode(next);
+  }
 
   // No "reset on open" effect: the shell mounts this fresh on every open, so
   // these initial values *are* the reset. Syncing state from a prop in an
@@ -84,7 +94,13 @@ export function LogSheet({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center md:items-center">
+    <motion.div
+      className="fixed inset-0 z-50 flex items-end justify-center md:items-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.16 }}
+    >
       <button
         type="button"
         aria-label="Close"
@@ -92,17 +108,23 @@ export function LogSheet({
         className="absolute inset-0 bg-ink/25 backdrop-blur-[2px]"
       />
 
-      <div
+      <motion.div
         role="dialog"
         aria-modal="true"
         aria-label="Record something"
-        // overscroll-contain stops a flick inside the sheet from chaining to
-        // the page underneath once the sheet hits its end, which on iOS reads
-        // as the whole app sliding around behind a modal.
-        className="sheet-in relative max-h-[88svh] w-full max-w-lg overflow-y-auto overscroll-contain rounded-t-[var(--radius-sheet)] border border-line bg-paper-raised p-4 pb-6 shadow-raised md:rounded-[var(--radius-sheet)]"
+        // Springs up on entry and back down on exit; AnimatePresence in the
+        // app shell keeps it mounted for the exit. Overscroll-contain stops a
+        // flick inside the sheet from chaining to the page underneath once
+        // the sheet hits its end, which on iOS reads as the whole app
+        // sliding around behind a modal.
+        initial={{ y: 28, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: 24, opacity: 0 }}
+        transition={SPRING_SOFT}
+        className="relative max-h-[88svh] w-full max-w-lg overflow-y-auto overscroll-contain border border-line bg-paper-raised p-4 pb-6 shadow-raised"
         style={{ paddingBottom: "calc(1.5rem + env(safe-area-inset-bottom))" }}
       >
-        <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-line-strong md:hidden" />
+        <div className="mx-auto mb-3 h-1 w-10 bg-line-strong md:hidden" />
 
         <div className="mb-3 flex items-center justify-between">
           <h2 className="display text-lg font-semibold">
@@ -124,6 +146,17 @@ export function LogSheet({
           </button>
         </div>
 
+        {/* Mode panels slide in the direction the user is travelling, so
+            moving between quick, chat and the form reads as one space rather
+            than three screens. */}
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={mode}
+            initial={{ opacity: 0, x: 16 * direction }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -16 * direction }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+          >
         {mode === "quick" && (
           <>
             {skills.length > 0 ? (
@@ -141,7 +174,7 @@ export function LogSheet({
                         onClick={() => setPicked(active ? null : skill)}
                         aria-pressed={active}
                         className={[
-                          "tappable flex items-center gap-2 rounded-full border px-3 py-2 text-sm",
+                          "tappable flex items-center gap-2 border px-3 py-2 text-sm",
                           active
                             ? "border-transparent font-semibold text-white"
                             : "border-line bg-paper hover:bg-line/30",
@@ -179,9 +212,9 @@ export function LogSheet({
                         type="button"
                         disabled={saving}
                         onClick={() => logQuick(picked, minutes)}
-                        // accent-deep on hover: the lighter sage sits at 2.7:1
+                        // accent-deep on hover: the lighter green sits at 2.67:1
                         // against the ground, too faint to read as a border.
-                        className="tappable w-full rounded-xl border border-line bg-paper py-3 text-body font-medium hover:border-accent-deep hover:text-accent-deep disabled:opacity-50"
+                        className="tappable w-full border border-line bg-paper py-3 text-body font-medium hover:border-accent-deep hover:text-accent-deep disabled:opacity-50"
                       >
                         {minutes < 60
                           ? `${minutes}m`
@@ -192,8 +225,8 @@ export function LogSheet({
                 </ul>
                 <button
                   type="button"
-                  onClick={() => setMode("form")}
-                  className="tappable mt-2 w-full rounded-xl py-2 text-sm text-muted hover:text-ink"
+                  onClick={() => go("form")}
+                  className="tappable mt-2 w-full py-2 text-sm text-muted hover:text-ink"
                 >
                   Another amount, or no duration
                 </button>
@@ -203,15 +236,15 @@ export function LogSheet({
             <div className="mt-4 flex gap-2 border-t border-line pt-3">
               <button
                 type="button"
-                onClick={() => setMode("chat")}
-                className="tappable flex-1 rounded-xl border border-line py-2.5 text-sm hover:bg-line/30"
+                onClick={() => go("chat")}
+                className="tappable flex-1 border border-line py-2.5 text-sm hover:bg-line/30"
               >
                 Describe it
               </button>
               <button
                 type="button"
-                onClick={() => setMode("form")}
-                className="tappable flex-1 rounded-xl border border-line py-2.5 text-sm hover:bg-line/30"
+                onClick={() => go("form")}
+                className="tappable flex-1 border border-line py-2.5 text-sm hover:bg-line/30"
               >
                 Add detail
               </button>
@@ -227,7 +260,7 @@ export function LogSheet({
               onClose();
               router.refresh();
             }}
-            onBack={() => setMode("quick")}
+            onBack={() => go("quick")}
           />
         )}
 
@@ -239,10 +272,12 @@ export function LogSheet({
               onClose();
               router.refresh();
             }}
-            onCancel={() => setMode("quick")}
+            onCancel={() => go("quick")}
           />
         )}
-      </div>
-    </div>
+          </motion.div>
+        </AnimatePresence>
+      </motion.div>
+    </motion.div>
   );
 }

@@ -35,14 +35,14 @@ describe("alarm-red detection", () => {
 
   describe("allows the LifeXP palette", () => {
     const palette: Record<string, string> = {
-      "sage (accent)": "#80988f",
-      "deep sage (accent-deep)": "#4f7266",
-      "sage tint (accent-soft)": "#e3e9e6",
-      "gold (medal)": "#8a6124",
+      "green (accent)": "#6e9f70",
+      "deep green (accent-deep)": "#426e4a",
+      "chip tint (accent-soft)": "#eae6d6",
+      "gold (medal)": "#805a21",
       "bright gold (medal-bright)": "#c9932b",
       "bronze tier": "#96683c",
-      "cream (paper)": "#f7f1e1",
-      "ink": "#211e16",
+      "cream (paper)": "#f0f0e6",
+      ink: "#211e16",
     };
 
     for (const [name, hex] of Object.entries(palette)) {

@@ -1,5 +1,6 @@
 import { requireUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { demoRecentExperiences, demoUser, isDemoMode } from "@/lib/demo";
 import { getCalendarStatus } from "@/lib/google/calendar";
 import { resolveProvider } from "@/lib/ai/provider";
 import { CalendarPreview } from "@/components/calendar-preview";
@@ -17,24 +18,30 @@ export default async function SettingsPage() {
 
   const [calendar, user, pendingSync, recent] = await Promise.all([
     getCalendarStatus(userId),
-    db.user.findUnique({
-      where: { id: userId },
-      select: { email: true, timezone: true },
-    }),
-    db.experience.count({ where: { userId, googleEventId: null } }),
-    db.experience.findMany({
-      where: { userId },
-      orderBy: { occurredAt: "desc" },
-      take: 6,
-      select: {
-        id: true,
-        title: true,
-        notes: true,
-        occurredAt: true,
-        minutes: true,
-        googleEventId: true,
-      },
-    }),
+    isDemoMode()
+      ? demoUser()
+      : db.user.findUnique({
+          where: { id: userId },
+          select: { email: true, timezone: true },
+        }),
+    isDemoMode()
+      ? 0
+      : db.experience.count({ where: { userId, googleEventId: null } }),
+    isDemoMode()
+      ? demoRecentExperiences(6)
+      : db.experience.findMany({
+          where: { userId },
+          orderBy: { occurredAt: "desc" },
+          take: 6,
+          select: {
+            id: true,
+            title: true,
+            notes: true,
+            occurredAt: true,
+            minutes: true,
+            googleEventId: true,
+          },
+        }),
   ]);
 
   // Reads env only; no key material reaches the page.
@@ -42,12 +49,12 @@ export default async function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      <header>
+      <header className="rise-in">
         <h1 className="display text-2xl font-semibold">Settings</h1>
         <p className="mt-1 text-ink-soft">{user?.email}</p>
       </header>
 
-      <section aria-labelledby="calendar-heading" className="card p-4">
+      <section aria-labelledby="calendar-heading" className="rise-in card p-4" style={{ ["--rise-delay" as string]: "0.06s" }}>
         <h2 id="calendar-heading" className="font-medium">
           Google Calendar
         </h2>
@@ -55,9 +62,9 @@ export default async function SettingsPage() {
         {calendar.state === "unavailable" && (
           <>
             <p className="mt-2 text-sm text-ink-soft">
-              {calendar.reason} You can still see exactly what LifeXP would write.
-              this preview is built by the same code that talks to Google, so
-              nothing here is a mock-up.
+              {calendar.reason} You can still see exactly what LifeXP would
+              write. This preview is built by the same code that talks to
+              Google, so nothing here is a mock-up.
             </p>
             <CalendarPreview experiences={recent} connected={false} />
             <p className="mt-2 text-xs text-muted">
@@ -78,7 +85,7 @@ export default async function SettingsPage() {
             <form action={connectCalendar} className="mt-3">
               <button
                 type="submit"
-                className="rounded-full bg-ink px-4 py-2 text-sm font-medium text-paper"
+                className="bg-ink px-4 py-2 text-sm font-medium text-paper"
               >
                 Connect calendar
               </button>
@@ -98,7 +105,7 @@ export default async function SettingsPage() {
             </p>
 
             {calendar.error && (
-              <p className="mt-2 rounded-lg border border-line bg-paper px-3 py-2 text-sm text-muted">
+              <p className="mt-2 border border-line bg-paper px-3 py-2 text-sm text-muted">
                 {calendar.error}
               </p>
             )}
@@ -108,7 +115,7 @@ export default async function SettingsPage() {
                 <form action={backfillCalendar}>
                   <button
                     type="submit"
-                    className="rounded-full border border-line px-4 py-2 text-sm hover:bg-line/50"
+                    className="border border-line px-4 py-2 text-sm hover:bg-line/50"
                   >
                     Add {pendingSync > 100 ? "the next 100" : `${pendingSync}`} older{" "}
                     {pendingSync === 1 ? "experience" : "experiences"}
@@ -118,7 +125,7 @@ export default async function SettingsPage() {
               <form action={disconnectCalendar}>
                 <button
                   type="submit"
-                  className="rounded-full border border-line px-4 py-2 text-sm text-muted hover:bg-line/50"
+                  className="border border-line px-4 py-2 text-sm text-muted hover:bg-line/50"
                 >
                   Stop syncing
                 </button>
@@ -135,7 +142,7 @@ export default async function SettingsPage() {
         )}
       </section>
 
-      <section aria-labelledby="ai-heading" className="card p-4">
+      <section aria-labelledby="ai-heading" className="rise-in card p-4" style={{ ["--rise-delay" as string]: "0.12s" }}>
         <h2 id="ai-heading" className="font-medium">
           Natural language
         </h2>
@@ -157,7 +164,7 @@ export default async function SettingsPage() {
         )}
       </section>
 
-      <section aria-labelledby="data-heading" className="card p-4">
+      <section aria-labelledby="data-heading" className="rise-in card p-4" style={{ ["--rise-delay" as string]: "0.18s" }}>
         <h2 id="data-heading" className="font-medium">
           Your data
         </h2>
@@ -167,7 +174,7 @@ export default async function SettingsPage() {
         </p>
         <a
           href="/api/export"
-          className="mt-3 inline-block rounded-full border border-line px-4 py-2 text-sm hover:bg-line/50"
+          className="mt-3 inline-block border border-line px-4 py-2 text-sm hover:bg-line/50"
         >
           Download export
         </a>

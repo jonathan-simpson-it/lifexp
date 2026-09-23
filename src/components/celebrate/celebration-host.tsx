@@ -94,7 +94,7 @@ function MedalMoment({
       <div
         role="dialog"
         aria-modal="true"
-        className="pop-in relative w-full max-w-xs rounded-[var(--radius-sheet)] border border-line bg-paper-raised p-6 text-center shadow-raised"
+        className="pop-in relative w-full max-w-xs border border-line bg-paper-raised p-6 text-center shadow-raised"
       >
         <p className="text-eyebrow text-medal uppercase">Medal earned</p>
 
@@ -113,7 +113,7 @@ function MedalMoment({
         <button
           type="button"
           onClick={onDismiss}
-          className="tappable mt-6 w-full rounded-full bg-accent-deep py-3 font-semibold text-white"
+          className="tappable mt-6 w-full bg-accent-deep py-3 font-semibold text-white"
         >
           Nice
         </button>

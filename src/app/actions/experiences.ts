@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requireUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { demoCreateExperience, demoCreateSkill, isDemoMode } from "@/lib/demo";
 import { createSkillForUser, findOrCreateSkill } from "@/lib/growth/skills";
 import { getSkillMoment } from "@/lib/growth/moment";
 import { syncProgress } from "@/lib/progress/sync";
@@ -69,6 +70,12 @@ function parseOccurredAt(value: string): Date {
  */
 export async function createExperience(input: ExperienceInput) {
   const userId = await requireUserId();
+
+  // Demo deployment: the write lands in the in-memory fixtures, milestones and
+  // badges recompute, and the reward moment returns real before/after state.
+  if (isDemoMode()) {
+    return demoCreateExperience(input);
+  }
 
   const title = input.title.trim();
   if (!title) throw new Error("Give the experience a title");
@@ -159,6 +166,10 @@ export async function updateExperience(input: {
   skillIds?: string[];
 }) {
   const userId = await requireUserId();
+  if (isDemoMode()) {
+    revalidatePath("/", "layout");
+    return;
+  }
 
   const existing = await db.experience.findUnique({
     where: { id: input.id },
@@ -203,6 +214,10 @@ export async function updateExperience(input: {
 
 export async function deleteExperience(id: string) {
   const userId = await requireUserId();
+  if (isDemoMode()) {
+    revalidatePath("/", "layout");
+    return;
+  }
 
   const existing = await db.experience.findUnique({
     where: { id },
@@ -224,6 +239,12 @@ export async function createSkill(formData: FormData) {
   const userId = await requireUserId();
   const name = String(formData.get("name") ?? "").trim();
   if (!name) throw new Error("Give the skill a name");
+
+  if (isDemoMode()) {
+    demoCreateSkill(name);
+    revalidatePath("/", "layout");
+    return;
+  }
 
   await createSkillForUser(userId, name);
   revalidatePath("/", "layout");

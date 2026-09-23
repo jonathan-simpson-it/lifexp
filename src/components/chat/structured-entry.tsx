@@ -81,7 +81,7 @@ export function StructuredEntry({
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="What did you do?"
-        className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
+        className="w-full border border-line bg-paper px-3 py-2 text-sm"
       />
 
       <div className="grid grid-cols-2 gap-3">
@@ -97,7 +97,7 @@ export function StructuredEntry({
             value={hours}
             onChange={(e) => setHours(e.target.value)}
             placeholder="optional"
-            className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
+            className="w-full border border-line bg-paper px-3 py-2 text-sm"
           />
         </label>
 
@@ -109,7 +109,7 @@ export function StructuredEntry({
             type="date"
             value={occurredAt}
             onChange={(e) => setOccurredAt(e.target.value)}
-            className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
+            className="w-full border border-line bg-paper px-3 py-2 text-sm"
           />
         </label>
       </div>
@@ -131,7 +131,7 @@ export function StructuredEntry({
                   )
                 }
                 className={[
-                  "rounded-full border px-2.5 py-1 text-xs transition-colors",
+                  "border px-2.5 py-1 text-xs transition-colors",
                   active
                     ? "border-growth/50 bg-growth-soft text-growth"
                     : "border-line text-muted hover:bg-line/40",
@@ -146,7 +146,7 @@ export function StructuredEntry({
           value={newSkill}
           onChange={(e) => setNewSkill(e.target.value)}
           placeholder="or name a new skill"
-          className="mt-2 w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
+          className="mt-2 w-full border border-line bg-paper px-3 py-2 text-sm"
         />
       </div>
 
@@ -155,7 +155,7 @@ export function StructuredEntry({
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
         placeholder="Notes (optional)"
-        className="w-full resize-y rounded-lg border border-line bg-paper px-3 py-2 text-sm"
+        className="w-full resize-y border border-line bg-paper px-3 py-2 text-sm"
       />
 
       {error && (
@@ -168,14 +168,14 @@ export function StructuredEntry({
         <button
           type="submit"
           disabled={pending}
-          className="flex-1 rounded-full bg-ink px-4 py-2 text-sm font-medium text-paper disabled:opacity-40"
+          className="flex-1 bg-ink px-4 py-2 text-sm font-medium text-paper disabled:opacity-40"
         >
           {pending ? "Saving…" : "Save"}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-full border border-line px-4 py-2 text-sm text-muted hover:bg-line/50"
+          className="border border-line px-4 py-2 text-sm text-muted hover:bg-line/50"
         >
           Cancel
         </button>

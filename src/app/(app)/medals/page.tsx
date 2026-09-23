@@ -20,8 +20,8 @@ export default async function MedalsPage() {
       <header>
         <h1 className="display text-title">Medals</h1>
         <p className="mt-1 text-ink-soft">
-          Two kinds: markers reached inside a single skill, and badges that cut
-          across your whole life.
+          Two kinds: milestones reached inside a skill, and badges earned across
+          all of them.
         </p>
       </header>
 

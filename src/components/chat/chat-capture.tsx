@@ -112,13 +112,13 @@ export function ChatCapture({
           onChange={(e) => setText(e.target.value)}
           placeholder="Went to Japanese class for 90 minutes today"
           autoComplete="off"
-          className="min-w-0 flex-1 rounded-full border border-line bg-paper px-4 py-2.5 text-base outline-none focus:border-accent"
+          className="min-w-0 flex-1 border border-line bg-paper px-4 py-2.5 text-base outline-none focus:border-accent"
         />
         <button
           type="submit"
           disabled={!text.trim() || thinking}
           aria-label="Record this"
-          // accent-deep, not accent: white on the lighter sage is 3.09:1, and
+          // accent-deep, not accent: white on the lighter green is 3.06:1, and
           // this glyph is the only thing telling you the button is the submit.
           className="tappable shrink-0 rounded-full bg-accent-deep p-2.5 text-white disabled:opacity-30"
         >
@@ -156,7 +156,7 @@ export function ChatCapture({
       <button
         type="button"
         onClick={onBack}
-        className="tappable mt-3 w-full rounded-xl py-2 text-sm text-muted hover:text-ink"
+        className="tappable mt-3 w-full py-2 text-sm text-muted hover:text-ink"
       >
         Back
       </button>

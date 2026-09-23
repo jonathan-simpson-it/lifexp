@@ -48,11 +48,11 @@ export default async function GrowthPage() {
             name="name"
             required
             placeholder="Japanese, Piano, Climbing…"
-            className="min-w-0 flex-1 rounded-full border border-line bg-paper px-4 py-2 text-sm"
+            className="min-w-0 flex-1 border border-line bg-paper px-4 py-2 text-sm"
           />
           <button
             type="submit"
-            className="shrink-0 rounded-full bg-ink px-4 py-2 text-sm font-medium text-paper"
+            className="shrink-0 bg-ink px-4 py-2 text-sm font-medium text-paper"
           >
             Add
           </button>

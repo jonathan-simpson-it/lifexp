@@ -3,23 +3,23 @@ import type { MilestoneTier } from "@/lib/progress/milestones";
 /**
  * Stable per-skill colour, derived from the seed stored on the row.
  *
- * Every skill is a variant of the one sage hue rather than a point on the full
- * colour wheel. Skills still need to be told apart, the calendar draws a dot
- * per skill and the garden tints each plant, but a rainbow of arbitrary hues
- * made those the loudest thing on screen and contradicted a palette that is
- * meant to be a single colour.
+ * Every skill is a variant of the brand green hue rather than a point on the
+ * full colour wheel. Skills still need to be told apart, the calendar draws a
+ * dot per skill and the garden tints each plant, but a rainbow of arbitrary
+ * hues made those the loudest thing on screen and contradicted a palette that
+ * is meant to be a single colour.
  *
  * Differentiation comes mostly from **lightness**, which separates cleanly
- * within one hue family; the small hue drift (148–187) just stops neighbouring
+ * within one hue family; the small hue drift (128–162) just stops neighbouring
  * skills looking like the same paint at different opacity. Low chroma keeps the
- * whole set reading as sage.
+ * whole set reading as one green.
  */
 export function skillColor(
   colorSeed: number,
   opts: { soft?: boolean; solid?: boolean } = {},
 ) {
   const seed = Math.abs(colorSeed);
-  const hue = 148 + (seed % 40);
+  const hue = 128 + (seed % 35);
 
   if (opts.soft) return `oklch(0.93 0.022 ${hue})`;
 

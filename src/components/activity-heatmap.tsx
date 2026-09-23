@@ -44,7 +44,7 @@ export function ActivityHeatmap({
                       ? "nothing recorded"
                       : `${day.count} ${day.count === 1 ? "experience" : "experiences"}`
                   }`}
-                  className="size-[9px] rounded-[2px]"
+                  className="size-[9px]"
                   style={{
                     background:
                       day.count === 0

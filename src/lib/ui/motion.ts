@@ -15,6 +15,8 @@ import type { Transition } from "motion/react";
  *
  *   - shared-element transitions (`layoutId`), which have no CSS equivalent
  *   - animating a *number*, which is text content rather than a style
+ *   - exit animations (`AnimatePresence`), which must be awaited by the
+ *     library to keep a removed element mounted while it leaves
  *
  * Keeping that boundary explicit is what stops the bundle growing a physics
  * engine to fade a card in.

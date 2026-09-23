@@ -59,10 +59,14 @@ keeps it from looking templated.
 
 | Token | Hex | Role |
 |---|---|---|
-| `--paper` | `#f7f1e1` | The page |
-| `--paper-raised` | `#fdfaf2` | Cards, sheets, anything lifted |
-| `--accent-soft` | `#e3e9e6` | Sage chip and badge grounds |
+| `--paper` | `#f0f0e6` | The page |
+| `--paper-raised` | `#f9f9f1` | Cards, sheets, anything lifted |
+| `--accent-soft` | `#eae6d6` | Warm chip and badge grounds |
 | `--medal-soft` | `#f1e5c9` | Medal chip grounds |
+
+Both grounds come from the client's logo lockup: the green mark ships on a
+`#f0f0e6` field, so the app's cream is the logo's cream, and everything else is
+a lift or a shade of it.
 
 ### Text tokens
 
@@ -73,37 +77,38 @@ noticing.
 
 | Token | Hex | Role | Worst |
 |---|---|---|---|
-| `--ink` | `#211e16` | Primary text | 13.31 |
-| `--ink-soft` | `#494332` | Secondary prose, the voice | 7.88 |
-| `--muted` | `#6b6250` | Labels, captions, metadata | 4.81 |
-| `--accent-deep` | `#496a5f` | Sage text, primary buttons, focus | 4.78 |
+| `--ink` | `#211e16` | Primary text | 14.51 |
+| `--ink-soft` | `#494332` | Secondary prose, the voice | 8.58 |
+| `--muted` | `#6b6250` | Labels, captions, metadata | 5.25 |
+| `--accent-deep` | `#426e4a` | Green text, primary buttons, focus | 4.71 |
 | `--medal` | `#805a21` | Medal text and labels | 4.94 |
 
-White on `--accent-deep` is **5.98:1**, which is why every primary button uses
+White on `--accent-deep` is **5.90:1**, which is why every primary button uses
 the deep variant.
 
 ### Decorative tokens (fills and graphics only)
 
 | Token | Hex | Role | On paper |
 |---|---|---|---|
-| `--accent` | `#80988f` | Progress fills, plant tints, calendar dots | 2.74 |
-| `--line` | `#d8c8a4` | Card borders, dividers | 1.46 |
-| `--line-strong` | `#c4b087` | Emphasised rules, the sheet grabber | 1.88 |
-| `--medal-bright` | `#c9932b` | Medal mark fills | 2.42 |
+| `--accent` | `#6e9f70` | Progress fills, plant tints, calendar dots | 2.67 |
+| `--line` | `#d0cbb4` | Card borders, dividers | 1.42 |
+| `--line-strong` | `#b8b294` | Emphasised rules, the sheet grabber | 1.86 |
+| `--medal-bright` | `#c9932b` | Medal mark fills | 2.38 |
 
-### Sage is the only colour, in three values
+### Green is the only colour, in three values
 
-`--accent`, `--accent-deep` and `--accent-soft` are one hue (158) at three
-depths, not three colours. `--growth` and `--growth-soft` are *aliases* of the
-accent, so there is genuinely one colour in the product.
+`--accent` is the client's logo green (`#6e9f70`). `--accent-deep` and
+`--accent-soft` are that hue taken darker and lighter, not three colours.
+`--growth` and `--growth-soft` are *aliases* of the accent, so there is
+genuinely one colour in the product.
 
 The split exists because of contrast, not decoration:
 
 ```
---accent       2.74:1 on cream  →  a FILL. Never text, never a border that has
+--accent       2.67:1 on cream  →  a FILL. Never text, never a border that has
                                    to be seen. Bars, plant tints, dots.
---accent-deep  4.78:1 worst     →  anything with text on or in it: buttons
-                                   (white label, 5.98:1), sage text, focus
+--accent-deep  4.71:1 worst     →  anything with text on or in it: buttons
+                                   (white label, 5.90:1), green text, focus
                                    rings, hover borders.
 --accent-soft  a tint           →  chip grounds only, with ink or accent-deep
                                    on top.
@@ -117,12 +122,12 @@ The split exists because of contrast, not decoration:
 
 | Tier | Hex | On paper |
 |---|---|---|
-| `--tier-first-steps` | `#8c8474` | 3.29 |
-| `--tier-foundation` | `#6f7f5e` | 3.82 |
-| `--tier-bronze` | `#96683c` | 4.29 |
-| `--tier-silver` | `#7c848c` | 3.36 |
-| `--tier-gold` | `#a5811a` | 3.24 |
-| `--tier-mastery` | `#665a96` | 5.37 |
+| `--tier-first-steps` | `#8c8474` | 3.23 |
+| `--tier-foundation` | `#6f7f5e` | 3.75 |
+| `--tier-bronze` | `#96683c` | 4.21 |
+| `--tier-silver` | `#7c848c` | 3.30 |
+| `--tier-gold` | `#a5811a` | 3.18 |
+| `--tier-mastery` | `#665a96` | 5.28 |
 
 > These clear 3:1 as graphics and most do **not** clear 4.5:1 as text. A tier
 > colour may fill a medal mark or draw a dot. It may never be the colour of a
@@ -133,10 +138,10 @@ The split exists because of contrast, not decoration:
 
 Skills must be tellable apart (the calendar draws a dot per skill) but a
 rainbow would be the loudest thing in a single-colour palette. `skillColor()`
-in `src/lib/ui/format.ts` generates inside the sage band:
+in `src/lib/ui/format.ts` generates inside the brand green band:
 
 ```
-hue        148 + (seed % 40)            // a narrow drift, 148–187
+hue        128 + (seed % 35)            // a narrow drift, 128–162
 lightness  0.44 + ((seed * 7) % 26)/100 // where the separation actually comes from
 chroma     0.055                        // low, so the set reads as one family
 ```
@@ -292,7 +297,7 @@ The default container.
 ```css
 background: var(--paper-raised);
 border: 1px solid var(--line);
-border-radius: var(--radius-lg);   /* 20px */
+border-radius: 0;                  /* square, everywhere */
 box-shadow: var(--shadow-1);
 padding: 16px;                     /* 20px when the card is the page's subject */
 ```
@@ -303,9 +308,9 @@ Hover on pointer devices lifts it to `--shadow-2`. Never move it.
 
 | Variant | Ground | Label | Radius |
 |---|---|---|---|
-| Primary | `--accent-deep` | white, 600 | full |
-| Secondary | transparent, `1px --line` | `--ink` | 14px |
-| Quiet | transparent | `--muted` → `--ink` on hover | 14px |
+| Primary | `--accent-deep` | white, 600 | 0 |
+| Secondary | transparent, `1px --line` | `--ink` | 0 |
+| Quiet | transparent | `--muted` → `--ink` on hover | 0 |
 
 Every button carries `.tappable`: `scale(0.96)` on `:active` over 120ms. It is
 the cheapest way to make a web app feel native and it costs one class.
@@ -313,7 +318,7 @@ the cheapest way to make a web app feel native and it costs one class.
 ### Chip
 
 ```css
-border-radius: 9999px;
+border-radius: 0;
 padding: 8px 12px;
 font-size: var(--size-caption);
 /* unselected */ background: var(--paper);   border: 1px solid var(--line);
@@ -326,7 +331,7 @@ The milestone chip is the pattern to copy when a colour is not safe as text: a
 ### Bottom sheet
 
 ```css
-border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;   /* 28px */
+border-radius: 0;
 background: var(--paper-raised);
 border: 1px solid var(--line);
 box-shadow: var(--shadow-2);
@@ -358,7 +363,7 @@ BRONZE → young tree  SILVER → flowering       GOLD → fruiting
 MASTERY → grand tree
 ```
 
-- Tinted with that skill's generated sage.
+- Tinted with that skill's generated green.
 - Soil width scales with the stage. A seedling in a wide bed looks lost; a
   grand tree in a narrow one looks potted.
 - Idle sway: 7s, offset per index (`--sway-delay`), amplitude **falling** as the
@@ -489,15 +494,18 @@ Three levels. There is no fourth.
 ```css
 --shadow-1: 0 1px 2px rgb(94 74 40 / .06), 0 2px 6px rgb(94 74 40 / .05);
 --shadow-2: 0 2px 6px rgb(94 74 40 / .08), 0 8px 20px rgb(94 74 40 / .09);
---shadow-accent-lift: 0 4px 10px rgb(48 74 66 / .22), 0 10px 26px rgb(48 74 66 / .16);
+--shadow-accent-lift: 0 4px 10px rgb(48 82 56 / .22), 0 10px 26px rgb(48 82 56 / .16);
 ```
 
 **Shadows are warm-tinted, never neutral grey.** Grey on cream reads as dirt.
-The centre button's shadow is tinted with the sage rather than the ground, so it
+The centre button's shadow is tinted with the green rather than the ground, so it
 casts a shadow of its own colour.
 
-Radii: `14px` controls · `20px` cards · `28px` sheets · `9999px` chips and the
-centre button.
+Shape: **square, everywhere**. The palette is print, not app, so corners are
+square and grouping comes from hairlines and space. Circles are reserved for
+things that are genuinely circular: indicator dots, circular icon buttons, and
+the centre record button. If a new component reaches for a border radius,
+delete the class instead.
 
 ---
 
@@ -569,10 +577,15 @@ visibly the cause.
 |---|---|---|
 | Any tap | `scale(0.96)`, 120ms | CSS |
 | Plant idle | 7s sway, amplitude by stage | CSS |
-| Screen entry | Cards rise 10px | CSS |
+| Route change | Screen fades in, 220ms (opacity only: a transform here would repin every fixed element to the document) | CSS (`app/template.tsx`) |
+| Card entry | Cards rise 10px, lists stagger to 200ms | CSS |
 | Garden entry | Plants grow from the soil line, 60ms stagger, 400ms | CSS |
-| Sheet open | Springs up 28px, backdrop blurs in | CSS |
+| Sheet open | Springs up 28px, backdrop blurs in | `motion` |
+| Sheet close | Springs back down 24px, backdrop fades | `motion` (`AnimatePresence`) |
+| Sheet mode | Quick/chat/form panels slide in the travel direction | `motion` |
 | Skill picked | Duration presets stagger in, 30ms | CSS |
+| Calendar month | Grid slides in from the direction travelled | `motion` |
+| Day selected | Day panel cross-fades | `motion` |
 | Nav change | Active pill slides between tabs | `motion` `layoutId` |
 | Day selected | Ink pill travels to the tapped day | `motion` `layoutId` |
 | Centre button | `+` rotates 45° into a close mark | CSS |
@@ -586,9 +599,9 @@ is the one material in this palette that should, and keeping it to one place is
 what makes it read as an event rather than a texture.
 
 `motion` is reached for **only** where CSS genuinely cannot go: shared-element
-transitions, and animating a *number* (text content, not a style). Keeping that
-boundary explicit is what stops the bundle growing a physics engine to fade a
-card in.
+transitions, animating a *number* (text content, not a style), and exit
+animations `AnimatePresence` has to await. Keeping that boundary explicit is
+what stops the bundle growing a physics engine to fade a card in.
 
 Two deliberate simplifications, both worth knowing before "improving" them:
 
@@ -605,6 +618,26 @@ Everything sits behind `prefers-reduced-motion: reduce`, which collapses every
 duration globally. Imperative animations additionally check the query themselves
 and do not start at all. An e2e test asserts the watering, the grow-in and the
 sway are all silenced.
+
+### The landing page exception
+
+The public landing page runs under a wider motion budget than the app, because
+its job is different: it has seconds to explain a product a visitor has never
+met. There, and only there:
+
+- **Scroll-triggered reveals are allowed.** Sections rise once as they enter,
+  via `components/landing/reveal.tsx`. Below-fold only; the hero never hides
+  waiting for JS, and reduced-motion visitors get the settled page.
+- **One looping demo is allowed.** The phone demo replays the quick-log flow
+  while it is on screen and stops when it is not.
+- **The hero is interactive, not ambient.** The garden demo is the real
+  components wired to local state; it moves on tap, plays one scripted
+  watering on arrival, and never nags.
+
+Everything else in this file still applies there: growth-only direction, no
+red, no punitive copy, transform/opacity only, and the reduced-motion collapse.
+The signed-in app gains route transitions (`app/template.tsx`), staggered list
+entrances, and the sheet's exit animation, and nothing more.
 
 ---
 
@@ -655,10 +688,10 @@ Paste-ready prompts. Attach this file alongside each one.
 
 > Build a LifeXP screen for `<purpose>` following the attached DESIGN.md. Warm
 > cream ground (`--paper`), cards in `--paper-raised` with a `--line` border and
-> a 20px radius. Newsreader for titles at 20px and above and for every number;
+> square corners. Newsreader for titles at 20px and above and for every number;
 > Hanken Grotesk below that. Give the screen exactly one hero figure
 > (`text-hero`, tabular numerals) answering its single question, with supporting
-> values in `text-caption`. Sage `--accent` for fills only; `--accent-deep` for
+> values in `text-caption`. Green `--accent` for fills only; `--accent-deep` for
 > anything carrying text. No red, no week-on-week comparison charts, no streak
 > or consecutive-day language. Mobile first: 48rem column, 16px gutters, 112px
 > bottom padding to clear the nav bar.
@@ -666,7 +699,7 @@ Paste-ready prompts. Attach this file alongside each one.
 ### A new component
 
 > Create `<component>` for LifeXP per the attached DESIGN.md. Use the card
-> recipe (paper-raised, 1px `--line`, 20px radius, `--shadow-1`, 16px padding).
+> recipe (paper-raised, 1px `--line`, square corners, `--shadow-1`, 16px padding).
 > Every tappable element gets `.tappable`. Encode state in form as well as
 > number. Verify each text colour clears 4.5:1 against every ground it can sit
 > on, `--paper`, `--paper-raised`, `--accent-soft` and `--medal-soft`.

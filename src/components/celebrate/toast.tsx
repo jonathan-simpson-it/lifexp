@@ -28,7 +28,7 @@ export function Toast({
       aria-live="polite"
       className="rise-in pointer-events-none fixed inset-x-0 bottom-24 z-[55] flex justify-center px-4 md:bottom-8 md:pl-60"
     >
-      <div className="flex items-center gap-2 rounded-full border border-growth/30 bg-growth-soft px-4 py-2.5 text-sm font-medium text-growth shadow-card">
+      <div className="flex items-center gap-2 border border-growth/30 bg-growth-soft px-4 py-2.5 text-sm font-medium text-growth shadow-card">
         <span className="flex size-5 items-center justify-center rounded-full bg-growth text-white">
           <Check size={13} strokeWidth={3} aria-hidden />
         </span>

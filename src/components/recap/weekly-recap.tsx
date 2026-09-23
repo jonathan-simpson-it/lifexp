@@ -108,8 +108,7 @@ export function WeeklyRecap({
           </h2>
           {light ? (
             <p className="voice mt-1.5">
-              A lighter week than usual. It still counts, that is the whole
-              point.
+              A lighter week than usual. It still counts.
             </p>
           ) : (
             <p className="mt-1.5 text-ink-soft">
@@ -125,7 +124,7 @@ export function WeeklyRecap({
           {recentBadges.map((badge) => (
             <li
               key={badge.key}
-              className="flex items-center gap-1 rounded-full bg-medal-soft py-1 pr-2.5 pl-1 text-caption font-medium text-medal"
+              className="flex items-center gap-1 bg-medal-soft py-1 pr-2.5 pl-1 text-caption font-medium text-medal"
             >
               {/* No ribbon at this size: below about 20px the straps turn into
                   two dark specks and the medal stops reading as a medal. */}

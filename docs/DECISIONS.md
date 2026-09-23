@@ -175,7 +175,7 @@ migrations stop connecting, re-run it and update `.env`.
 
 ## 11. Warm/paper visual language, and no red token
 
-**Decision.** Cream grounds, a serif for anything stating a quantity, sage for
+**Decision.** Cream grounds, a serif for anything stating a quantity, green for
 growth, warm metal for medals. The palette defines **no red**.
 
 **Why.** The product is a record of a life, not a dashboard. And nothing in it is
@@ -187,7 +187,8 @@ deliberately hardcoded, and an e2e test scans for it.
 
 ## 12. Light only, no dark mode
 
-**Decision.** `--paper` is cream (`#f7f1e1`) and there is **no**
+**Decision.** `--paper` is the logo's cream (`#f0f0e6`, from
+`public/lifexp-logo-green.jpeg`) and there is **no**
 `prefers-color-scheme: dark` block. `color-scheme: only light` is set on
 `:root`, and `viewport.themeColor` is a single value.
 
@@ -253,25 +254,26 @@ evidence, at the cost of the mapping no longer being exactly the ladder.
 
 ---
 
-## 15. Sage is the only colour, in three values
+## 15. Green is the only colour, in three values
 
-**Decision.** `--accent` (#80988f), `--accent-deep` (#4f7266) and
-`--accent-soft` (#e3e9e6), one hue (158) at three depths. `--growth` aliases
+**Decision.** `--accent` (#6e9f70), `--accent-deep` (#426e4a) and
+`--accent-soft` (#eae6d6, a warm paper tint rather than a green one), the
+logo's green darkened and grounded. `--growth` aliases
 the accent rather than holding a second green, and per-skill colours are
-generated inside the same hue band.
+generated inside the same hue band. The cream is the logo's too: `--paper` is
+`#f0f0e6` and `--paper-raised` is a lift of it.
 
-**Why the split.** #80988f is 2.74:1 on cream. That is fine for a decorative
+**Why the split.** #6e9f70 is 2.67:1 on cream. That is fine for a decorative
 fill but below the 3:1 a UI boundary needs and far below the 4.5:1 text needs,
 and white on it is only 3.1:1. One token would have meant either unreadable
 buttons or abandoning the chosen colour. The deep variant carries everything
 with text; the light one stays decorative. The audit script encodes exactly that
 rule, so using `--accent` for text fails the check.
 
-**Per-skill colours are sage too.** Skills still need to be distinguishable,
+**Per-skill colours are green too.** Skills still need to be distinguishable,
 the calendar draws a dot per skill, but arbitrary hues made those the loudest
-thing on screen in a palette meant to be a single colour. `skillColor` now
-varies **lightness** within hue 148–187, which separates cleanly inside one
-family.
+thing on screen in a palette meant to be a single colour. `skillColor` varies
+**lightness** within hue 128–162, which separates cleanly inside one family.
 
 **Revisit if.** Users cannot tell skills apart in the calendar. The lever is
 lightness spread, not hue.
@@ -369,15 +371,16 @@ combinations were below AA without anyone noticing:
 
 | | |
 |---|---|
-| `--medal` on `--medal-soft` | 4.40:1 |
-| `--medal` on `--accent-soft` | 4.47:1 |
-| `--accent-deep` on `--accent-soft` | 4.34:1 |
-| `--accent-deep` on `--medal-soft` | 4.27:1 |
+| `--medal` on `--medal-soft` | 4.94:1 |
+| `--medal` on `--accent-soft` | 4.93:1 |
+| `--accent-deep` on `--accent-soft` | 4.71:1 |
+| `--accent-deep` on `--medal-soft` | 4.71:1 |
 
-`--accent-deep` moved from `#4f7266` to `#496a5f` and `--medal` from `#8a6124`
-to `#805a21`, both with margin so adding a chip tint later does not silently
-reintroduce the problem. `--accent` is untouched: it is the client's chosen sage
-and it is a fill, never text.
+The palette was rebased on the client's logo lockup, so `--accent` is now
+`#6e9f70` and the grounds are its cream. `--accent-deep` is that green taken
+darker (`#426e4a`); it was moved there from `#4f7266`, and `--medal` from
+`#8a6124` to `#805a21`, both with margin so adding a chip tint later does not
+silently reintroduce the problem.
 
 **The deeper cause was the test.** `no text is light-on-light` used a 3:1
 threshold, the bar for graphics, not for text, so everything above passed.

@@ -14,47 +14,43 @@
 */
 
 :root {
-  /* Cream ground. The client asked for a light app, so this is the only
-     palette, see the note on colour-scheme below. */
-  --paper: #f7f1e1;
-  --paper-raised: #fdfaf2;
+  /* Cream ground, taken from the brand lockup (public/lifexp-logo-green.jpeg
+     ships on a #f0f0e6 field). The pairing is the logo's: cream is the main
+     ground and the logo green is the only support colour. */
+  --paper: #f0f0e6;
+  --paper-raised: #f9f9f1;
   --ink: #211e16;
   --ink-soft: #494332;
   --muted: #6b6250;
-  /* Borders sit at ~1.46 against the ground: visible enough to define a card
+  /* Borders sit at ~1.4 against the ground: visible enough to define a card
      edge on cream, soft enough not to draw a box around everything. */
-  --line: #d8c8a4;
-  --line-strong: #c4b087;
+  --line: #d0cbb4;
+  --line-strong: #b8b294;
 
   /*
-    Sage: the only colour.
+    Green: the only colour, from the brand lockup (#6e9f70).
 
-    Three values of one hue (158), not three colours. The split exists because
+    Three values of one hue, not three colours. The split exists because
     of contrast, not decoration:
 
-    --accent      the sage itself. A FILL for graphics: progress bars, chips,
-                  plant tints, where the 3:1 bar applies. On cream it is
-                  2.74:1, so nothing legible may sit on it and it may never be
+    --accent      the logo green itself. A FILL for graphics: progress bars,
+                  chips, plant tints, where the 3:1 bar applies. On cream it is
+                  ~2.9:1, so nothing legible may sit on it and it may never be
                   used for text.
-    --accent-deep everything carrying small text: a button with a white label
-                  (5.98:1) or sage text on any ground in the palette (4.78:1
-                  at worst, which is on --accent-soft).
+    --accent-deep everything carrying small text, darkened along the logo's hue
+                  just far enough to clear 4.5:1 on every ground in the palette
+                  with room to spare: a button with a white label (5.9:1) or
+                  green text on cream (5.1:1).
     --accent-soft the tint, for chip and badge backgrounds.
 
     Growth aliases the accent rather than holding its own green, so there is
     genuinely one colour in the product.
-
-    --accent-deep was #4f7266 until it was measured against the *chip tints*
-    rather than only against the two paper grounds. Sage text on a sage chip
-    (the active sidebar item) was 4.34:1, and the audit had never looked at
-    that pair. It is darkened just far enough to clear 4.5 on every ground in
-    the palette with room to spare.
   */
-  --accent: #80988f;
-  --accent-deep: #496a5f;
-  --accent-soft: #e3e9e6;
+  --accent: #6e9f70;
+  --accent-deep: #426e4a;
+  --accent-soft: #eae6d6;
 
-  /* Accumulation, freshness, anything alive: the same sage. */
+  /* Accumulation, freshness, anything alive: the same green. */
   --growth: var(--accent-deep);
   --growth-soft: var(--accent-soft);
 
@@ -96,22 +92,26 @@
   --size-figure: 1.625rem; /* 26px, totals, month figures */
   --size-hero: 2.125rem; /* 34px, the one number per screen */
 
-  --radius: 14px;
-  --radius-lg: 20px;
-  --radius-sheet: 28px;
+  /* Shape: square, everywhere. The palette is print, not app, so corners
+     are square and hierarchy comes from rules and space. Circles are reserved
+     for genuinely circular things: dots and the centre record button. */
+  --radius: 0px;
+  --radius-lg: 0px;
+  --radius-sheet: 0px;
 
   /* Elevation. Warm-tinted shadows: a neutral grey shadow reads as dirt on
      cream. */
   --shadow-1: 0 1px 2px rgb(94 74 40 / 0.06), 0 2px 6px rgb(94 74 40 / 0.05);
   --shadow-2: 0 2px 6px rgb(94 74 40 / 0.08), 0 8px 20px rgb(94 74 40 / 0.09);
-  /* Tinted with the sage rather than the old terracotta, so the raised centre
-     button casts a shadow of its own colour instead of a warm halo. */
-  --shadow-accent-lift: 0 4px 10px rgb(48 74 66 / 0.22), 0 10px 26px rgb(48 74 66 / 0.16);
+  /* Tinted with the brand green rather than the old terracotta, so the raised
+     centre button casts a shadow of its own colour instead of a warm halo. */
+  --shadow-accent-lift: 0 4px 10px rgb(48 82 56 / 0.22), 0 10px 26px rgb(48 82 56 / 0.16);
 
   /* Motion. The overshoot is what makes the app feel springy rather than
-     merely animated; every celebratory transition uses it. */
+      merely animated; every celebratory transition uses it. */
   --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
   --dur-tap: 120ms;
   --dur-move: 260ms;
   --dur-pop: 420ms;
@@ -223,6 +223,8 @@ html {
     depresses on :active, which is a better signal anyway.
   */
   -webkit-tap-highlight-color: transparent;
+  /* Anchor travel on the landing page. Collapsed for reduced motion below. */
+  scroll-behavior: smooth;
 }
 
 /* Selection in the product's own colour rather than the browser's blue. */
@@ -369,6 +371,7 @@ body {
 }
 .pop-in {
   animation: pop-in var(--dur-pop) var(--spring) both;
+  animation-delay: var(--rise-delay, 0s);
 }
 
 @keyframes rise-in {
@@ -900,7 +903,6 @@ body {
 :where(a, button, input, textarea, select, [tabindex]):focus-visible {
   outline: 2px solid var(--growth);
   outline-offset: 2px;
-  border-radius: 6px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -911,4 +913,80 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ==========================================================================
+   Route and section entrances.
+
+   Two levels of entrance, both opacity/transform only and both collapsed by
+   the reduced-motion block above:
+
+   .page-in    every route render, 220ms. Wired once in app/template.tsx so
+               navigation lands with a beat instead of a hard swap.
+   .reveal     landing sections, armed by an IntersectionObserver in
+               components/landing/reveal.tsx. Below-fold only: the hero never
+               uses it, so nothing visible is ever hidden waiting for JS.
+   ========================================================================== */
+
+@keyframes page-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/*
+  Opacity only, deliberately: an animating transform on this wrapper would
+  make it the containing block for every position:fixed descendant (bottom
+  nav, sidebar, log sheet, landing header), and those would pin to the
+  document instead of the viewport.
+*/
+.page-in {
+  animation: page-in 0.22s var(--ease-out) both;
+}
+
+/*
+  The reveal starts hidden only while `data-shown` is false, and the observer
+  sets that flag on mount rather than in CSS, so a no-JS render is never
+  blank: the attribute is absent server-side and the content paints settled.
+*/
+.reveal[data-shown="false"] {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.reveal[data-shown="true"] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.55s var(--ease-out),
+    transform 0.55s var(--ease-out);
+  transition-delay: var(--rise-delay, 0s);
+}
+
+/*
+  Pointer-device lift for tappable cards. Gate on hover so touch devices get
+  the .tappable press instead of a sticky hover state.
+*/
+@media (hover: hover) {
+  .lift {
+    transition:
+      transform 0.18s var(--ease-out),
+      box-shadow 0.18s var(--ease-out);
+  }
+  .lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-2);
+  }
+}
+
+/* Anchor targets clear the fixed landing header. */
+section[id] {
+  scroll-margin-top: 84px;
 }

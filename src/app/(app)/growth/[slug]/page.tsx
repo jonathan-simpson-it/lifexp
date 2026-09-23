@@ -3,6 +3,7 @@ import { requireUserId } from "@/lib/auth";
 import { getSkillDetail, getTimeline } from "@/lib/growth/aggregate";
 import { ActivityHeatmap } from "@/components/activity-heatmap";
 import { Timeline } from "@/components/timeline";
+import { Fill } from "@/components/ui/fill";
 import {
   formatDuration,
   formatRemaining,
@@ -112,15 +113,7 @@ export default async function SkillPage({
 
         {next && (
           <div className="mt-3">
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-line">
-              <div
-                className="h-full rounded-full"
-                style={{
-                  width: `${Math.max(fraction * 100, 2)}%`,
-                  background: color,
-                }}
-              />
-            </div>
+            <Fill fraction={fraction} color={color} className="h-1.5" />
           </div>
         )}
       </section>

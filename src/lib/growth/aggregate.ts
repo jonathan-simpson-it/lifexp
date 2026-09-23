@@ -1,5 +1,14 @@
 import { db } from "@/lib/db";
 import {
+  demoExperienceRows,
+  demoMonthRows,
+  demoRecentSkills,
+  demoSkillDetail,
+  demoSkillRows,
+  demoTimeline,
+  isDemoMode,
+} from "@/lib/demo";
+import {
   nextMilestone,
   type MilestoneRow,
   type MilestoneTier,
@@ -35,6 +44,25 @@ type ExperienceWithSkills = {
   occurredAt: Date;
   minutes: number | null;
   skills: { skillId: string }[];
+};
+
+/** The shape getGrowthOverview needs from a skill row, DB or fixture. */
+type OverviewSkill = {
+  id: string;
+  name: string;
+  slug: string;
+  colorSeed: number;
+  secondaryUnit: string | null;
+  templateKey: string | null;
+  milestones: {
+    id: string;
+    label: string;
+    tier: string;
+    order: number;
+    thresholdMinutes: number | null;
+    thresholdCount: number | null;
+    achievedAt: Date | null;
+  }[];
 };
 
 async function loadExperiences(userId: string): Promise<ExperienceWithSkills[]> {
@@ -92,14 +120,17 @@ export async function getGrowthOverview(userId: string): Promise<DashboardData> 
   // is even if the request straddles midnight.
   const now = new Date();
 
-  const [skills, experiences] = await Promise.all([
-    db.skill.findMany({
-      where: { userId, archivedAt: null },
-      include: { milestones: { orderBy: { order: "asc" } } },
-      orderBy: { createdAt: "asc" },
-    }),
-    loadExperiences(userId),
-  ]);
+  const [skills, experiences]: [OverviewSkill[], ExperienceWithSkills[]] =
+    isDemoMode()
+      ? [demoSkillRows(), demoExperienceRows()]
+      : await Promise.all([
+          db.skill.findMany({
+            where: { userId, archivedAt: null },
+            include: { milestones: { orderBy: { order: "asc" } } },
+            orderBy: { createdAt: "asc" },
+          }),
+          loadExperiences(userId),
+        ]);
 
   // Index experiences by skill once, rather than filtering per skill.
   const bySkill = new Map<string, ExperienceWithSkills[]>();
@@ -172,6 +203,8 @@ export async function getGrowthOverview(userId: string): Promise<DashboardData> 
 export async function getGardenConditions(
   userId: string,
 ): Promise<GardenConditions> {
+  if (isDemoMode()) return gardenConditionsFor(new Date(), "UTC");
+
   const user = await db.user.findUnique({
     where: { id: userId },
     select: { timezone: true },
@@ -197,6 +230,8 @@ export async function getRecentSkills(
   userId: string,
   take = 8,
 ): Promise<QuickSkill[]> {
+  if (isDemoMode()) return demoRecentSkills(take);
+
   const skills = await db.skill.findMany({
     where: { userId, archivedAt: null },
     select: {
@@ -244,6 +279,8 @@ export async function getTimeline(
   userId: string,
   options: { skillId?: string; take?: number } = {},
 ): Promise<TimelineEntry[]> {
+  if (isDemoMode()) return demoTimeline(options);
+
   const rows = await db.experience.findMany({
     where: {
       userId,
@@ -307,11 +344,37 @@ const dayKey = (date: Date) => date.toISOString().slice(0, 10);
  * blanks. Days are UTC, consistent with `bucketByDay`, and at personal scale
  * the timezone edges are not worth per-user day boundaries.
  */
+type MonthExperienceRow = {
+  id: string;
+  title: string;
+  minutes: number | null;
+  occurredAt: Date;
+  skills: { skill: { id: string; name: string; colorSeed: number } }[];
+};
+
+type MonthMaintenanceRow = {
+  id: string;
+  doneAt: Date;
+  item: { name: string };
+};
+
 export async function getMonth(
   userId: string,
   year: number,
   month: number,
 ): Promise<CalendarMonth> {
+  if (isDemoMode()) {
+    const demo = demoMonthRows(year, month);
+    return buildMonth(
+      year,
+      month,
+      demo.experiences,
+      demo.maintenanceLogs,
+      demo.milestoneCount,
+      demo.badgeCount,
+    );
+  }
+
   const from = new Date(Date.UTC(year, month - 1, 1));
   const to = new Date(Date.UTC(year, month, 1));
 
@@ -343,6 +406,17 @@ export async function getMonth(
     }),
   ]);
 
+  return buildMonth(year, month, experiences, maintenanceLogs, milestones, badges);
+}
+
+function buildMonth(
+  year: number,
+  month: number,
+  experiences: MonthExperienceRow[],
+  maintenanceLogs: MonthMaintenanceRow[],
+  milestones: number,
+  badges: number,
+): CalendarMonth {
   const byDay = new Map<string, CalendarDay>();
   const ensure = (key: string) => {
     let day = byDay.get(key);
@@ -390,6 +464,8 @@ export async function getMonth(
 }
 
 export async function getSkillDetail(userId: string, slug: string) {
+  if (isDemoMode()) return demoSkillDetail(slug);
+
   const skill = await db.skill.findUnique({
     where: { userId_slug: { userId, slug } },
     include: { milestones: { orderBy: { order: "asc" } } },

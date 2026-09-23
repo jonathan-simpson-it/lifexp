@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requireUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { demoLogMaintenance, demoUndoMaintenance, isDemoMode } from "@/lib/demo";
 import { syncProgress } from "@/lib/progress/sync";
 
 async function assertOwnsItem(userId: string, itemId: string) {
@@ -16,6 +17,11 @@ async function assertOwnsItem(userId: string, itemId: string) {
 /** Records that the thing was done. There is nothing to "complete" or "miss". */
 export async function logMaintenance(itemId: string) {
   const userId = await requireUserId();
+  if (isDemoMode()) {
+    demoLogMaintenance(itemId);
+    revalidatePath("/", "layout");
+    return;
+  }
   await assertOwnsItem(userId, itemId);
 
   await db.maintenanceLog.create({ data: { itemId } });
@@ -26,6 +32,11 @@ export async function logMaintenance(itemId: string) {
 /** Undo for a mis-tap: removes the most recent log for this item. */
 export async function undoLastMaintenance(itemId: string) {
   const userId = await requireUserId();
+  if (isDemoMode()) {
+    demoUndoMaintenance(itemId);
+    revalidatePath("/", "layout");
+    return;
+  }
   await assertOwnsItem(userId, itemId);
 
   const latest = await db.maintenanceLog.findFirst({
@@ -40,6 +51,10 @@ export async function undoLastMaintenance(itemId: string) {
 
 export async function createMaintenanceItem(formData: FormData) {
   const userId = await requireUserId();
+  if (isDemoMode()) {
+    revalidatePath("/", "layout");
+    return;
+  }
 
   const name = String(formData.get("name") ?? "").trim();
   if (!name) throw new Error("Give the item a name");
@@ -61,6 +76,10 @@ export async function createMaintenanceItem(formData: FormData) {
 
 export async function updateMaintenanceInterval(itemId: string, intervalDays: number) {
   const userId = await requireUserId();
+  if (isDemoMode()) {
+    revalidatePath("/", "layout");
+    return;
+  }
   await assertOwnsItem(userId, itemId);
 
   await db.maintenanceItem.update({
@@ -74,6 +93,10 @@ export async function updateMaintenanceInterval(itemId: string, intervalDays: nu
 /** Archive rather than delete, so the history stays intact. */
 export async function archiveMaintenanceItem(itemId: string) {
   const userId = await requireUserId();
+  if (isDemoMode()) {
+    revalidatePath("/", "layout");
+    return;
+  }
   await assertOwnsItem(userId, itemId);
 
   await db.maintenanceItem.update({

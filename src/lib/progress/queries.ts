@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { demoAchievedMilestones, demoBadgeAwards, isDemoMode } from "@/lib/demo";
 import { BADGES, type BadgeDefinition } from "./badges";
 
 export type BadgeState = {
@@ -14,7 +15,10 @@ export type BadgeState = {
  * "? ? ?" so there is always something left to discover.
  */
 export async function getBadgeState(userId: string): Promise<BadgeState[]> {
-  const awards = await db.badgeAward.findMany({ where: { userId } });
+  const awards = isDemoMode()
+    ? demoBadgeAwards()
+    : await db.badgeAward.findMany({ where: { userId } });
+
   const byKey = new Map(awards.map((a) => [a.badgeKey, a]));
 
   const states: BadgeState[] = BADGES.map((definition) => {
@@ -52,10 +56,14 @@ export async function getRecentBadges(
 ): Promise<RecapBadge[]> {
   const since = new Date(Date.now() - days * 86_400_000);
 
-  const awards = await db.badgeAward.findMany({
-    where: { userId, awardedAt: { gte: since } },
-    orderBy: { awardedAt: "desc" },
-  });
+  const awards = isDemoMode()
+    ? demoBadgeAwards()
+        .filter((award) => award.awardedAt >= since)
+        .sort((a, b) => b.awardedAt.getTime() - a.awardedAt.getTime())
+    : await db.badgeAward.findMany({
+        where: { userId, awardedAt: { gte: since } },
+        orderBy: { awardedAt: "desc" },
+      });
 
   return awards.flatMap((award) => {
     const definition = BADGES.find((b) => b.key === award.badgeKey);
@@ -86,6 +94,8 @@ export function getRecapWindow(now = new Date()) {
 
 /** Milestones reached across all skills, most recent first. */
 export async function getAchievedMilestones(userId: string, take = 6) {
+  if (isDemoMode()) return demoAchievedMilestones(take);
+
   return db.milestone.findMany({
     where: { skill: { userId }, achievedAt: { not: null } },
     include: { skill: { select: { name: true, slug: true, colorSeed: true } } },

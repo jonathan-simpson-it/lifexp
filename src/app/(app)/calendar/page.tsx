@@ -33,13 +33,13 @@ export default async function CalendarPage({
         <div
           role="group"
           aria-label="View"
-          className="flex rounded-full border border-line p-0.5 text-sm"
+          className="flex border border-line p-0.5 text-sm"
         >
           <Link
             href={`/calendar?y=${year}&m=${month}`}
             aria-current={view === "month" ? "true" : undefined}
             className={[
-              "tappable rounded-full px-3 py-1",
+              "tappable px-3 py-1",
               view === "month" ? "bg-ink text-paper" : "text-muted",
             ].join(" ")}
           >
@@ -49,7 +49,7 @@ export default async function CalendarPage({
             href={`/calendar?y=${year}&m=${month}&view=year`}
             aria-current={view === "year" ? "true" : undefined}
             className={[
-              "tappable rounded-full px-3 py-1",
+              "tappable px-3 py-1",
               view === "year" ? "bg-ink text-paper" : "text-muted",
             ].join(" ")}
           >
@@ -69,7 +69,7 @@ export default async function CalendarPage({
             weeks={52}
           />
           <p className="mt-3 text-sm text-muted">
-            A year of evidence. Gaps are just time. There is nothing here to
+            A year of evidence. Gaps are just time, and there is nothing here to
             break.
           </p>
         </div>

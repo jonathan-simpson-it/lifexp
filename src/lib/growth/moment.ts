@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { demoSkillMoment, isDemoMode } from "@/lib/demo";
 import {
   restStateFor,
   seasonFor,
@@ -52,6 +53,8 @@ export async function getSkillMoment(
   userId: string,
   skillId: string,
 ): Promise<SkillMoment | null> {
+  if (isDemoMode()) return demoSkillMoment(skillId);
+
   // One clock read, shared by rest and season.
   const now = new Date();
 

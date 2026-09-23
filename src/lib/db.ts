@@ -7,12 +7,24 @@ const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClient;
 };
 
-function createClient() {
+/**
+ * On the `ui-test-only` branch the app is deployed with no DATABASE_URL at all.
+ * `next build` imports every route module while collecting page data, so this
+ * file must not throw at import time: a missing connection string now yields a
+ * stand-in client that only complains if something actually reaches for it.
+ * Every read path checks `isDemoMode()` first and returns fixtures instead (see
+ * lib/demo.ts), so in demo mode nothing should ever touch this proxy.
+ */
+function createClient(): PrismaClient {
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) {
-    throw new Error(
-      "DATABASE_URL is not set. Copy .env.example to .env, then run `npx prisma dev --name lifexp` and paste the connection strings it prints.",
-    );
+    return new Proxy({} as PrismaClient, {
+      get() {
+        throw new Error(
+          "No database is configured on this deployment. Demo mode should have answered this read with in-memory fixtures.",
+        );
+      },
+    });
   }
   return new PrismaClient({
     adapter: new PrismaPg({ connectionString }),

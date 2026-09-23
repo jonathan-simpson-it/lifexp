@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { currentUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { demoSkillNames, demoUser, isDemoMode } from "@/lib/demo";
 import { extractExperiences } from "@/lib/ai/provider";
 
 /**
@@ -34,13 +35,16 @@ export async function POST(request: Request) {
     );
   }
 
-  const [user, skills] = await Promise.all([
-    db.user.findUnique({ where: { id: userId }, select: { timezone: true } }),
-    db.skill.findMany({
-      where: { userId, archivedAt: null },
-      select: { id: true, name: true },
-    }),
-  ]);
+  const user = isDemoMode()
+    ? demoUser()
+    : await db.user.findUnique({ where: { id: userId }, select: { timezone: true } });
+
+  const skills = isDemoMode()
+    ? demoSkillNames()
+    : await db.skill.findMany({
+        where: { userId, archivedAt: null },
+        select: { id: true, name: true },
+      });
 
   const timezone = user?.timezone || "UTC";
 

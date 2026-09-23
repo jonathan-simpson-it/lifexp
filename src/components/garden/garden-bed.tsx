@@ -14,8 +14,8 @@ import { formatDuration, skillColor } from "@/lib/ui/format";
  * The garden.
  *
  * Every skill is a plant whose stage comes from the highest milestone it has
- * reached. It is the home screen's emotional centre and the thing that makes
- * "life is an accumulation of experiences" literal rather than a tagline.
+ * reached. It is the home screen's emotional centre and the thing that turns a
+ * list of entries into a garden.
  *
  * The garden answers to time, but never to how often you show up. A skill left
  * alone **rests**: same stage, same size, cooler and still, and it wakes the
@@ -64,7 +64,7 @@ export function GardenBed({
                 href={`/growth/${skill.slug}`}
                 // 80px wide so four skills fit across a phone without the
                 // fourth being clipped at the edge.
-                className="tappable flex w-20 flex-col items-center rounded-xl px-0.5 py-1 text-center"
+                className="tappable flex w-20 flex-col items-center px-0.5 py-1 text-center"
                 aria-label={`${skill.name}, ${STAGE_LABEL[stage]}${resting ? `, ${resting}` : ""}, ${formatDuration(skill.totalMinutes)} recorded`}
               >
                 <span

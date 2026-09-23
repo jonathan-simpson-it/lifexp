@@ -1,11 +1,21 @@
 import NextAuth from "next-auth";
 import { cache } from "react";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import type { NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/lib/db";
+import { DEMO_EMAIL, DEMO_USER_ID, isDemoMode } from "@/lib/demo";
+
+/**
+ * `ui-test-only`: with no database there is nothing to authenticate against, so
+ * the whole NextAuth stack is swapped for a stub that always answers with the
+ * demo user. Reads are answered from fixtures (lib/demo.ts) and writes are
+ * accepted but never persisted (see the server actions).
+ */
+export const demoMode = isDemoMode();
 
 /**
  * Google sign-in is the primary path. The calendar write-back needs a Google
@@ -65,7 +75,7 @@ if (!hasGoogleCredentials && process.env.NODE_ENV !== "production") {
         const email =
           typeof credentials?.email === "string" && credentials.email.trim()
             ? credentials.email.trim().toLowerCase()
-            : "demo@lifexp.local";
+            : DEMO_EMAIL;
 
         const user = await db.user.upsert({
           where: { email },
@@ -79,28 +89,74 @@ if (!hasGoogleCredentials && process.env.NODE_ENV !== "production") {
   );
 }
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(db),
-  providers,
-  // JWT sessions, not database sessions: the Credentials provider above only
-  // works with this strategy. The adapter still persists User and Account rows
-  // on Google sign-in, which is what the calendar integration reads its
-  // refresh token from.
-  session: { strategy: "jwt" },
-  pages: { signIn: "/signin" },
-  callbacks: {
-    jwt({ token, user }) {
-      if (user?.id) token.userId = user.id;
-      return token;
-    },
-    session({ session, token }) {
-      if (token.userId && session.user) {
-        session.user.id = token.userId as string;
-      }
-      return session;
-    },
-  },
-});
+const nextAuth = demoMode
+  ? null
+  : NextAuth({
+      adapter: PrismaAdapter(db),
+      providers,
+      // JWT sessions, not database sessions: the Credentials provider above only
+      // works with this strategy. The adapter still persists User and Account
+      // rows on Google sign-in, which is what the calendar integration reads its
+      // refresh token from.
+      session: { strategy: "jwt" },
+      pages: { signIn: "/signin" },
+      callbacks: {
+        jwt({ token, user }) {
+          if (user?.id) token.userId = user.id;
+          return token;
+        },
+        session({ session, token }) {
+          if (token.userId && session.user) {
+            session.user.id = token.userId as string;
+          }
+          return session;
+        },
+      },
+    });
+
+type RealAuth = NonNullable<typeof nextAuth>;
+
+/**
+ * Reading headers opts every route that asks for a session into dynamic
+ * rendering, so the demo's "this week" is computed per request rather than
+ * frozen at build time. The session object mirrors what NextAuth returns.
+ */
+async function demoSession() {
+  await headers();
+  return {
+    user: { id: DEMO_USER_ID, email: DEMO_EMAIL, name: "Demo" },
+    expires: new Date(Date.now() + 86_400_000).toISOString(),
+  };
+}
+
+async function demoSignIn(): Promise<void> {
+  redirect("/today");
+}
+
+async function demoSignOut(): Promise<void> {
+  redirect("/");
+}
+
+const demoHandlers = {
+  GET: async () => new Response("Not available in demo mode", { status: 404 }),
+  POST: async () => new Response("Not available in demo mode", { status: 404 }),
+};
+
+export const handlers: RealAuth["handlers"] = nextAuth
+  ? nextAuth.handlers
+  : (demoHandlers as unknown as RealAuth["handlers"]);
+
+export const auth: RealAuth["auth"] = nextAuth
+  ? nextAuth.auth
+  : (demoSession as unknown as RealAuth["auth"]);
+
+export const signIn: RealAuth["signIn"] = nextAuth
+  ? nextAuth.signIn
+  : (demoSignIn as unknown as RealAuth["signIn"]);
+
+export const signOut: RealAuth["signOut"] = nextAuth
+  ? nextAuth.signOut
+  : (demoSignOut as unknown as RealAuth["signOut"]);
 
 /**
  * The signed-in user's id, or null. Every data read is scoped through this.
@@ -117,6 +173,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
  * same request, making it one query rather than one per caller.
  */
 export const currentUserId = cache(async (): Promise<string | null> => {
+  if (demoMode) return DEMO_USER_ID;
+
   const session = await auth();
   const id = session?.user?.id;
   if (!id) return null;

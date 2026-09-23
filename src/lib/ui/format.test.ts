@@ -56,13 +56,13 @@ describe("skillColor solid", () => {
     expect(distinct.size).toBeGreaterThan(30);
   });
 
-  it("stays inside the sage band", () => {
+  it("stays inside the green band", () => {
     for (const seed of SEEDS) {
       const hue = Number(
         skillColor(seed, { solid: true }).match(/\s([\d.]+)\)$/)![1],
       );
-      expect(hue).toBeGreaterThanOrEqual(148);
-      expect(hue).toBeLessThanOrEqual(187);
+      expect(hue).toBeGreaterThanOrEqual(128);
+      expect(hue).toBeLessThanOrEqual(162);
     }
   });
 });

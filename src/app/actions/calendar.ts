@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requireUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { isDemoMode } from "@/lib/demo";
 import { signIn, signOut, CALENDAR_SCOPE } from "@/lib/auth";
 import { ensureLifeXPCalendar, upsertExperienceEvent } from "@/lib/google/calendar";
 
@@ -36,6 +37,10 @@ export async function connectCalendar() {
  */
 export async function disconnectCalendar() {
   const userId = await requireUserId();
+  if (isDemoMode()) {
+    revalidatePath("/settings");
+    return;
+  }
 
   await db.account.updateMany({
     where: { userId, provider: "google" },
@@ -58,6 +63,10 @@ export async function disconnectCalendar() {
  */
 export async function backfillCalendar(): Promise<void> {
   const userId = await requireUserId();
+  if (isDemoMode()) {
+    revalidatePath("/settings");
+    return;
+  }
 
   const calendarId = await ensureLifeXPCalendar(userId);
   if (!calendarId) return;

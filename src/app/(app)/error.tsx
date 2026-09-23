@@ -31,7 +31,7 @@ export default function AppError({
             LifeXP uses a local Postgres in development, started in its own
             terminal. If that window was closed, start it again:
           </p>
-          <pre className="mt-3 overflow-x-auto rounded-xl border border-line bg-paper-raised p-3 text-sm">
+          <pre className="mt-3 overflow-x-auto border border-line bg-paper-raised p-3 text-sm">
             npm run db:start
           </pre>
           <p className="mt-3 text-sm text-muted">
@@ -39,7 +39,7 @@ export default function AppError({
             your <code>.env</code>, paste the new values in and restart{" "}
             <code>npm run dev</code>. Then, if the data is gone:
           </p>
-          <pre className="mt-2 overflow-x-auto rounded-xl border border-line bg-paper-raised p-3 text-sm">
+          <pre className="mt-2 overflow-x-auto border border-line bg-paper-raised p-3 text-sm">
             npx prisma migrate dev{"\n"}npm run seed
           </pre>
         </>
@@ -53,7 +53,7 @@ export default function AppError({
       <button
         type="button"
         onClick={reset}
-        className="mt-5 rounded-full bg-ink px-4 py-2 text-sm font-medium text-paper"
+        className="mt-5 bg-ink px-4 py-2 text-sm font-medium text-paper"
       >
         Try again
       </button>
@@ -62,7 +62,7 @@ export default function AppError({
         <summary className="cursor-pointer text-sm text-muted">
           Technical detail
         </summary>
-        <pre className="mt-2 overflow-x-auto rounded-xl border border-line bg-paper-raised p-3 text-xs text-muted">
+        <pre className="mt-2 overflow-x-auto border border-line bg-paper-raised p-3 text-xs text-muted">
           {error.message}
           {error.digest ? `\n\ndigest: ${error.digest}` : ""}
         </pre>

@@ -129,7 +129,7 @@ test.describe("usable without any keys", () => {
  * the app turns dark on exactly the phones nobody tests on.
  */
 test.describe("cream ground", () => {
-  const CREAM = "rgb(247, 241, 225)"; // --paper
+  const CREAM = "rgb(240, 240, 230)"; // --paper, the brand lockup's cream
 
   test("is cream when the device prefers light", async ({ page }) => {
     await page.emulateMedia({ colorScheme: "light" });

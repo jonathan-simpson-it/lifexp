@@ -39,14 +39,14 @@ const sans = Hanken_Grotesk({
 export const metadata: Metadata = {
   title: "LifeXP",
   description:
-    "LifeXP makes invisible progress visible. No streaks, no guilt. Just evidence of the person you are gradually becoming.",
+    "A record of the things you do over months and years, so slow progress stays visible. No streaks, no guilt.",
 };
 
 export const viewport: Viewport = {
   // One colour, matching --paper. LifeXP is light in every colour scheme, so
   // advertising a dark variant here would only make the phone's status bar
   // disagree with the page underneath it.
-  themeColor: "#f7f1e1",
+  themeColor: "#f0f0e6",
   colorScheme: "only light",
   width: "device-width",
   initialScale: 1,

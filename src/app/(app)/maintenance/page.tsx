@@ -53,7 +53,7 @@ export default async function MaintenancePage() {
               name="name"
               required
               placeholder="Change bedsheets"
-              className="min-w-0 flex-1 rounded-full border border-line bg-paper px-4 py-2 text-sm"
+              className="min-w-0 flex-1 border border-line bg-paper px-4 py-2 text-sm"
             />
             <label htmlFor="item-interval" className="sr-only">
               Days between
@@ -66,11 +66,11 @@ export default async function MaintenancePage() {
               min={1}
               max={3650}
               defaultValue={7}
-              className="w-20 rounded-full border border-line bg-paper px-3 py-2 text-center text-sm"
+              className="w-20 border border-line bg-paper px-3 py-2 text-center text-sm"
             />
             <button
               type="submit"
-              className="shrink-0 rounded-full bg-ink px-4 py-2 text-sm font-medium text-paper"
+              className="shrink-0 bg-ink px-4 py-2 text-sm font-medium text-paper"
             >
               Add
             </button>
@@ -95,7 +95,7 @@ export default async function MaintenancePage() {
                     />
                     <button
                       type="submit"
-                      className="rounded-full border border-line px-2.5 py-1 text-xs text-muted transition-colors hover:bg-line/40 hover:text-ink"
+                      className="border border-line px-2.5 py-1 text-xs text-muted transition-colors hover:bg-line/40 hover:text-ink"
                     >
                       + {suggestion.name}
                     </button>

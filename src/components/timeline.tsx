@@ -20,6 +20,10 @@ export function Timeline({ entries }: { entries: TimelineEntry[] }) {
     else groups.set(key, [entry]);
   }
 
+  // One running position across all groups, so the entrance reads as one
+  // list settling rather than each day restarting the stagger.
+  let position = 0;
+
   return (
     <div className="space-y-6">
       {[...groups.entries()].map(([heading, items]) => (
@@ -29,7 +33,13 @@ export function Timeline({ entries }: { entries: TimelineEntry[] }) {
           </h3>
           <ul className="mt-2 space-y-2">
             {items.map((entry) => (
-              <li key={entry.id} className="card p-3">
+              <li
+                key={entry.id}
+                className="rise-in card p-3"
+                style={{
+                  ["--rise-delay" as string]: `${Math.min(position++ * 0.03, 0.18)}s`,
+                }}
+              >
                 <div className="flex items-baseline justify-between gap-3">
                   <span className="min-w-0 font-medium">{entry.title}</span>
                   <span className="numeral shrink-0 text-sm text-muted">
@@ -43,7 +53,7 @@ export function Timeline({ entries }: { entries: TimelineEntry[] }) {
                       <Link
                         key={skill.id}
                         href={`/growth/${skill.slug}`}
-                        className="inline-flex items-center gap-1.5 rounded-full border border-line px-2 py-0.5 text-xs text-muted hover:text-ink"
+                        className="inline-flex items-center gap-1.5 border border-line px-2 py-0.5 text-xs text-muted hover:text-ink"
                       >
                         <span
                           aria-hidden

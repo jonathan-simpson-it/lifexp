@@ -26,6 +26,8 @@ export function MedalTile({
   footnote,
   /** Position in the row, used to stagger the idle sway. */
   index = 0,
+  /** Plays the strike sequence once; the landing showcase uses it on entry. */
+  striking = false,
 }: {
   tier: MilestoneTier;
   title: string;
@@ -35,6 +37,7 @@ export function MedalTile({
   /** Date, or the one-line context sentence. */
   footnote?: string | null;
   index?: number;
+  striking?: boolean;
 }) {
   return (
     <div
@@ -65,7 +68,7 @@ export function MedalTile({
         className="medal-hang block origin-top"
         style={{ ["--hang-delay" as string]: `${(index % 6) * 0.5}s` }}
       >
-        <Medal tier={tier} size={58} earned={earned} symbol={symbol} />
+        <Medal tier={tier} size={58} earned={earned} symbol={symbol} striking={striking} />
       </span>
 
       <p
@@ -127,6 +130,7 @@ export function BadgeTile({
   earned,
   footnote,
   index,
+  striking = false,
 }: {
   badgeKey: string;
   title: string;
@@ -134,6 +138,7 @@ export function BadgeTile({
   earned: boolean;
   footnote?: string | null;
   index?: number;
+  striking?: boolean;
 }) {
   const { symbol, metal } = badgeVisual(badgeKey);
 
@@ -146,6 +151,7 @@ export function BadgeTile({
       symbol={symbol}
       footnote={footnote}
       index={index}
+      striking={striking}
     />
   );
 }

@@ -1,4 +1,4 @@
-export { Logo, LogoMark, PRODUCT_NAME } from "./logo";
+export { Logo, LogoCream, PRODUCT_NAME } from "./logo";
 export { Medal } from "./medal";
 export {
   Plant,

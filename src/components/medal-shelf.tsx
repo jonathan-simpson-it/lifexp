@@ -41,7 +41,11 @@ export function MedalShelf({
           before. */}
       <ul className="mt-4 grid grid-cols-3 gap-x-3 gap-y-6 sm:grid-cols-4 md:grid-cols-6">
         {shown.map((badge, i) => (
-          <li key={badge.definition.key}>
+          <li
+            key={badge.definition.key}
+            className="rise-in"
+            style={{ ["--rise-delay" as string]: `${Math.min(i * 0.04, 0.2)}s` }}
+          >
             <Tile badge={badge} index={i} />
           </li>
         ))}

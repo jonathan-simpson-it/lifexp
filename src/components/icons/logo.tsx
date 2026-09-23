@@ -1,55 +1,46 @@
+import Image from "next/image";
+
 /**
- * The LifeXP mark: a sprout breaking ground.
+ * The brand lockup.
  *
- * Chosen over anything chart- or trophy-shaped because the product is about
- * accumulation over years, not scores. It also ties the brand to the garden, so
- * the mark and the home screen are visibly the same idea.
+ * Rendered from the client's artwork rather than redrawn in SVG, so the app
+ * and everything the client ships share one mark. The source JPEGs carry a
+ * `#f7f7f7` field; `lifexp-logo-green.png` and `lifexp-logo-cream.png` are the
+ * same artwork with that field extracted to transparency (ffmpeg colorkey, and
+ * a distance-based alpha for the cream, whose letters sit only a few levels
+ * off the background). That is why the marks sit cleanly on both the cream
+ * ground and the ink closing band without a white box or a blend mode.
  *
- * Name lives here once, so renaming is a single-file change.
+ * If the client ships updated artwork, regenerate the PNGs from the JPEGs in
+ * `public/` with the same commands rather than editing the pixels by hand.
  */
 
 export const PRODUCT_NAME = "LifeXP";
 
-export function LogoMark({ size = 28 }: { size?: number }) {
+const GREEN_RATIO = 1154 / 255; // source artwork, width / height
+const CREAM_RATIO = 1052 / 237;
+
+export function Logo({ size = 30 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden>
-      <path
-        d="M16 27V14"
-        stroke="var(--growth)"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-      />
-      {/* Left leaf sits lower and smaller: an even pair reads as a logo cliché,
-          an uneven one reads as something actually growing. */}
-      <path
-        d="M16 19c-5 0-7.6-2.9-7.6-7 4.4 0 7.6 2.6 7.6 7Z"
-        fill="var(--growth)"
-        opacity="0.75"
-      />
-      <path
-        d="M16 15.5c5.4 0 8.4-3.2 8.4-8-4.8 0-8.4 3-8.4 8Z"
-        fill="var(--accent)"
-      />
-      <path d="M8.5 27h15" stroke="var(--line-strong)" strokeWidth="2.4" strokeLinecap="round" />
-    </svg>
+    <Image
+      src="/lifexp-logo-green.png"
+      alt={PRODUCT_NAME}
+      width={Math.round(size * GREEN_RATIO)}
+      height={size}
+      className="block"
+    />
   );
 }
 
-export function Logo({
-  size = 28,
-  showName = true,
-}: {
-  size?: number;
-  showName?: boolean;
-}) {
+/** The cream variant, for ink grounds. Same artwork, light ink. */
+export function LogoCream({ size = 30 }: { size?: number }) {
   return (
-    <span className="inline-flex items-center gap-2">
-      <LogoMark size={size} />
-      {showName && (
-        <span className="display text-lg font-semibold tracking-tight">
-          {PRODUCT_NAME}
-        </span>
-      )}
-    </span>
+    <Image
+      src="/lifexp-logo-cream.png"
+      alt={PRODUCT_NAME}
+      width={Math.round(size * CREAM_RATIO)}
+      height={size}
+      className="block"
+    />
   );
 }

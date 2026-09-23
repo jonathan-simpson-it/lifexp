@@ -67,7 +67,7 @@ export function WateredToast({
       aria-live="polite"
       className="rise-in pointer-events-none fixed inset-x-0 bottom-24 z-[55] flex justify-center px-4 md:bottom-8 md:pl-60"
     >
-      <div className="flex max-w-sm items-center gap-2 rounded-[var(--radius-lg)] border border-line bg-paper-raised py-2 pr-4 pl-2 shadow-raised">
+      <div className="flex max-w-sm items-center gap-2 border border-line bg-paper-raised py-2 pr-4 pl-2 shadow-raised">
         <Watering
           stageBefore={stageBefore}
           stageAfter={stageAfter}

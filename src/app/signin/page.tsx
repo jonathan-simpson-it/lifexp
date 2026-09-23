@@ -40,7 +40,7 @@ export default async function SignInPage() {
           <form action={signInWithGoogle}>
             <button
               type="submit"
-              className="w-full rounded-full bg-ink px-5 py-3 text-base font-medium text-paper transition-opacity hover:opacity-90"
+              className="w-full bg-ink px-5 py-3 text-base font-medium text-paper transition-opacity hover:opacity-90"
             >
               Continue with Google
             </button>
@@ -55,11 +55,11 @@ export default async function SignInPage() {
               name="email"
               type="email"
               defaultValue="demo@lifexp.local"
-              className="w-full rounded-xl border border-line bg-paper-raised px-4 py-3 text-base"
+              className="w-full border border-line bg-paper-raised px-4 py-3 text-base"
             />
             <button
               type="submit"
-              className="w-full rounded-full bg-ink px-5 py-3 text-base font-medium text-paper transition-opacity hover:opacity-90"
+              className="w-full bg-ink px-5 py-3 text-base font-medium text-paper transition-opacity hover:opacity-90"
             >
               Continue
             </button>
@@ -73,12 +73,12 @@ export default async function SignInPage() {
       </div>
 
       {!hasGoogleCredentials && (
-        <div className="mt-8 rounded-xl border border-line p-4">
+        <div className="mt-8 border border-line p-4">
           <p className="text-sm font-medium">Everything works without any keys</p>
           <p className="mt-1.5 text-sm text-muted">
             Continue as <code>demo@lifexp.local</code> for two years of example
-            history: a skill deep into its ladder, medals earned and still to
-            find, and maintenance at every stage of freshness.
+            history: skills at different stages, earned and unearned medals, and
+            maintenance items of different ages.
           </p>
           <ul className="mt-2.5 space-y-1 text-sm text-muted">
             <li>

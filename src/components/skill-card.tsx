@@ -8,12 +8,17 @@ import {
   TIER_COLOR,
 } from "@/lib/ui/format";
 import { SkillIcon } from "@/components/icons";
+import { Fill } from "@/components/ui/fill";
 
 export function SkillCardList({ skills }: { skills: SkillCardData[] }) {
   return (
     <ul className="grid gap-3">
-      {skills.map((skill) => (
-        <li key={skill.id}>
+      {skills.map((skill, index) => (
+        <li
+          key={skill.id}
+          className="rise-in"
+          style={{ ["--rise-delay" as string]: `${Math.min(index * 0.05, 0.2)}s` }}
+        >
           <SkillCard skill={skill} />
         </li>
       ))}
@@ -35,7 +40,7 @@ export function SkillCard({ skill }: { skill: SkillCardData }) {
   return (
     <Link
       href={`/growth/${skill.slug}`}
-      className="tappable card block p-4 transition-shadow hover:shadow-raised"
+      className="tappable card lift block p-4"
     >
       <div className="flex items-start justify-between gap-3">
         <span className="flex min-w-0 items-center gap-2.5">
@@ -67,7 +72,7 @@ export function SkillCard({ skill }: { skill: SkillCardData }) {
           // classified as graphical when the palette was audited, and this was
           // the one place they were not being used as graphics. As a dot they
           // are back inside their bar, and the label reads at 8.73:1.
-          <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-paper px-2.5 py-1 text-caption font-semibold text-ink-soft">
+          <span className="flex shrink-0 items-center gap-1.5 bg-paper px-2.5 py-1 text-caption font-semibold text-ink-soft">
             <span
               aria-hidden
               className="size-2 shrink-0 rounded-full"
@@ -79,23 +84,15 @@ export function SkillCard({ skill }: { skill: SkillCardData }) {
       </div>
 
       <div className="mt-3.5">
-        <div
-          className="h-2 w-full overflow-hidden rounded-full bg-line"
-          role="img"
-          aria-label={
+        <Fill
+          fraction={skill.fraction}
+          color={color}
+          ariaLabel={
             skill.nextLabel
               ? `${Math.round(skill.fraction * 100)} percent toward ${skill.nextLabel}`
               : "All milestones reached"
           }
-        >
-          <div
-            className="h-full rounded-full transition-[width] duration-700 ease-[var(--spring)]"
-            style={{
-              width: `${Math.max(skill.fraction * 100, 3)}%`,
-              background: color,
-            }}
-          />
-        </div>
+        />
 
         <div className="mt-2 flex items-baseline justify-between gap-3">
           {skill.nextLabel ? (

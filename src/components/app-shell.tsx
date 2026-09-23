@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AnimatePresence, MotionConfig } from "motion/react";
 import { AppNav } from "@/components/nav/app-nav";
 import { LogSheet, type LogResult } from "@/components/log/log-sheet";
 import { CelebrationHost } from "@/components/celebrate/celebration-host";
@@ -17,6 +18,10 @@ import type { QuickSkill } from "@/lib/growth/aggregate";
  * reset. A counter drives their `key`, so opening the sheet a second time gets
  * clean initial state for free, and neither component needs an effect that
  * copies props into state, which would cost an extra render pass every time.
+ *
+ * `MotionConfig reducedMotion="user"` is set once here so every `motion`
+ * animation in the shell (the sheet's exit, the nav pill) honours the OS
+ * reduced-motion setting without each component asking again.
  */
 export function AppShell({
   skills,
@@ -37,7 +42,7 @@ export function AppShell({
   }
 
   return (
-    <>
+    <MotionConfig reducedMotion="user">
       {/* Left padding clears the desktop sidebar; bottom padding clears the
           mobile bar plus its safe area. */}
       <div className="md:pl-60">
@@ -46,16 +51,20 @@ export function AppShell({
 
       <AppNav onAdd={openSheet} sheetOpen={sheetOpen} />
 
-      {sheetOpen && (
-        <LogSheet
-          key={openCount}
-          skills={skills}
-          onClose={() => setSheetOpen(false)}
-          onLogged={(value) => setResult({ id: openCount, value })}
-        />
-      )}
+      {/* AnimatePresence owns the close: the sheet springs back down and the
+          backdrop fades instead of vanishing mid-frame. */}
+      <AnimatePresence>
+        {sheetOpen && (
+          <LogSheet
+            key={openCount}
+            skills={skills}
+            onClose={() => setSheetOpen(false)}
+            onLogged={(value) => setResult({ id: openCount, value })}
+          />
+        )}
+      </AnimatePresence>
 
       {result && <CelebrationHost key={result.id} result={result.value} />}
-    </>
+    </MotionConfig>
   );
 }

@@ -103,7 +103,7 @@ export const BADGES: BadgeDefinition[] = [
   {
     key: "first-experience",
     title: "First Experience",
-    description: "You recorded something. That is the whole trick.",
+    description: "You recorded something. Everything else builds on it.",
     hint: "Record your first experience",
     icon: "Sprout",
     earned: (s) => s.experiences.length > 0 && { at: s.experiences[0].occurredAt },
@@ -162,7 +162,7 @@ export const BADGES: BadgeDefinition[] = [
   {
     key: "hundred-hours",
     title: "Hundred Hours",
-    description: "A hundred hours of your life, made visible.",
+    description: "A hundred hours recorded across everything you track.",
     hint: null,
     icon: "Mountain",
     earned: (s) => {
@@ -230,7 +230,7 @@ export const BADGES: BadgeDefinition[] = [
   {
     key: "caretaker",
     title: "Caretaker",
-    description: "Twenty-five acts of looking after your life.",
+    description: "Twenty-five maintenance logs recorded.",
     hint: "Keep up with maintenance",
     icon: "Home",
     earned: (s) =>

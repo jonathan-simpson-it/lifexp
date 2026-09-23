@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
 import { currentUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
+import {
+  demoBadgeAwards,
+  demoExperienceRows,
+  demoMaintenanceItems,
+  demoSkillRows,
+  isDemoMode,
+} from "@/lib/demo";
 
 /**
  * Full data export.
@@ -15,24 +22,70 @@ export async function GET() {
     return NextResponse.json({ error: "Not signed in" }, { status: 401 });
   }
 
-  const [skills, experiences, maintenance, badges] = await Promise.all([
-    db.skill.findMany({
-      where: { userId },
-      include: { milestones: { orderBy: { order: "asc" } } },
-      orderBy: { createdAt: "asc" },
-    }),
-    db.experience.findMany({
-      where: { userId },
-      include: { skills: { select: { skillId: true } } },
-      orderBy: { occurredAt: "asc" },
-    }),
-    db.maintenanceItem.findMany({
-      where: { userId },
-      include: { logs: { orderBy: { doneAt: "asc" } } },
-      orderBy: { createdAt: "asc" },
-    }),
-    db.badgeAward.findMany({ where: { userId }, orderBy: { awardedAt: "asc" } }),
-  ]);
+  type ExportSkill = {
+    id: string;
+    name: string;
+    slug: string;
+    secondaryUnit: string | null;
+    createdAt: Date;
+    milestones: {
+      label: string;
+      tier: string;
+      thresholdMinutes: number | null;
+      thresholdCount: number | null;
+      achievedAt: Date | null;
+    }[];
+  };
+  type ExportExperience = {
+    id: string;
+    title: string;
+    notes: string | null;
+    occurredAt: Date;
+    minutes: number | null;
+    source: string;
+    skills: { skillId: string }[];
+  };
+  type ExportMaintenance = {
+    name: string;
+    intervalDays: number;
+    logs: { doneAt: Date }[];
+  };
+  type ExportBadge = {
+    badgeKey: string;
+    awardedAt: Date;
+    context: unknown;
+  };
+
+  const [skills, experiences, maintenance, badges]: [
+    ExportSkill[],
+    ExportExperience[],
+    ExportMaintenance[],
+    ExportBadge[],
+  ] = isDemoMode()
+    ? [
+        demoSkillRows(),
+        demoExperienceRows(),
+        demoMaintenanceItems(),
+        demoBadgeAwards(),
+      ]
+    : await Promise.all([
+        db.skill.findMany({
+          where: { userId },
+          include: { milestones: { orderBy: { order: "asc" } } },
+          orderBy: { createdAt: "asc" },
+        }),
+        db.experience.findMany({
+          where: { userId },
+          include: { skills: { select: { skillId: true } } },
+          orderBy: { occurredAt: "asc" },
+        }),
+        db.maintenanceItem.findMany({
+          where: { userId },
+          include: { logs: { orderBy: { doneAt: "asc" } } },
+          orderBy: { createdAt: "asc" },
+        }),
+        db.badgeAward.findMany({ where: { userId }, orderBy: { awardedAt: "asc" } }),
+      ]);
 
   const payload = {
     exportedAt: new Date().toISOString(),
